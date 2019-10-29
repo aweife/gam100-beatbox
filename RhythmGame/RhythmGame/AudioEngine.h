@@ -7,7 +7,11 @@
 #define true 1
 #define false 0
 
-extern void initialise(void); //initialises sound
+typedef enum
+{
+	BGM,
+	SFX
+} TRACK;
 
 //sound control
 extern void setVolume(float v); //sets the actual playing sound's volume
@@ -26,16 +30,11 @@ extern void setSound(int sound); //set the sound on or off
 extern void toggleSound(void); //toggles sound on and off
 extern void togglePause(void); //toggle pause on/off
 
-// Use these functions only
+// Call these functions only
 extern void AE_Init();
-extern void AE_LoadBGM(const char *path);
-extern void AE_LoadSFX(const char *path);
-extern void AE_PlayBGM(int trackID);
-extern void AE_PlaySFX(int trackID);
+extern void AE_LoadTrack(const char *path, TRACK type);
+extern void AE_Play(int trackID, TRACK type);
+extern void AE_SetVolume(float volume, TRACK type);
 
 // For internal use
 void _CheckResult(const char *debug);
-
-void _LoadSound(const char *path, FMOD_SOUND **sound);
-
-void _PlaySound(FMOD_SOUND **sound, FMOD_CHANNEL **channel);

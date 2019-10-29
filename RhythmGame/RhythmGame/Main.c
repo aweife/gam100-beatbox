@@ -5,19 +5,21 @@
 int main(void)
 {
 	AE_Init();
-	AE_LoadBGM("..\\yoursound.mp3");
-	AE_LoadSFX("..\\swish.wav");
-	AE_PlayBGM(0);
+	AE_LoadTrack("..\\yoursound.mp3", BGM);
+	AE_LoadTrack("..\\swish.wav", SFX);
+	AE_Play(0, BGM);
+	AE_SetVolume(0.5f, BGM);
 	Sleep(3000);
-	AE_PlaySFX(0);
+	AE_Play(0, SFX);
 	Sleep(300);
-	AE_PlaySFX(0);
+	AE_Play(0, SFX);
 	Sleep(300);
-	AE_PlaySFX(0);
+	AE_Play(0, SFX);
 	Sleep(300);
-	AE_PlaySFX(0);
+	AE_Play(0, SFX);
 	Sleep(300);
-	AE_PlaySFX(0);
+	AE_Play(0, SFX);
+	AE_Play(0, SFX);
 	while (1);
 
 
