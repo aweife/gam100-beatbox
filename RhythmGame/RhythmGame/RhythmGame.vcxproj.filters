@@ -36,6 +36,9 @@
     <ClCompile Include="Random\Random.c">
       <Filter>Random</Filter>
     </ClCompile>
+    <ClCompile Include="AudioEngine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console\Console.h">
@@ -46,6 +49,9 @@
     </ClInclude>
     <ClInclude Include="Random\Random.h">
       <Filter>Random</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioEngine.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
