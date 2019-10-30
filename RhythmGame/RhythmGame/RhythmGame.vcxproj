@@ -21,13 +21,21 @@
   <ItemGroup>
     <ClCompile Include="Clock\Clock.cpp" />
     <ClCompile Include="Console\Console.c" />
+    <ClCompile Include="Game2.c" />
+    <ClCompile Include="Global.c" />
     <ClCompile Include="Main.c" />
+    <ClCompile Include="MainMenu.c" />
     <ClCompile Include="Random\Random.c" />
+    <ClCompile Include="StateMachine.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock\Clock.h" />
     <ClInclude Include="Console\Console.h" />
+    <ClInclude Include="Game2.h" />
+    <ClInclude Include="Global.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Random\Random.h" />
+    <ClInclude Include="StateMachine.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
