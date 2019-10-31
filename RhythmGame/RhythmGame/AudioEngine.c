@@ -21,7 +21,7 @@ static FMOD_SYSTEM *system;
 static int bgmCount;
 static int sfxCount;
 static FMOD_SOUND *bgmSounds[NUMBER_OF_BGM_TRACKS];
-static FMOD_SOUND *sfxSounds[NUMBER_OF_SFX_TRACKS];
+static FMOD_SOUND *sfxList[NUMBER_OF_SFX_TRACKS];
 static FMOD_CHANNEL *bgmChannel;
 
 // Initialise FMOD for use
@@ -52,7 +52,7 @@ void AE_LoadTrack(const char *path, TRACK type)
 		bgmCount++;
 		break;
 	case SFX:
-		result = FMOD_System_CreateSound(system, path, FMOD_DEFAULT, 0, &sfxSounds[sfxCount]);
+		result = FMOD_System_CreateSound(system, path, FMOD_DEFAULT, 0, &sfxList[sfxCount]);
 		sfxCount++;
 		break;
 	}
@@ -70,10 +70,22 @@ void AE_Play(int trackID, TRACK type)
 		break;
 	case SFX:
 		// Automatically plays oneshot
-		result = FMOD_System_PlaySound(system, sfxSounds[trackID], 0, false, 0);
+		result = FMOD_System_PlaySound(system, sfxList[trackID], 0, false, 0);
 		_CheckResult("playing");
 		break;
 	}
+}
+
+void AE_PlayOneShot(int id, float volume)
+{
+	FMOD_CHANNEL *c;
+	result = FMOD_System_PlaySound(system, sfxList[id], 0, false, &c);
+	_CheckResult("playing");
+
+	// Set the volume of the one shot
+	if (volume < 0.0f || volume > 1.0f) return;
+	result = FMOD_Channel_SetVolume(c, volume);
+	_CheckResult("setting volume");
 }
 
 void AE_SetVolume(float volume, TRACK type)
@@ -101,7 +113,7 @@ void AE_Shutdown()
 		FMOD_Sound_Release(bgmSounds[i]);
 	_CheckResult("system shutdown");
 	for (int i = 0; i < sfxCount; i++)
-		FMOD_Sound_Release(sfxSounds[i]);
+		FMOD_Sound_Release(sfxList[i]);
 	_CheckResult("system shutdown");
 }
 

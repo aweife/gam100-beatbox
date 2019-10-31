@@ -34,6 +34,7 @@ extern void togglePause(void); //toggle pause on/off
 extern void AE_Init();
 extern void AE_LoadTrack(const char *path, TRACK type);
 extern void AE_Play(int trackID, TRACK type);
+extern void AE_PlayOneShot(int id, float volume);
 extern void AE_SetVolume(float volume, TRACK type);
 
 // For internal use
