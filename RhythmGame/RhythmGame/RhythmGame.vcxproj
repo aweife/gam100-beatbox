@@ -21,8 +21,8 @@
   <ItemGroup>
     <ClCompile Include="Clock\Clock.cpp" />
     <ClCompile Include="Console\Console.c" />
-    <ClCompile Include="Game2.c" />
-    <ClCompile Include="Global.c" />
+    <ClCompile Include="Game.c" />
+    <ClCompile Include="Functions.c" />
     <ClCompile Include="Main.c" />
     <ClCompile Include="MainMenu.c" />
     <ClCompile Include="Random\Random.c" />
@@ -31,8 +31,8 @@
   <ItemGroup>
     <ClInclude Include="Clock\Clock.h" />
     <ClInclude Include="Console\Console.h" />
-    <ClInclude Include="Game2.h" />
-    <ClInclude Include="Global.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Functions.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Random\Random.h" />
     <ClInclude Include="StateMachine.h" />

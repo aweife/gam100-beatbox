@@ -1,6 +1,6 @@
 #include "StateMachine.h"
 #include "Console/Console.h"
-#include "Game2.h"
+#include "Game.h"
 
 static GameState currentState = State_Default;
 static GameState reqState = State_Default;
@@ -11,7 +11,7 @@ void StateMachine_Start()
 	{
 		switch (currentState)
 		{
-		case State_Game2: Game2_ExitState(); break;
+		case State_Game: Game_ExitState(); break;
 		}
 	}
 
@@ -19,7 +19,7 @@ void StateMachine_Start()
 
 	switch (currentState)
 	{
-	case State_Game2: Game2_EnterState(); break;
+	case State_Game: Game_EnterState(); break;
 	}
 }
 
@@ -32,7 +32,7 @@ void StateMachine_ProcessInput()
 {
 	switch (currentState)
 	{
-	case State_Game2: Game2_ProcessInput(); break;
+	case State_Game: Game_ProcessInput(); break;
 	}
 }
 
@@ -40,7 +40,7 @@ void StateMachine_Update()
 {
 	switch (currentState)
 	{
-	case State_Game2: Game2_Update(); break;
+	case State_Game: Game_Update(); break;
 	}
 }
 
@@ -50,7 +50,7 @@ void StateMachine_Render()
 
 	switch (currentState)
 	{
-	case State_Game2: Game2_Render(); break;
+	case State_Game: Game_Render(); break;
 	}
 
 	Console_SwapRenderBuffer();

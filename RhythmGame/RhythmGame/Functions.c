@@ -1,4 +1,4 @@
-#include "Global.h"
+#include "Functions.h"
 
 int reqExit = 0;
 
