@@ -18,13 +18,17 @@ static bool bHasError;
 static FMOD_RESULT result;
 static FMOD_SYSTEM *system;
 
+// BGM
 static int bgmCount;
-static int sfxCount;
 static FMOD_SOUND *bgmSounds[NUMBER_OF_BGM_TRACKS];
-static FMOD_SOUND *sfxList[NUMBER_OF_SFX_TRACKS];
-static FMOD_CHANNEL *bgmChannel;
+static FMOD_CHANNEL* bgmChannel;
+static double bgmDelay;
 
-// Initialise FMOD for use
+// SFX
+static int sfxCount;
+static FMOD_SOUND *sfxList[NUMBER_OF_SFX_TRACKS];
+
+
 void AE_Init()
 {
 	// Initialise state
@@ -42,13 +46,12 @@ void AE_Init()
 	_CheckResult("initialising");
 }
 
-// Creates a sound object for streaming (provided with its path)
 void AE_LoadTrack(const char *path, TRACK type)
 {
 	switch (type)
 	{
 	case BGM:
-		result = FMOD_System_CreateStream(system, path, FMOD_DEFAULT, 0, &bgmSounds[bgmCount]);
+		result = FMOD_System_CreateSound(system, path, FMOD_DEFAULT, 0, &bgmSounds[bgmCount]);
 		bgmCount++;
 		break;
 	case SFX:
@@ -57,23 +60,6 @@ void AE_LoadTrack(const char *path, TRACK type)
 		break;
 	}
 	_CheckResult("loading sound");
-}
-
-void AE_Play(int trackID, TRACK type)
-{
-	switch (type)
-	{
-	case BGM:
-		// Returns the channel handle for manipulation
-		result = FMOD_System_PlaySound(system, bgmSounds[trackID], 0, false, &bgmChannel);
-		_CheckResult("playing");
-		break;
-	case SFX:
-		// Automatically plays oneshot
-		result = FMOD_System_PlaySound(system, sfxList[trackID], 0, false, 0);
-		_CheckResult("playing");
-		break;
-	}
 }
 
 void AE_PlayOneShot(int id, float volume)
@@ -93,18 +79,22 @@ void AE_PlayOneShot(int id, float volume)
 	_CheckResult("playing");
 }
 
-void AE_SetVolume(float volume, TRACK type)
-{	
-	switch (type)
-	{
-	case BGM:
-		result = FMOD_Channel_SetVolume(bgmChannel, volume);
-		break;
-	case SFX:
-		//result = FMOD_ChannelGroup_SetVolume(sfxGroup, volume);
-		break;
-	}
-	_CheckResult("setting volume");
+void AE_StartBGMWithDelay(int id, double delay)
+{
+	bgmDelay = delay * 1000.0;
+
+	result = FMOD_System_PlaySound(system, sfxList[id], 0, true, &bgmChannel);
+	_CheckResult("play bgm paused");
+}
+
+void AE_Update()
+{
+	result = FMOD_System_Update(system);
+	_CheckResult("updating");
+
+	// If StartBGMWithDelay has been called
+	if (bgmDelay > 0.0)
+		_CountDownBGM();
 }
 
 void AE_Shutdown()
@@ -129,6 +119,51 @@ void _CheckResult(const char *debug)
 	bHasError = true;
 	printf("FMOD ERROR during %s! (%d) %s\n", debug, result, FMOD_ErrorString(result));
 }
+
+void _CountDownBGM()
+{
+	bgmDelay -= Clock_GetDeltaTime();
+	
+	// Time the delay
+	if (bgmDelay <= 0.0)
+	{
+		bgmDelay = 0.0;
+
+		result = FMOD_Channel_SetPaused(bgmChannel, false);
+		_CheckResult("starting bgm with delay");
+	}
+}
+
+//void AE_Play(int trackID, TRACK type)
+//{
+//	switch (type)
+//	{
+//	case BGM:
+//		// Returns the channel handle for manipulation
+//		result = FMOD_System_PlaySound(system, bgmSounds[trackID], 0, false, &bgmChannel);
+//		_CheckResult("playing");
+//		break;
+//	case SFX:
+//		// Automatically plays oneshot
+//		result = FMOD_System_PlaySound(system, sfxList[trackID], 0, false, 0);
+//		_CheckResult("playing");
+//		break;
+//	}
+//}
+
+//void AE_SetVolume(float volume, TRACK type)
+//{
+//	switch (type)
+//	{
+//	case BGM:
+//		result = FMOD_Channel_SetVolume(bgmChannel, volume);
+//		break;
+//	case SFX:
+//		//result = FMOD_ChannelGroup_SetVolume(sfxGroup, volume);
+//		break;
+//	}
+//	_CheckResult("setting volume");
+//}
 
 //sets the actual playing sound's volume
 //void setVolume(float v) {
