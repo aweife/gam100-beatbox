@@ -78,14 +78,19 @@ void AE_Play(int trackID, TRACK type)
 
 void AE_PlayOneShot(int id, float volume)
 {
+	// Set the track paused
 	FMOD_CHANNEL *c;
-	result = FMOD_System_PlaySound(system, sfxList[id], 0, false, &c);
+	result = FMOD_System_PlaySound(system, sfxList[id], 0, true, &c);
 	_CheckResult("playing");
 
 	// Set the volume of the one shot
 	if (volume < 0.0f || volume > 1.0f) return;
 	result = FMOD_Channel_SetVolume(c, volume);
 	_CheckResult("setting volume");
+
+	// Unpause the track
+	result = FMOD_Channel_SetPaused(c, false);
+	_CheckResult("playing");
 }
 
 void AE_SetVolume(float volume, TRACK type)
