@@ -10,8 +10,7 @@ int main(void)
 	Console_SetTitle("FikrulEatPig");
 	Console_SetCursorVisibility(0);
 	Console_SetSquareFont();
-	Console_SetWindowedMode(80, 80, 1);
-	
+	Console_SetWindowedMode(240, 125, 0);
 	StateMachine_changeState(State_Game);
 
 	while (gameRunning())
