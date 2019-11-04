@@ -23,15 +23,22 @@ int tmpY = 0;
 
 //Game Update
 int direction = 0;
-//double ENeulerX = 0.0;
-//double ENeulerY = 0.0;
 double velocity = 0.01f;
 
 //Game Time
 float BPMEnTime = 0.0f;
 float BPMProjSpawnTime = 0.0f;
 float BPMProjMoveTime = 0.0f;
+float elapsedTimerTime = 0.0f;
 char timeDisplay[10];
+
+void Clock()
+{
+	elapsedTimerTime += Clock_GetDeltaTime();
+	_itoa_s(elapsedTimerTime / CLOCKS_PER_SEC, timeDisplay, sizeof(timeDisplay), 10);
+	Console_SetRenderBuffer_String(63, 8, "Timer:");
+	Console_SetRenderBuffer_String(70, 8, timeDisplay);
+}
 
 void Boundary()
 {
@@ -52,54 +59,70 @@ void Boundary()
 	}
 }
 
-//void ProjectileSpawn()
-//{
-//	Console_SetRenderBuffer_Char(ProjX, ProjY, '*');
-//}
-//
-//void ProjectileShoot()
-//{
-//
-//}
-
-//typedef struct
-//{
-//	int artArray[100];
-//} ART;
-
 typedef struct //MUSTLEARNTHIS
 {
 	int x;
 	int y;
+	int state;
+	int pArrayReady;
 } Projectile;
 
-Projectile pArray[100];
-int pCount = 0;
+Projectile pArray[5]; //Only stores 3 elements
+int pCount = 5; //Limits 3 bullets on-screen
 
 void ProjectileSpawn()
 {
 	BPMProjSpawnTime += Clock_GetDeltaTime();
-	if (BPMProjSpawnTime >= 4000.0f) //4s
+	if (BPMProjSpawnTime >= 4000.0f) //It will ONLY spawn at 4s interval
 	{
-		BPMProjSpawnTime = 0;
-		tmpX = EnX;
-		tmpY = EnY;
-		pArray[pCount].x = tmpX;
-		pArray[pCount].y = tmpY;
-		pCount++;
+		for (int i = 0; i < pCount; ++i)
+		{
+			if (pArray[i].pArrayReady == 0 && pArray[i].state == 0) //State and Ready ensures array don't spawn unnecessary projectiles > 3
+			{
+				pArray[i].pArrayReady = 1; 
+				BPMProjSpawnTime = BPMProjSpawnTime - 4000.0f; //reset spawn time
+				break;
+			}
+		}
+		 
 	}
-	for (int i = 0; i < pCount; i++)
-	Console_SetRenderBuffer_Char(pArray[i].x, pArray[i].y, '*');
+
+	for (int i = 0; i < pCount; ++i)
+	{
+		if (pArray[i].pArrayReady == 1 && pArray[i].state == 0)
+		{
+			//Sets projectile to spawn at last location of enemy
+			pArray[i].state = 1;
+			pArray[i].x = EnX;
+			pArray[i].y = EnY;
+			pArray[i].pArrayReady = 0;
+		}
+
+		if (pArray[i].state == 1)
+		{
+			Console_SetRenderBuffer_Char(pArray[i].x, pArray[i].y , '*'); //Print out projectile
+		}
+
+		if (pArray[i].x > width - 2 || pArray[i].x < 1 || pArray[i].y > width - 2 || pArray[i].y < 1) //Collision
+		{
+			pArray[i].state = 0;
+			//Hide away projectiles
+			pArray[i].x = 90; 
+			pArray[i].y = 90;
+		}
+	}
 }
 
 void ProjectileMovement()
 {
 	BPMProjMoveTime += Clock_GetDeltaTime();
-	if (BPMProjMoveTime >= 4800.0f)
+	if (BPMProjMoveTime >= 800.0f)
 	{
 		for (int i = 0; i < pCount; i++)
-			pArray[i].x++;
-		BPMProjMoveTime = 4000.0f;
+		{
+			pArray[i].x++; //Projectile only moves to the left
+		}
+		BPMProjMoveTime = BPMProjMoveTime - 800.0f; //Resets enemy move time to move every 1 second
 	}
 }
 
@@ -113,7 +136,7 @@ void enemyState()
 {
 	BPMEnTime += Clock_GetDeltaTime();
 
-	if (BPMEnTime >= 800.0f) //every 0.8s
+	if (BPMEnTime >= 800.0f) //Every 0.8s interval
 	{
 		randNo = Random_Range(1, 4);
 		if (randNo == 1)
@@ -129,26 +152,7 @@ void enemyState()
 		else if (randNo == 4) {
 			EnY += 1;
 		}
-
-		//switch (randNo)
-		//{
-		//case 1: EnX -= 1;
-		//		break;
-		//case 2: EnX += 1;
-		//		//hasitSpawn = 1;
-		//		tmpX = EnX;
-		//		tmpY = EnY;
-		//		ProjX = tmpX;
-		//		ProjY = tmpY;
-		//		hasitSpawn = 1;
-		//		break;
-		//case 3: EnY -= 1;
-		//		break;
-		//case 4: EnY += 1;
-		//		break;
-		//}
-
-		BPMEnTime = 0.0f;
+		BPMEnTime = BPMEnTime - 800.0f;
 	}
 }
 
@@ -171,7 +175,10 @@ int main()
 	{
 		Console_ClearRenderBuffer();
 		Clock_GameLoopStart();
+		Clock();
 		Boundary();
+		ProjectileSpawn();
+		ProjectileMovement();
 		enemyCharacters();
 		enemyState();
 		/*if (hasitSpawn = 1)
@@ -179,8 +186,6 @@ int main()
 			ProjectileSpawn();
 			ProjectileMovement();
 		}*/
-		ProjectileSpawn();
-		ProjectileMovement();
 		Console_SwapRenderBuffer();
 	}
 }
