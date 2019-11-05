@@ -13,82 +13,38 @@ void Game_ExitState()
 
 void Game_ProcessInput()
 {
-	EaseBool = 1;
 	if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_UP))
-	{
-		playerSetDirection(TOPLEFT);
-		EaseCheck = SpeedUp;
-	}
-		
+		_playerSetVel(TOPLEFT, SpeedUp);
 	else if (GetAsyncKeyState(VK_RIGHT) && GetAsyncKeyState(VK_UP))
-	{
-		playerSetDirection(TOPRIGHT);
-		EaseCheck = SpeedUp;
-	}
+		_playerSetVel(TOPRIGHT, SpeedUp);
 	else if (GetAsyncKeyState(VK_RIGHT) && GetAsyncKeyState(VK_DOWN))
-	{
-		playerSetDirection(BOTTOMRIGHT);
-		EaseCheck = SpeedUp;
-	}
+		_playerSetVel(BOTTOMRIGHT, SpeedUp);
 	else if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_DOWN))
-	{
-		playerSetDirection(BOTTOMLEFT);
-		EaseCheck = SpeedUp;
-	}
+		_playerSetVel(BOTTOMLEFT, SpeedUp);
 	else if (GetAsyncKeyState(VK_UP))
-	{
-		playerSetDirection(UP);
-		EaseCheck = SpeedUp;
-	}
+		_playerSetVel(UP, SpeedUp);
 	else if (GetAsyncKeyState(VK_RIGHT))
-	{
-		direction = RIGHT;
-		EaseCheck = SpeedUp;
-	}
+		_playerSetVel(RIGHT, SpeedUp);
 	else if (GetAsyncKeyState(VK_DOWN))
-	{
-		playerSetDirection(DOWN);
-		EaseCheck = SpeedUp;
-	}
+		_playerSetVel(DOWN, SpeedUp);
 	else if (GetAsyncKeyState(VK_LEFT))
-	{
-		playerSetDirection(LEFT);
-		EaseCheck = SpeedUp;
-	}
+		_playerSetVel(LEFT, SpeedUp);
 	else
 	{
-		if (playerGetDirection() != STAY)
+		if (_playerGetDirection() != STAY)
 		{
-			EaseCheck = SlowDown;
-			if (factor <= 0)
-				direction = STAY;
+			if (_playerGetEaseFactor() <= 0)
+				_playerSetVel(STAY, SlowDown);
 		}
 	}
 }
 
 void Game_Update()
 {
-	dt = Clock_GetDeltaTime();
-	EaseTimer += Clock_GetDeltaTime();
-	playerMove(direction);
-	playerShape();
+	p_playerMove();
 }
 
 void Game_Render()
 {
-	gameRender();
-}
-
-/*************************************************************************************************************
-											Player Functions
-*************************************************************************************************************/
-
-
-void gameRender()
-{
-	Player myPlayer = *playerGetPosition();
-	for (int i = 0; i < 9; i++)
-	{
-		Console_SetRenderBuffer_CharColor(myPlayer.playerX[i], myPlayer.playerY[i], ' ', BACKGROUND_INTENSITY);
-	}
+	p_Render();
 }

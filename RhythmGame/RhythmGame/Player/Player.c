@@ -4,33 +4,44 @@ Player *playerPtr, player;
 
 void playerInit()
 {
-	pPosX = 40.0;
-	pPosY = 40.0;
-	direction = 0;
-	dt = 0.0;
-	velocity = 0.04f;
-
+	player.direction = 0;
 	factor = 0.0;
-	EaseTimer = 0.0;
 	EaseBool = 0;
 	EaseCheck = 1;
 
 	playerPtr = &player;
 }
 
-void playerSetDirection(int dir)
+void _playerSetVel(int dir, int EaseC)
 {
-	direction = dir;
+	player.direction = dir;
+	EaseCheck = EaseC;
 }
 
-int playerGetDirection()
+double _playerGetEaseFactor()
 {
-	return direction;
+	return factor;
 }
 
-
-void playerMove(int direction)
+int _playerGetDirection()
 {
+	return player.direction;
+}
+
+void p_Render()
+{
+	_playerShape();
+	for (int i = 0; i < 9; i++)
+	{
+		Console_SetRenderBuffer_CharColor(player.playerX[i], player.playerY[i], ' ', BACKGROUND_INTENSITY);
+	}
+}
+
+void p_playerMove()
+{
+	double dt = Clock_GetDeltaTime();
+	EaseTimer += Clock_GetDeltaTime();
+
 	if (EaseTimer >= 25.0)
 	{
 		if (factor <= 1.0 && EaseCheck == SpeedUp)
@@ -38,58 +49,39 @@ void playerMove(int direction)
 		else if (factor >= 0.0 && EaseCheck == SlowDown)
 			factor -= 0.1;
 
-		EaseTimer = 0.0;
+		EaseTimer -= EaseTimer;
 	}
 
-	switch (direction)
+	switch (player.direction)
 	{
 	case 1:
-		pPosX += -1 * dt * velocity * factor;
-		pPosY += -1 * dt * velocity * factor;
-		diagonalCheck();
+		player.eulerX += -1 * dt * velocity * factor;
+		player.eulerY += -1 * dt * velocity * factor;
 		break;
 	case 2:
-		pPosX += 1 * dt * velocity * factor;
-		pPosY += -1 * dt * velocity * factor;
+		player.eulerX += 1 * dt * velocity * factor;
+		player.eulerY += -1 * dt * velocity * factor;
 		break;
 	case 3:
-		pPosX += 1 * dt * velocity * factor;
-		pPosY += 1 * dt * velocity * factor;
+		player.eulerX += 1 * dt * velocity * factor;
+		player.eulerY += 1 * dt * velocity * factor;
 		break;
 	case 4:
-		pPosX += -1 * dt * velocity * factor;
-		pPosY += 1 * dt * velocity * factor;
+		player.eulerX += -1 * dt * velocity * factor;
+		player.eulerY += 1 * dt * velocity * factor;
 		break;
-	case 5: pPosY += -1 * dt * velocity * factor; break;
-	case 6: pPosX += 1 * dt * velocity * factor; break;
-	case 7: pPosY += 1 * dt * velocity * factor; break;
-	case 8: pPosX += -1 * dt * velocity * factor; break;
+	case 5: player.eulerY += -1 * dt * velocity * factor; break;
+	case 6: player.eulerX += 1 * dt * velocity * factor; break;
+	case 7: player.eulerY += 1 * dt * velocity * factor; break;
+	case 8: player.eulerX += -1 * dt * velocity * factor; break;
 	default: break;
 	}
 
-	playerPtr->originX = pPosX;
-	playerPtr->originY = pPosY;
+	playerPtr->originX = player.eulerX;
+	playerPtr->originY = player.eulerY;
 }
 
-void diagonalCheck()
-{
-	if ((int)pPosX != round(pPosX))
-	{
-		if ((int)pPosY == round(pPosY))
-		{
-			pPosX = round(pPosX);
-		}
-	}
-	else
-	{
-		if ((int)pPosY != round(pPosY))
-		{
-			pPosY = round(pPosY);
-		}
-	}
-}
-
-void playerShape()
+void _playerShape()
 {
 	int localx = 0;
 	int localy = 0;
@@ -107,7 +99,8 @@ void playerShape()
 	}
 }
 
-Player* playerGetPosition()
+
+Player* playerGetInfo()
 {
 	return playerPtr;
 }

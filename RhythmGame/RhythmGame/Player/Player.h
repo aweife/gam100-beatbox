@@ -1,8 +1,8 @@
 #pragma once
-
-#include "../Clock/Clock.h"
+#include "../Functions.h"
 
 #define boxSize 3
+#define velocity 0.04f
 
 typedef enum DIRECTION
 {
@@ -30,25 +30,24 @@ typedef struct Player
 	int originY;
 	int playerX[boxSize * boxSize];
 	int playerY[boxSize * boxSize];
+	int direction;
+	int eulerX;
+	int eulerY;
 }Player;
 
-static double pPosX;
-static double pPosY;
-int direction;
-static double dt;
-static double velocity;
-
 static double factor;
-static double EaseTimer;
 static int EaseBool;
 static int EaseCheck;
+static double EaseTimer;
 
 // Initialise player variables
 void playerInit();
 
 // Moves the player according to input
-void playerMove(int direction);
+void p_playerMove();
+void _playerShape();
+Player* playerGetInfo();
+double _playerGetEaseFactor();
+int _playerGetDirection();
 
-void diagonalCheck();
-void playerShape();
-Player* playerGetPosition();
+void p_Render();

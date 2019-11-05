@@ -5,6 +5,7 @@
 #include "Console/Console.h"
 #include "StateMachine.h"
 #include "Audio/AudioEngine.h"
+#include "Clock/Clock.h"
 
 typedef enum {
 	BLACK = 0,
