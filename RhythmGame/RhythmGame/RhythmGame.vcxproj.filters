@@ -21,17 +21,17 @@
     <Filter Include="Source Files\States">
       <UniqueIdentifier>{c04da36d-8922-4009-9fbd-6686724b54be}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\States\Game2">
-      <UniqueIdentifier>{a731a715-cf0e-42f3-817b-39a42d8abc92}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\States\MainMenu">
       <UniqueIdentifier>{7797c208-ec71-46c1-bc7d-49ace404609e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\StateMachine">
       <UniqueIdentifier>{14294d75-af0b-4942-8574-413b5265e69e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Global">
+    <Filter Include="Source Files\Functions">
       <UniqueIdentifier>{6149259b-af6d-401c-b79f-6fc0b7e213ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States\Game">
+      <UniqueIdentifier>{a731a715-cf0e-42f3-817b-39a42d8abc92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -47,17 +47,17 @@
     <ClCompile Include="Random\Random.c">
       <Filter>Random</Filter>
     </ClCompile>
-    <ClCompile Include="Game2.c">
-      <Filter>Source Files\States\Game2</Filter>
-    </ClCompile>
     <ClCompile Include="MainMenu.c">
       <Filter>Source Files\States\MainMenu</Filter>
     </ClCompile>
     <ClCompile Include="StateMachine.c">
       <Filter>Source Files\StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="Global.c">
-      <Filter>Source Files\Global</Filter>
+    <ClCompile Include="Functions.c">
+      <Filter>Source Files\Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.c">
+      <Filter>Source Files\States\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,17 +70,17 @@
     <ClInclude Include="Random\Random.h">
       <Filter>Random</Filter>
     </ClInclude>
-    <ClInclude Include="Game2.h">
-      <Filter>Source Files\States\Game2</Filter>
-    </ClInclude>
     <ClInclude Include="MainMenu.h">
       <Filter>Source Files\States\MainMenu</Filter>
     </ClInclude>
     <ClInclude Include="StateMachine.h">
       <Filter>Source Files\StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="Global.h">
-      <Filter>Source Files\Global</Filter>
+    <ClInclude Include="Functions.h">
+      <Filter>Source Files\Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Source Files\States\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

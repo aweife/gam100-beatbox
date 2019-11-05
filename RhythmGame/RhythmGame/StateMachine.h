@@ -5,9 +5,7 @@ typedef enum GameState
 {
 	State_Default,
 	State_MainMenu,
-	State_Game1,
-	State_Game2,
-	State_Game3,
+	State_Game,
 	State_GameOver,
 	State_Pause,
 }GameState;
