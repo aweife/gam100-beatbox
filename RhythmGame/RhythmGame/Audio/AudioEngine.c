@@ -1,10 +1,10 @@
 #include "AudioEngine.h"
 
-static int on; //is sound on?
-static int possible; //is it possible to play sound?
-
-static char *currentSound;
-static FMOD_SOUND *sound;
+//static int on; //is sound on?
+//static int possible; //is it possible to play sound?
+//
+//static char *currentSound;
+//static FMOD_SOUND *sound;
 
 #define NUMBER_OF_BGM_TRACKS 1
 #define NUMBER_OF_SFX_TRACKS 1
@@ -16,7 +16,7 @@ static bool bHasError;
 
 // FMOD-specific stuff
 static FMOD_RESULT result;
-static FMOD_SYSTEM *system;
+static FMOD_SYSTEM *fmodSystem;
 
 // BGM
 static int bgmCount;
@@ -38,11 +38,11 @@ void AE_Init()
 	sfxCount = 0;
 
 	// Setup the sound system
-	result = FMOD_System_Create(&system);
+	result = FMOD_System_Create(&fmodSystem);
 	_CheckResult("create");
 
 	// Initialise sound system
-	if (!bHasError) result = FMOD_System_Init(system, NUMBER_OF_CHANNELS, FMOD_INIT_NORMAL, 0);
+	if (!bHasError) result = FMOD_System_Init(fmodSystem, NUMBER_OF_CHANNELS, FMOD_INIT_NORMAL, 0);
 	_CheckResult("initialising");
 }
 
@@ -51,11 +51,11 @@ void AE_LoadTrack(const char *path, TRACK type)
 	switch (type)
 	{
 	case BGM:
-		result = FMOD_System_CreateSound(system, path, FMOD_DEFAULT, 0, &bgmSounds[bgmCount]);
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &bgmSounds[bgmCount]);
 		bgmCount++;
 		break;
 	case SFX:
-		result = FMOD_System_CreateSound(system, path, FMOD_DEFAULT, 0, &sfxList[sfxCount]);
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &sfxList[sfxCount]);
 		sfxCount++;
 		break;
 	}
@@ -66,7 +66,7 @@ void AE_PlayOneShot(int id, float volume)
 {
 	// Set the track paused
 	FMOD_CHANNEL *c;
-	result = FMOD_System_PlaySound(system, sfxList[id], 0, true, &c);
+	result = FMOD_System_PlaySound(fmodSystem, sfxList[id], 0, true, &c);
 	_CheckResult("playing");
 
 	// Set the volume of the one shot
@@ -83,13 +83,13 @@ void AE_StartBGMWithDelay(int id, double delay)
 {
 	bgmDelay = delay * 1000.0;
 
-	result = FMOD_System_PlaySound(system, sfxList[id], 0, true, &bgmChannel);
+	result = FMOD_System_PlaySound(fmodSystem, sfxList[id], 0, true, &bgmChannel);
 	_CheckResult("play bgm paused");
 }
 
 void AE_Update()
 {
-	result = FMOD_System_Update(system);
+	result = FMOD_System_Update(fmodSystem);
 	_CheckResult("updating");
 
 	// If StartBGMWithDelay has been called
@@ -100,7 +100,7 @@ void AE_Update()
 void AE_Shutdown()
 {
 	// All channels stop playing and released, main system too
-	result = FMOD_System_Release(system);
+	result = FMOD_System_Release(fmodSystem);
 	_CheckResult("system shutdown");
 
 	// Free sounds in memory

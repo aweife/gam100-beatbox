@@ -1,15 +1,15 @@
 #include "Player.h"
 
-Player *playerPtr, player;
+Player player;
 
 void playerInit()
 {
+	player.originX = 40.0;
+	player.originY = 40.0;
 	player.direction = 0;
 	factor = 0.0;
 	EaseBool = 0;
 	EaseCheck = 1;
-
-	playerPtr = &player;
 }
 
 void _playerSetVel(int dir, int EaseC)
@@ -33,7 +33,7 @@ void p_Render()
 	_playerShape();
 	for (int i = 0; i < 9; i++)
 	{
-		Console_SetRenderBuffer_CharColor(player.playerX[i], player.playerY[i], ' ', BACKGROUND_INTENSITY);
+		Console_SetRenderBuffer_CharColor(player.playerX[i], player.playerY[i], ' ', bRED);
 	}
 }
 
@@ -77,8 +77,8 @@ void p_playerMove()
 	default: break;
 	}
 
-	playerPtr->originX = player.eulerX;
-	playerPtr->originY = player.eulerY;
+	player.originX = player.eulerX;
+	player.originY = player.eulerY;
 }
 
 void _playerShape()
@@ -86,21 +86,15 @@ void _playerShape()
 	int localx = 0;
 	int localy = 0;
 
-	localy = playerPtr->originY--;
-	localx = playerPtr->originX--;
+	localy = player.originY--;
+	localx = player.originX--;
 
 	for (int i = 0; i < boxSize; i++)
 	{
 		for (int j = 0; j < boxSize; j++)
 		{
-			playerPtr->playerX[i * 3 + j] = localx + j;
-			playerPtr->playerY[i * 3 + j] = localy + i;
+			player.playerX[i * 3 + j] = localx + j;
+			player.playerY[i * 3 + j] = localy + i;
 		}
 	}
-}
-
-
-Player* playerGetInfo()
-{
-	return playerPtr;
 }
