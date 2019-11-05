@@ -9,10 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Console">
       <UniqueIdentifier>{88666842-40b3-4c0e-bd06-06c857cd9f8d}</UniqueIdentifier>
     </Filter>
@@ -21,6 +17,21 @@
     </Filter>
     <Filter Include="Random">
       <UniqueIdentifier>{2ce6280a-4ef7-408b-b989-58aac7b21397}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{c04da36d-8922-4009-9fbd-6686724b54be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States\Game2">
+      <UniqueIdentifier>{a731a715-cf0e-42f3-817b-39a42d8abc92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States\MainMenu">
+      <UniqueIdentifier>{7797c208-ec71-46c1-bc7d-49ace404609e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\StateMachine">
+      <UniqueIdentifier>{14294d75-af0b-4942-8574-413b5265e69e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Global">
+      <UniqueIdentifier>{6149259b-af6d-401c-b79f-6fc0b7e213ae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,8 +47,17 @@
     <ClCompile Include="Random\Random.c">
       <Filter>Random</Filter>
     </ClCompile>
-    <ClCompile Include="AudioEngine.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Game2.c">
+      <Filter>Source Files\States\Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.c">
+      <Filter>Source Files\States\MainMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine.c">
+      <Filter>Source Files\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Global.c">
+      <Filter>Source Files\Global</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -50,8 +70,17 @@
     <ClInclude Include="Random\Random.h">
       <Filter>Random</Filter>
     </ClInclude>
-    <ClInclude Include="AudioEngine.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Game2.h">
+      <Filter>Source Files\States\Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Source Files\States\MainMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>Source Files\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>Source Files\Global</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
