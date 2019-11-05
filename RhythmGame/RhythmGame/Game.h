@@ -1,5 +1,8 @@
-#ifndef GAME2_H
-#define GAME2_H
+#pragma once
+
+#include <Windows.h>
+#include "Player/Player.h"
+#include "Clock/Clock.h"
 
 void Game_EnterState();
 void Game_ExitState();
@@ -12,5 +15,3 @@ void diagonalCheck();
 void playerShape();
 
 void gameRender();
-
-#endif

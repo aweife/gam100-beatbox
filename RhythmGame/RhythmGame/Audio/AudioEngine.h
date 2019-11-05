@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "fmod.h"
 #include "fmod_errors.h"
-#include "Clock/Clock.h"
+#include "../Clock/Clock.h"
 
 #define bool int
 #define true 1

@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AudioEngine.c" />
+    <ClCompile Include="Audio\AudioEngine.c" />
     <ClCompile Include="Clock\Clock.cpp" />
     <ClCompile Include="Console\Console.c" />
+    <ClCompile Include="Enemy\Enemy.c" />
+    <ClCompile Include="Player\Player.c" />
     <ClCompile Include="Game.c" />
     <ClCompile Include="Functions.c" />
     <ClCompile Include="Main.c" />
@@ -30,12 +32,14 @@
     <ClCompile Include="StateMachine.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AudioEngine.h" />
+    <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="Clock\Clock.h" />
     <ClInclude Include="Console\Console.h" />
+    <ClInclude Include="Enemy\Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Random\Random.h" />
     <ClInclude Include="StateMachine.h" />
   </ItemGroup>
