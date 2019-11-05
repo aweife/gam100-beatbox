@@ -1,6 +1,10 @@
 #pragma once
 
 #include <Windows.h>
+#include <stdbool.h>
+#include "Console/Console.h"
+#include "StateMachine.h"
+#include "Audio/AudioEngine.h"
 
 typedef enum {
 	BLACK = 0,
@@ -19,6 +23,7 @@ typedef enum {
 	MAGENTA = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_BLUE,
 	YELLOW = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN,
 	WHITE = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE,
+	bRED = BACKGROUND_RED,
 } CONSOLECOLOR;
 
 void Global_Exit();
