@@ -1,17 +1,18 @@
 #include "Player.h"
 
-Player *playerPtr, player;
+Player player;
 
 void p_playerInit()
 {
+	player.originX = 40.0;
+	player.originY = 40.0;
 	player.direction = 0;
 	player.eulerX = 40;
 	player.eulerY = 40;
 	factor = 0.0;
 	EaseBool = 0;
 	EaseCheck = SlowDown;
-
-	playerPtr = &player;
+	EaseCheck = 1;
 }
 
 void _playerSetVel(int dir, int EaseC)
@@ -35,7 +36,7 @@ void p_Render()
 	_playerShape();
 	for (int i = 0; i < 9; i++)
 	{
-		Console_SetRenderBuffer_CharColor(player.playerX[i], player.playerY[i], ' ', BACKGROUND_INTENSITY);
+		Console_SetRenderBuffer_CharColor(player.playerX[i], player.playerY[i], ' ', bRED);
 	}
 }
 
@@ -93,21 +94,15 @@ void _playerShape()
 	int localx = 0;
 	int localy = 0;
 
-	localy = playerPtr->originY--;
-	localx = playerPtr->originX--;
+	localy = player.originY--;
+	localx = player.originX--;
 
 	for (int i = 0; i < boxSize; i++)
 	{
 		for (int j = 0; j < boxSize; j++)
 		{
-			playerPtr->playerX[i * 3 + j] = localx + j;
-			playerPtr->playerY[i * 3 + j] = localy + i;
+			player.playerX[i * 3 + j] = localx + j;
+			player.playerY[i * 3 + j] = localy + i;
 		}
 	}
-}
-
-
-Player* playerGetInfo()
-{
-	return playerPtr;
 }

@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include "Console/Console.h"
 #include "StateMachine.h"
-#include "Audio/AudioEngine.h"
 #include "Clock/Clock.h"
 
 typedef enum {
