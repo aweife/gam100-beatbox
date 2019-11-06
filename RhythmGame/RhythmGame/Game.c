@@ -3,7 +3,7 @@
 void Game_EnterState()
 {
 	// Call this to init player
-	playerInit();
+	p_playerInit();
 }
 
 void Game_ExitState()
@@ -33,6 +33,7 @@ void Game_ProcessInput()
 	{
 		if (_playerGetDirection() != STAY)
 		{
+			_playerSetVel(_playerGetDirection(), SlowDown);
 			if (_playerGetEaseFactor() <= 0)
 				_playerSetVel(STAY, SlowDown);
 		}

@@ -31,17 +31,18 @@ typedef struct Player
 	int playerX[boxSize * boxSize];
 	int playerY[boxSize * boxSize];
 	int direction;
-	int eulerX;
-	int eulerY;
+	double eulerX;
+	double eulerY;
 }Player;
 
 static double factor;
+static double dt;
 static int EaseBool;
 static int EaseCheck;
 static double EaseTimer;
 
 // Initialise player variables
-void playerInit();
+void p_playerInit();
 
 // Moves the player according to input
 void p_playerMove();
