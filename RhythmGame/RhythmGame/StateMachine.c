@@ -13,13 +13,13 @@ void StateMachine_Start()
 		{
 		case State_Game: Game_ExitState(); break;
 		}
-	}
 
-	currentState = reqState;
+		currentState = reqState;
 
-	switch (currentState)
-	{
-	case State_Game: Game_EnterState(); break;
+		switch (currentState)
+		{
+		case State_Game: Game_EnterState(); break;
+		}
 	}
 }
 

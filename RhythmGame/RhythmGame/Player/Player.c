@@ -2,12 +2,14 @@
 
 Player *playerPtr, player;
 
-void playerInit()
+void p_playerInit()
 {
 	player.direction = 0;
+	player.eulerX = 40;
+	player.eulerY = 40;
 	factor = 0.0;
 	EaseBool = 0;
-	EaseCheck = 1;
+	EaseCheck = SlowDown;
 
 	playerPtr = &player;
 }
@@ -39,16 +41,21 @@ void p_Render()
 
 void p_playerMove()
 {
-	double dt = Clock_GetDeltaTime();
+	dt = Clock_GetDeltaTime();
 	EaseTimer += Clock_GetDeltaTime();
 
 	if (EaseTimer >= 25.0)
 	{
-		if (factor <= 1.0 && EaseCheck == SpeedUp)
+		
+		if (EaseCheck == SpeedUp)
 			factor += 0.1;
-		else if (factor >= 0.0 && EaseCheck == SlowDown)
+		else if (EaseCheck == SlowDown)
 			factor -= 0.1;
-
+		
+		if (factor < 0)
+			factor = 0.0;
+		else if (factor > 1.0)
+			factor = 1.0;
 		EaseTimer -= EaseTimer;
 	}
 
@@ -77,8 +84,8 @@ void p_playerMove()
 	default: break;
 	}
 
-	playerPtr->originX = player.eulerX;
-	playerPtr->originY = player.eulerY;
+	player.originX = player.eulerX;
+	player.originY = player.eulerY;
 }
 
 void _playerShape()
