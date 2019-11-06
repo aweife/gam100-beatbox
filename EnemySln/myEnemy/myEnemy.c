@@ -16,23 +16,33 @@ int EnX = 30;
 int EnY = 30;
 int ProjX = 1;
 int ProjY = 1;
-int hasitSpawn = 0;
 int randNo = 0;
 int tmpX = 0;
 int tmpY = 0;
-
-//Game Update
-int direction = 0;
-double velocity = 0.01f;
+double result = 0.0;
 
 //Game Time
-float BPMEnTime = 0.0f;
-float BPMProjSpawnTime = 0.0f;
-float BPMProjMoveTime = 0.0f;
-float elapsedTimerTime = 0.0f;
+double BPMEnTime = 0.0;
+double BPMProjSpawnTime = 0.0;
+double BPMProjMoveTime = 0.0;
+double elapsedTimerTime = 0.0;
 char timeDisplay[10];
 
-void Clock()
+//Projectile Structure
+typedef struct //MUSTLEARNTHIS
+{
+	int x;
+	int y;
+	int state;
+	int pArrayReady;
+} Projectile;
+
+//Only stores 5 elements
+Projectile pArray[5]; 
+//Limits 5 bullets on-screen
+int pCount = 5; 
+
+void _getClock()
 {
 	elapsedTimerTime += Clock_GetDeltaTime();
 	_itoa_s(elapsedTimerTime / CLOCKS_PER_SEC, timeDisplay, sizeof(timeDisplay), 10);
@@ -40,7 +50,7 @@ void Clock()
 	Console_SetRenderBuffer_String(70, 8, timeDisplay);
 }
 
-void Boundary()
+void _renderBoundary()
 {
 	for (int i = 0; i < height; i++)
 	{
@@ -59,28 +69,27 @@ void Boundary()
 	}
 }
 
-typedef struct //MUSTLEARNTHIS
+double calculateBPM(int x)
 {
-	int x;
-	int y;
-	int state;
-	int pArrayReady;
-} Projectile;
+	result = 60.0 / (float)x;
+	result *= 1000.0;
+	return result;
+}
 
-Projectile pArray[5]; //Only stores 3 elements
-int pCount = 5; //Limits 3 bullets on-screen
-
-void ProjectileSpawn()
+void _spawnProjectile()
 {
 	BPMProjSpawnTime += Clock_GetDeltaTime();
-	if (BPMProjSpawnTime >= 4000.0f) //It will ONLY spawn at 4s interval
+	//It will ONLY spawn at 4s interval
+	if (BPMProjSpawnTime >= 4000.0) 
 	{
 		for (int i = 0; i < pCount; ++i)
 		{
-			if (pArray[i].pArrayReady == 0 && pArray[i].state == 0) //State and Ready ensures array don't spawn unnecessary projectiles > 3
+			//State and Ready ensures array don't spawn unnecessary projectiles > 5
+			if (pArray[i].pArrayReady == 0 && pArray[i].state == 0)
 			{
 				pArray[i].pArrayReady = 1; 
-				BPMProjSpawnTime = BPMProjSpawnTime - 4000.0f; //reset spawn time
+				//Reset spawn time
+				BPMProjSpawnTime = BPMProjSpawnTime - 4000.0;
 				break;
 			}
 		}
@@ -100,10 +109,12 @@ void ProjectileSpawn()
 
 		if (pArray[i].state == 1)
 		{
-			Console_SetRenderBuffer_Char(pArray[i].x, pArray[i].y , '*'); //Print out projectile
+			//Print out projectile
+			Console_SetRenderBuffer_Char(pArray[i].x, pArray[i].y , '*');
 		}
 
-		if (pArray[i].x > width - 2 || pArray[i].x < 1 || pArray[i].y > width - 2 || pArray[i].y < 1) //Collision
+		//Collision
+		if (pArray[i].x > width - 2 || pArray[i].x < 1 || pArray[i].y > width - 2 || pArray[i].y < 1) 
 		{
 			pArray[i].state = 0;
 			//Hide away projectiles
@@ -113,30 +124,32 @@ void ProjectileSpawn()
 	}
 }
 
-void ProjectileMovement()
+void _updateProjectile()
 {
 	BPMProjMoveTime += Clock_GetDeltaTime();
-	if (BPMProjMoveTime >= 800.0f)
+	if (BPMProjMoveTime >= result)
 	{
 		for (int i = 0; i < pCount; i++)
 		{
 			pArray[i].x++; //Projectile only moves to the left
 		}
-		BPMProjMoveTime = BPMProjMoveTime - 800.0f; //Resets enemy move time to move every 1 second
+		BPMProjMoveTime = BPMProjMoveTime - result; //Resets enemy move time to move every 1 second
 	}
 }
 
-void enemyCharacters()
+void renderEnemy()
 {
+	//Print Out Enemy
 	Console_SetRenderBuffer_Char(EnX, EnY, 'E');
 }
 
 
-void enemyState()
+void _updateEnemy()
 {
 	BPMEnTime += Clock_GetDeltaTime();
 
-	if (BPMEnTime >= 800.0f) //Every 0.8s interval
+	//Every 0.8s interval
+	if (BPMEnTime >= result) 
 	{
 		randNo = Random_Range(1, 4);
 		if (randNo == 1)
@@ -152,7 +165,7 @@ void enemyState()
 		else if (randNo == 4) {
 			EnY += 1;
 		}
-		BPMEnTime = BPMEnTime - 800.0f;
+		BPMEnTime = BPMEnTime - result;
 	}
 }
 
@@ -171,21 +184,18 @@ int main()
 
 	randNo = Random_Range(1, 4);
 	
+	printf_s("%.1f", calculateBPM(132));
+
 	while (GameIsRunning = 1)
 	{
 		Console_ClearRenderBuffer();
 		Clock_GameLoopStart();
-		Clock();
-		Boundary();
-		ProjectileSpawn();
-		ProjectileMovement();
-		enemyCharacters();
-		enemyState();
-		/*if (hasitSpawn = 1)
-		{
-			ProjectileSpawn();
-			ProjectileMovement();
-		}*/
+		_getClock();
+		_renderBoundary();
+		_spawnProjectile();
+		_updateProjectile();
+		renderEnemy();
+		_updateEnemy();
 		Console_SwapRenderBuffer();
 	}
 }
