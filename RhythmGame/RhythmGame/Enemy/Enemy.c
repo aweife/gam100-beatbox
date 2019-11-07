@@ -50,7 +50,7 @@ void E_Update()
 {
 	/*_getClock();*/
 	_updateEnemy();
-	Text_Moveenemy(&skull, EnX - 10, EnY - 7);
+	Text_Moveenemy(&skull, EnX - 9, EnY - 7);
 	_spawnProjectile();
 	_updateProjectile();
 }
@@ -182,7 +182,7 @@ void E_Render()
 	}
 
 	//LETTER ENEMY
-	Console_SetRenderBuffer_Char(EnX, EnY, 'E');
+	//Console_SetRenderBuffer_Char(EnX, EnY, 'E');
 }
 
 void _updateEnemy()
