@@ -31,6 +31,7 @@
     <ClCompile Include="MainMenu.c" />
     <ClCompile Include="Random\Random.c" />
     <ClCompile Include="StateMachine.c" />
+    <ClCompile Include="Testread.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -44,6 +45,10 @@
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Random\Random.h" />
     <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="Testread.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="skull.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -55,7 +55,7 @@ void Game_Update()
 
 void Game_Render()
 {
+	E_Render();
 	p_Render();
 	Map_Render();
-	E_Render();
 }

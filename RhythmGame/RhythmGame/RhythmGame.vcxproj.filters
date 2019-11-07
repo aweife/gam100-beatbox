@@ -71,6 +71,9 @@
     <ClCompile Include="Map\Map.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Testread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console\Console.h">
@@ -106,5 +109,11 @@
     <ClInclude Include="Map\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Testread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="skull.txt" />
   </ItemGroup>
 </Project>

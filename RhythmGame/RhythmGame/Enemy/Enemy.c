@@ -2,15 +2,16 @@
 
 //Game State
 int GameIsRunning = 0;
-int height = 60;
-int width = 60;
+int height = 1;
+int width = 80;
 
 //Game Input
-int EnX = 30;
-int EnY = 30;
+int EnX = 50;
+int EnY = 20;
 int ProjX = 1;
 int ProjY = 1;
-int randNo = 0;
+int randEnMove = 0;
+int randEnShoot = 0;
 int tmpX = 0;
 int tmpY = 0;
 double result = 0.0;
@@ -22,6 +23,8 @@ double BPMProjMoveTime = 0.0;
 double elapsedTimerTime = 0.0;
 char timeDisplay[10];
 
+//Skull Structure
+skullenemy skull;
 //Projectile Structure
 typedef struct //MUSTLEARNTHIS
 {
@@ -31,33 +34,36 @@ typedef struct //MUSTLEARNTHIS
 	int pArrayReady;
 } Projectile;
 
-//Only stores 5 elements
-Projectile pArray[5]; 
-//Limits 5 bullets on-screen
-int pCount = 5; 
+//Only stores 10 values
+Projectile pArray[10]; 
+//Limits 10 bullets on-screen
+int pCount = 10; 
 
 void E_Init()
 {
 	E_CalculateBPM(132);
+	Text_Init();
+	skull = Text_CreateEnemy();
 }
 
 void E_Update()
 {
-	_getClock();
+	/*_getClock();*/
+	_updateEnemy();
+	Text_Moveenemy(&skull, EnX - 10, EnY - 7);
 	_spawnProjectile();
 	_updateProjectile();
-	_updateEnemy();
 }
 
-void _getClock()
+/*void _getClock()
 {
 	elapsedTimerTime += Clock_GetDeltaTime();
 	_itoa_s(elapsedTimerTime / CLOCKS_PER_SEC, timeDisplay, sizeof(timeDisplay), 10);
 	Console_SetRenderBuffer_String(63, 8, "Timer:");
 	Console_SetRenderBuffer_String(70, 8, timeDisplay);
-}
+}*/
 
-void _renderBoundary()
+/*void _renderBoundary()
 {
 	for (int i = 0; i < height; i++)
 	{
@@ -74,14 +80,16 @@ void _renderBoundary()
 			Console_SetRenderBuffer_Char(i, j, '#');
 		}
 	}
-}
+}*/
 
 double E_CalculateBPM(int x)
 {
-	result = 60.0 / (float)x;
+	result = 60.0 / (double)x;
 	result *= 1000.0;
 	return result;
 }
+
+
 
 void _spawnProjectile()
 {
@@ -91,12 +99,12 @@ void _spawnProjectile()
 	{
 		for (int i = 0; i < pCount; ++i)
 		{
-			//State and Ready ensures array don't spawn unnecessary projectiles > 5
+			//State and Ready ensures array don't spawn unnecessary projectiles > 10
 			if (pArray[i].pArrayReady == 0 && pArray[i].state == 0)
 			{
 				pArray[i].pArrayReady = 1; 
 				//Reset spawn time
-				BPMProjSpawnTime = BPMProjSpawnTime - 4000.0;
+				BPMProjSpawnTime = BPMProjSpawnTime - 3000.0;
 				break;
 			}
 		}
@@ -115,12 +123,15 @@ void _spawnProjectile()
 		}
 
 		//Collision
-		if (pArray[i].x > width - 2 || pArray[i].x < 1 || pArray[i].y > width - 2 || pArray[i].y < 1) 
+		if (pArray[i].x >= GAME_WIDTH - MAP_OFFSET ||
+			pArray[i].y >= GAME_HEIGHT - MAP_OFFSET ||
+			pArray[i].x < MAP_OFFSET || 
+			pArray[i].y < MAP_OFFSET) 
 		{
 			pArray[i].state = 0;
 			//Hide away projectiles
-			pArray[i].x = 90; 
-			pArray[i].y = 90;
+			pArray[i].x = 300; 
+			pArray[i].y = 300;
 		}
 	}
 }
@@ -130,9 +141,27 @@ void _updateProjectile()
 	BPMProjMoveTime += Clock_GetDeltaTime();
 	if (BPMProjMoveTime >= result)
 	{
+		//randEnShoot = Random_Range(1, 4);
 		for (int i = 0; i < pCount; i++)
 		{
-			pArray[i].x++; //Projectile only moves to the left
+			/*if (randEnShoot == 1)
+			{
+				//Right
+				pArray[i].x++; 
+			}
+			else if (randEnShoot == 2) {
+				//Left
+				pArray[i].x--;
+			}
+			else if (randEnShoot == 3) {
+				//Up
+				pArray[i].y--;
+			}
+			else if (randEnShoot == 4) {
+				//Down
+				pArray[i].y++;
+			}*/
+			pArray[i].y+=2;
 		}
 		BPMProjMoveTime = BPMProjMoveTime - result; //Resets enemy move time to move every 1 second
 	}
@@ -140,7 +169,8 @@ void _updateProjectile()
 
 void E_Render()
 {
-	
+	//ASCI ENEMY
+	Text_RenderEnemy(&skull);
 
 	for (int i = 0; i < pCount; i++)
 	{
@@ -151,7 +181,7 @@ void E_Render()
 		}
 	}
 
-	//Print Out Enemy
+	//LETTER ENEMY
 	Console_SetRenderBuffer_Char(EnX, EnY, 'E');
 }
 
@@ -162,21 +192,39 @@ void _updateEnemy()
 	//Every 0.8s interval
 	if (BPMEnTime >= result) 
 	{
-		randNo = Random_Range(1, 4);
-		if (randNo == 1)
+		randEnMove = Random_Range(1, 6); //original is 4
+		if (randEnMove == 1)
 		{
-			EnX -= 1;
+			//LEFT
+			EnX -= 2;
 		}
-		else if (randNo == 2) {
-			EnX += 1;
+		else if (randEnMove == 2) {
+			//RIGHT
+			EnX += 2;
 		}
-		else if (randNo == 3) {
-			EnY -= 1;
+		else if (randEnMove == 3) {
+			//UP
+			//EnY -= 1;
+			EnX -= 4;
 		}
-		else if (randNo == 4) {
-			EnY += 1;
+		else if (randEnMove == 4) {
+			//DOWN
+			//EnY += 1;
+			EnX += 4;
+		}
+		else if (randEnMove == 5) { //just for the prototype
+			EnX -= 6;
+		}
+		else if (randEnMove == 6) {
+			EnX += 6;
 		}
 		BPMEnTime = BPMEnTime - result;
+	}
+
+	if (EnX >= 80 || EnX <= 20) //Reset Position if too near the border
+	{
+		EnX = 50;
+		EnY = 20;
 	}
 }
 
