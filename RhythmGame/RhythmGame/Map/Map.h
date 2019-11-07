@@ -1,16 +1,12 @@
 #pragma once
 
 #include "../Functions.h"
+#include "../Audio/AudioEngine.h"
 
 #define MAP_OFFSET 5
 
-coords mapOrigin;
-coords mapEnd;
-
-int mapOffset;
-
+// Initialise the static boundary
 extern void Map_Init();
 
-extern void Map_SetOffset(int offset);
-
+// Call this to render all boundaries
 extern void Map_Render();
