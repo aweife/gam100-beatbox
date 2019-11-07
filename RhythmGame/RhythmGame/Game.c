@@ -1,5 +1,7 @@
 #include "Game.h"
 
+int spaceDown = false;
+
 void Game_EnterState()
 {
 	// Call this to init player
@@ -43,6 +45,13 @@ void Game_ProcessInput()
 				_playerSetVel(STAY, SlowDown);
 		}
 	}
+
+	if (GetAsyncKeyState(VK_SPACE) && !spaceDown)
+	{
+		spaceDown = true;
+		p_playerDash();
+	}
+	else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
 }
 
 void Game_Update()

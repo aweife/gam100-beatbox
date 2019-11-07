@@ -110,8 +110,8 @@ double AE_GetEnergy()
 {
 	return spectrum * 25.0;
 }
-
-void AE_Update()
+ 
+void AE_Update() 
 {
 	result = FMOD_System_Update(fmodSystem);
 	_CheckResult("updating");
