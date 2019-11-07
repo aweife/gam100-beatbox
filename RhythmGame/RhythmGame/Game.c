@@ -6,8 +6,6 @@ void Game_EnterState()
 	p_playerInit();
 	Map_Init();
 	AE_Init();
-	AE_LoadTrack("..//mysound.mp3", SFX);
-	AE_StartBGMWithDelay(0, 2.17);
 	E_Init();
 }
 
@@ -49,7 +47,6 @@ void Game_Update()
 {
 	p_playerMove();
 	AE_Update();
-	Map_SetOffset((int)AE_GetEnergy());
 	E_Update();
 }
 
