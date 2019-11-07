@@ -4,18 +4,18 @@ Player player;
 
 void p_playerInit()
 {
-	player.originX = 40.0;
-	player.originY = 40.0;
+	player.originX = 40;
+	player.originY = 40;
 	player.direction = 0;
-	player.eulerX = 40;
-	player.eulerY = 40;
+	player.eulerX = 40.0;
+	player.eulerY = 40.0;
 	factor = 0.0;
 	EaseBool = 0;
 	EaseCheck = SlowDown;
 	EaseCheck = 1;
 }
 
-void _playerSetVel(int dir, int EaseC)
+void _playerSetVel(DIRECTION dir, EASEMOVEMENT EaseC)
 {
 	player.direction = dir;
 	EaseCheck = EaseC;

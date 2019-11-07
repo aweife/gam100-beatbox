@@ -15,14 +15,14 @@ typedef enum DIRECTION
 	DOWN = 7,
 	LEFT = 8,
 	STAY = 0,
-}Direction;
+}DIRECTION;
 
-typedef enum EaseMovement
+typedef enum EASEMOVEMENT
 {
 	SpeedUp = 0,
 	SlowDown = 1,
 	Default = 2,
-}EaseMovement;
+}EASEMOVEMENT;
 
 typedef struct Player
 {
@@ -47,7 +47,7 @@ void p_playerInit();
 // Moves the player according to input
 void p_playerMove();
 void _playerShape();
-Player* playerGetInfo();
+extern void _playerSetVel(DIRECTION dir, EASEMOVEMENT EaseC);
 double _playerGetEaseFactor();
 int _playerGetDirection();
 

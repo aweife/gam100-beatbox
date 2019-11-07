@@ -21,12 +21,17 @@ static FMOD_SYSTEM *fmodSystem;
 // BGM
 static int bgmCount;
 static FMOD_SOUND *bgmSounds[NUMBER_OF_BGM_TRACKS];
-static FMOD_CHANNEL* bgmChannel;
+static FMOD_CHANNEL *bgmChannel;
 static double bgmDelay;
 
 // SFX
 static int sfxCount;
 static FMOD_SOUND *sfxList[NUMBER_OF_SFX_TRACKS];
+
+// DSP
+static FMOD_DSP *dsp;
+static FMOD_DSP_PARAMETER_FFT *dspFFT;
+static double spectrum;
 
 
 void AE_Init()
@@ -44,6 +49,13 @@ void AE_Init()
 	// Initialise sound system
 	if (!bHasError) result = FMOD_System_Init(fmodSystem, NUMBER_OF_CHANNELS, FMOD_INIT_NORMAL, 0);
 	_CheckResult("initialising");
+
+	// Initialise dsp
+	if (!bHasError) result = FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &dsp);
+	_CheckResult("create dsp");
+
+	result = FMOD_DSP_SetParameterInt(dsp, FMOD_DSP_FFT_WINDOWTYPE, FMOD_DSP_FFT_WINDOW_TRIANGLE);
+	result = FMOD_DSP_SetParameterInt(dsp, FMOD_DSP_FFT_WINDOWSIZE, 1024);
 }
 
 void AE_LoadTrack(const char *path, TRACK type)
@@ -85,12 +97,29 @@ void AE_StartBGMWithDelay(int id, double delay)
 
 	result = FMOD_System_PlaySound(fmodSystem, sfxList[id], 0, true, &bgmChannel);
 	_CheckResult("play bgm paused");
+
+	// Add dsp to channel
+	result = FMOD_Channel_AddDSP(bgmChannel, 0, dsp);
+	_CheckResult("add dsp");
+
+	result = FMOD_DSP_SetActive(dsp, true);
+	_CheckResult("set dsp active");
+}
+
+double AE_GetEnergy()
+{
+	return spectrum * 25.0;
 }
 
 void AE_Update()
 {
 	result = FMOD_System_Update(fmodSystem);
 	_CheckResult("updating");
+
+	result = FMOD_DSP_GetParameterData(dsp, FMOD_DSP_FFT_SPECTRUMDATA, (void **)&dspFFT, 0, 0, 0);
+	_CheckResult("update spectrum");
+	if(dspFFT->spectrum[0])
+	spectrum = (double)*(dspFFT->spectrum[0]);
 
 	// If StartBGMWithDelay has been called
 	if (bgmDelay > 0.0)
@@ -123,7 +152,7 @@ void _CheckResult(const char *debug)
 void _CountDownBGM()
 {
 	bgmDelay -= Clock_GetDeltaTime();
-	
+
 	// Time the delay
 	if (bgmDelay <= 0.0)
 	{

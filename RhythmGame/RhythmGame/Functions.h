@@ -6,7 +6,10 @@
 #include "StateMachine.h"
 #include "Clock/Clock.h"
 
-typedef enum {
+#define GAME_WIDTH 100
+#define GAME_HEIGHT 80
+
+typedef enum CONSOLECOLOR{
 	BLACK = 0,
 	DARKBLUE = FOREGROUND_BLUE,
 	DARKGREEN = FOREGROUND_GREEN,
@@ -25,6 +28,11 @@ typedef enum {
 	WHITE = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE,
 	bRED = BACKGROUND_RED,
 } CONSOLECOLOR;
+
+typedef struct {
+	int x;
+	int y;
+} coords;
 
 void Global_Exit();
 int gameRunning();

@@ -23,6 +23,7 @@
     <ClCompile Include="Clock\Clock.cpp" />
     <ClCompile Include="Console\Console.c" />
     <ClCompile Include="Enemy\Enemy.c" />
+    <ClCompile Include="Map\Map.c" />
     <ClCompile Include="Player\Player.c" />
     <ClCompile Include="Game.c" />
     <ClCompile Include="Functions.c" />
@@ -39,6 +40,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Random\Random.h" />
     <ClInclude Include="StateMachine.h" />

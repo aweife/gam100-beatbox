@@ -42,6 +42,10 @@ extern void AE_PlayOneShot(int id, float volume);
 // Play a BGM (provide its magic number/delay)
 extern void AE_StartBGMWithDelay(int id, double delay);
 
+extern void AE_Update();
+
+extern double AE_GetEnergy();
+
 //extern void AE_Play(int trackID, TRACK type);
 //extern void AE_SetVolume(float volume, TRACK type);
 

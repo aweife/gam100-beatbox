@@ -1,9 +1,10 @@
 #pragma once
 
-#include <Windows.h>
+#include "Functions.h"
 #include "Player/Player.h"
-#include "Clock/Clock.h"
-#include "Console/Console.h"
+#include "Map/Map.h"
+#include "Audio/AudioEngine.h"
+
 
 void Game_EnterState();
 void Game_ExitState();

@@ -4,6 +4,10 @@ void Game_EnterState()
 {
 	// Call this to init player
 	p_playerInit();
+	Map_Init();
+	AE_Init();
+	AE_LoadTrack("..//mysound.mp3", SFX);
+	AE_StartBGMWithDelay(0, 5.0);
 }
 
 void Game_ExitState()
@@ -43,9 +47,12 @@ void Game_ProcessInput()
 void Game_Update()
 {
 	p_playerMove();
+	AE_Update();
+	Map_SetOffset((int)AE_GetEnergy());
 }
 
 void Game_Render()
 {
 	p_Render();
+	Map_Render();
 }

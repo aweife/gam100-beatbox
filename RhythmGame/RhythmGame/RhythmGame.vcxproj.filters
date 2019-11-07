@@ -68,6 +68,9 @@
     <ClCompile Include="Game.c">
       <Filter>Source Files\States\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Map\Map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console\Console.h">
@@ -99,6 +102,9 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Source Files\States\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\Map.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

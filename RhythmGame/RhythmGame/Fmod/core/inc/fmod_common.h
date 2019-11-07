@@ -618,7 +618,7 @@ typedef struct FMOD_VECTOR
 typedef struct FMOD_3D_ATTRIBUTES
 {
     FMOD_VECTOR position;
-    FMOD_VECTOR velocity;
+    //FMOD_VECTOR velocity;
     FMOD_VECTOR forward;
     FMOD_VECTOR up;
 } FMOD_3D_ATTRIBUTES;
