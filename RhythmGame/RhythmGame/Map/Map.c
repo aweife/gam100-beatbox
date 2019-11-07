@@ -1,49 +1,65 @@
 #include "Map.h"
 
+// Static boundary
+static coords sMapOrigin;
+static coords sMapEnd;
+static int sMapOffset = MAP_OFFSET;
+
+// Private functions
+void _CreateStatic();
+void _CreateTemporary(int offset, CONSOLECOLOR color);
+
 void Map_Init()
 {
-	// Initialise offset
-	mapOffset = MAP_OFFSET;
-	Map_SetOffset(0);
+	// Initialise static boundary
+	sMapOrigin.x = sMapOffset;
+	sMapOrigin.y = sMapOffset;
+	sMapEnd.x = GAME_WIDTH - sMapOffset;
+	sMapEnd.y = GAME_HEIGHT - sMapOffset;
 }
 
-void Map_SetOffset(int offset)
+void Map_Update()
 {
-	// Set mapOrigin at top left corner
-	mapOrigin.x = mapOffset - offset;
-	mapOrigin.y = mapOffset - offset;
 
-	// Set mapEnd at bottom right corner
-	mapEnd.x = GAME_WIDTH - mapOffset + offset;
-	mapEnd.y = GAME_HEIGHT - mapOffset + offset;
 }
 
 void Map_Render()
 {
-	for (int i = 0; i < mapEnd.x - mapOrigin.x; i++)
+	_CreateStatic();
+	if (AE_GetFrequency(KICK)) _CreateTemporary(2, GREEN);
+	if (AE_GetFrequency(SNARE)) _CreateTemporary(4, RED);
+}
+
+void _CreateStatic()
+{
+	// Horizontal
+	for (int i = 0; i < sMapEnd.x - sMapOrigin.x; i++)
 	{
-		Console_SetRenderBuffer_CharColor(mapOrigin.x + i, mapOrigin.y, 'X', GREEN);
-		Console_SetRenderBuffer_CharColor(mapOrigin.x + i, mapEnd.y, 'X', GREEN);
+		Console_SetRenderBuffer_CharColor(sMapOrigin.x + i, sMapOrigin.y, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(sMapOrigin.x + i, sMapEnd.y, 'X', DARKCYAN);
 	}
 
-	for (int i = 0; i < mapEnd.y - mapOrigin.y + 1; i++)
+	// Vertical
+	for (int i = 0; i < sMapEnd.y - sMapOrigin.y; i++)
 	{
-		Console_SetRenderBuffer_CharColor(mapOrigin.x, mapOrigin.y + i, 'X', GREEN);
-		Console_SetRenderBuffer_CharColor(mapEnd.x, mapOrigin.y + i, 'X', GREEN);
+		Console_SetRenderBuffer_CharColor(sMapOrigin.x, sMapOrigin.y + i, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(sMapEnd.x, sMapOrigin.y + i, 'X', DARKCYAN);
+	}
+}
+
+void _CreateTemporary(int offset, CONSOLECOLOR color)
+{
+	// Horizontal
+	for (int i = 0; i < (sMapEnd.x+offset) - (sMapOrigin.x-offset); i++)
+	{
+		Console_SetRenderBuffer_CharColor((sMapOrigin.x - offset) + i, (sMapOrigin.y - offset), 'X', color);
+		Console_SetRenderBuffer_CharColor((sMapOrigin.x - offset) + i, (sMapEnd.y + offset), 'X', color);
 	}
 
-	for (int i = 0; i < 95 - 5; i++)
+	// Vertical
+	for (int i = 0; i < (sMapEnd.y + offset) - (sMapOrigin.y - offset); i++)
 	{
-		Console_SetRenderBuffer_CharColor(5+ i, 5, 'X', DARKCYAN);
-		Console_SetRenderBuffer_CharColor(5 + i, 75, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor((sMapOrigin.x - offset), (sMapOrigin.y - offset) + i, 'X', color);
+		Console_SetRenderBuffer_CharColor((sMapEnd.x + offset), (sMapOrigin.y - offset) + i, 'X', color);
 	}
-
-	for (int i = 0; i < 75 - 5; i++)
-	{
-		Console_SetRenderBuffer_CharColor(5, 5 + i, 'X', DARKCYAN);
-		Console_SetRenderBuffer_CharColor(95, 5 + i, 'X', DARKCYAN);
-	}
-
-	
-	
 }

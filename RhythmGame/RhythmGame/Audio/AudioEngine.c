@@ -19,19 +19,33 @@ static FMOD_RESULT result;
 static FMOD_SYSTEM *fmodSystem;
 
 // BGM
-static int bgmCount;
-static FMOD_SOUND *bgmSounds[NUMBER_OF_BGM_TRACKS];
-static FMOD_CHANNEL *bgmChannel;
+typedef struct track
+{
+	FMOD_DSP *dsp;
+	FMOD_DSP_PARAMETER_FFT *dspFFT;
+	FMOD_SOUND *sound;
+	FMOD_CHANNEL *channel;
+
+	double threshold;
+	double spectrum;
+} track;
+static track kick = { .dsp = 0, };
+static track snare = { 0 };
+static track bgmList[NUMBER_OF_BGM_TRACKS];
+static int bgmCount = 0;
 static double bgmDelay;
+static int currentId = 0;
+
 
 // SFX
 static int sfxCount;
 static FMOD_SOUND *sfxList[NUMBER_OF_SFX_TRACKS];
 
-// DSP
-static FMOD_DSP *dsp;
-static FMOD_DSP_PARAMETER_FFT *dspFFT;
-static double spectrum;
+// For internal use
+void _CheckResult(const char *debug);
+void _CountDownBGM();
+void _StartBGM(FMOD_DSP *dsp, FMOD_SOUND *sound, FMOD_CHANNEL *channel);
+void _UpdateSpectrum(FMOD_DSP *dsp, FMOD_DSP_PARAMETER_FFT *dspFFT, double *spectrum);
 
 
 void AE_Init()
@@ -39,7 +53,6 @@ void AE_Init()
 	// Initialise state
 	bIsPlaying = true;
 	bHasError = false;
-	bgmCount = 0;
 	sfxCount = 0;
 
 	// Setup the sound system
@@ -50,20 +63,27 @@ void AE_Init()
 	if (!bHasError) result = FMOD_System_Init(fmodSystem, NUMBER_OF_CHANNELS, FMOD_INIT_NORMAL, 0);
 	_CheckResult("initialising");
 
-	// Initialise dsp
-	if (!bHasError) result = FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &dsp);
-	_CheckResult("create dsp");
-
-	result = FMOD_DSP_SetParameterInt(dsp, FMOD_DSP_FFT_WINDOWTYPE, FMOD_DSP_FFT_WINDOW_TRIANGLE);
-	result = FMOD_DSP_SetParameterInt(dsp, FMOD_DSP_FFT_WINDOWSIZE, 1024);
+	// LOAD TRACKS
+	AE_LoadTrack("..//Kick.wav", KICK);
+	AE_LoadTrack("..//Snare.wav", SNARE);
+	AE_LoadTrack("..//Melody.wav", BGM);
+	AE_StartBGMWithDelay(0, 2.17);
 }
 
-void AE_LoadTrack(const char *path, TRACK type)
+void AE_LoadTrack(const char *path, TRACKTYPE type)
 {
 	switch (type)
 	{
+	case KICK:
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &kick.sound);
+		kick.threshold = .0001;
+		break;
+	case SNARE:
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &snare.sound);
+		snare.threshold = .0001;
+		break;
 	case BGM:
-		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &bgmSounds[bgmCount]);
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &bgmList[bgmCount].sound);
 		bgmCount++;
 		break;
 	case SFX:
@@ -95,20 +115,38 @@ void AE_StartBGMWithDelay(int id, double delay)
 {
 	bgmDelay = delay * 1000.0;
 
-	result = FMOD_System_PlaySound(fmodSystem, sfxList[id], 0, true, &bgmChannel);
-	_CheckResult("play bgm paused");
+	// Kick
+	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &kick.dsp);
+	FMOD_System_PlaySound(fmodSystem, kick.sound, 0, true, &kick.channel);
+	FMOD_Channel_AddDSP(kick.channel, 0, kick.dsp);
+	FMOD_DSP_SetActive(kick.dsp, true);
 
-	// Add dsp to channel
-	result = FMOD_Channel_AddDSP(bgmChannel, 0, dsp);
-	_CheckResult("add dsp");
+	// Snare
+	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &snare.dsp);
+	FMOD_System_PlaySound(fmodSystem, snare.sound, 0, true, &snare.channel);
+	FMOD_Channel_AddDSP(snare.channel, 0, snare.dsp);
+	FMOD_DSP_SetActive(snare.dsp, true);
 
-	result = FMOD_DSP_SetActive(dsp, true);
-	_CheckResult("set dsp active");
+	// Bgm
+	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &bgmList[id].dsp);
+	FMOD_System_PlaySound(fmodSystem, bgmList[id].sound, 0, true, &bgmList[id].channel);
+	FMOD_Channel_AddDSP(bgmList[id].channel, 0, bgmList[id].dsp);
+	FMOD_DSP_SetActive(bgmList[id].dsp, true);
 }
 
-double AE_GetEnergy()
+int AE_GetFrequency(TRACKTYPE type)
 {
-	return spectrum * 25.0;
+	int result;
+	switch (type)
+	{
+	case KICK:
+		result = kick.spectrum > kick.threshold ? 1 : 0;
+		break;
+	case SNARE:
+		result = snare.spectrum > snare.threshold ? 1 : 0;
+		break;
+	}
+	return result;
 }
 
 void AE_Update()
@@ -116,10 +154,15 @@ void AE_Update()
 	result = FMOD_System_Update(fmodSystem);
 	_CheckResult("updating");
 
-	result = FMOD_DSP_GetParameterData(dsp, FMOD_DSP_FFT_SPECTRUMDATA, (void **)&dspFFT, 0, 0, 0);
-	_CheckResult("update spectrum");
-	if(dspFFT->spectrum[0])
-	spectrum = (double)*(dspFFT->spectrum[0]);
+	FMOD_DSP_GetParameterData(kick.dsp, FMOD_DSP_FFT_SPECTRUMDATA, &kick.dspFFT, 0, 0, 0);
+	if (kick.dspFFT->spectrum[0])
+		kick.spectrum = (double)((*(kick.dspFFT->spectrum[0]) + *(kick.dspFFT->spectrum[1])) / 2);
+	FMOD_DSP_GetParameterData(snare.dsp, FMOD_DSP_FFT_SPECTRUMDATA, &snare.dspFFT, 0, 0, 0);
+	if (snare.dspFFT->spectrum[0])
+		snare.spectrum = (double)((*(snare.dspFFT->spectrum[0]) + *(snare.dspFFT->spectrum[1])) / 2);
+	//_UpdateSpectrum(kick.dsp, kick.dspFFT, &kick.spectrum);
+	//_UpdateSpectrum(snare.dsp, snare.dspFFT, &snare.spectrum);
+
 
 	// If StartBGMWithDelay has been called
 	if (bgmDelay > 0.0)
@@ -133,8 +176,10 @@ void AE_Shutdown()
 	_CheckResult("system shutdown");
 
 	// Free sounds in memory
+	FMOD_Sound_Release(kick.sound);
+	FMOD_Sound_Release(snare.sound);
 	for (int i = 0; i < bgmCount; i++)
-		FMOD_Sound_Release(bgmSounds[i]);
+		FMOD_Sound_Release(bgmList[i].sound);
 	_CheckResult("system shutdown");
 	for (int i = 0; i < sfxCount; i++)
 		FMOD_Sound_Release(sfxList[i]);
@@ -158,8 +203,9 @@ void _CountDownBGM()
 	{
 		bgmDelay = 0.0;
 
-		result = FMOD_Channel_SetPaused(bgmChannel, false);
-		_CheckResult("starting bgm with delay");
+		FMOD_Channel_SetPaused(kick.channel, false);
+		FMOD_Channel_SetPaused(snare.channel, false);
+		FMOD_Channel_SetPaused(bgmList[0].channel, false);
 	}
 }
 
