@@ -49,7 +49,7 @@ void Game_ProcessInput()
 	if (GetAsyncKeyState(VK_SPACE) && !spaceDown)
 	{
 		spaceDown = true;
-		p_playerDash();
+		_playerDash();
 	}
 	else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
 }

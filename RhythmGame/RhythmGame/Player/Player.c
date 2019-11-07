@@ -17,46 +17,12 @@ void p_playerInit()
 	velocity = 0.04;
 }
 
-void _playerSetVel(DIRECTION dir, EASEMOVEMENT EaseC)
-{
-	player.direction = dir;
-	EaseCheck = EaseC;
-}
-
-double _playerGetEaseFactor()
-{
-	return factor;
-}
-
-int _playerGetDirection()
-{
-	return player.direction;
-}
-
-void p_Render()
-{
-	_playerShape();
-	for (int i = 0; i < 9; i++)
-	{
-		Console_SetRenderBuffer_CharColor(player.playerX[i], player.playerY[i], ' ', bRED);
-	}
-}
-
-void p_playerDash()
-{
-	if (cdTimer > 0) return;
-	velocity = 0.15;
-	factor = 1;
-	dashTimer = 100.0f;
-	cdTimer = 1000.0f;
-}
-
 void p_playerMove()
 {
 	dt = Clock_GetDeltaTime();
 	EaseTimer += Clock_GetDeltaTime();
 
-	if(cdTimer > 0) cdTimer -= Clock_GetDeltaTime();
+	if (cdTimer > 0) cdTimer -= Clock_GetDeltaTime();
 	if (dashTimer > 0) dashTimer -= Clock_GetDeltaTime();
 	else velocity = 0.02;
 
@@ -66,7 +32,7 @@ void p_playerMove()
 			factor += 0.1;
 		else if (EaseCheck == SlowDown)
 			factor -= 0.1;
-		
+
 		if (factor < 0)
 			factor = 0.0;
 		else if (factor > 1.0)
@@ -105,6 +71,40 @@ void p_playerMove()
 	player.originY = player.eulerY;
 }
 
+void p_Render()
+{
+	_playerShape();
+	for (int i = 0; i < 9; i++)
+	{
+		Console_SetRenderBuffer_CharColor(player.playerX[i], player.playerY[i], ' ', bRED);
+	}
+}
+
+void _playerSetVel(DIRECTION dir, EASEMOVEMENT EaseC)
+{
+	player.direction = dir;
+	EaseCheck = EaseC;
+}
+
+double _playerGetEaseFactor()
+{
+	return factor;
+}
+
+int _playerGetDirection()
+{
+	return player.direction;
+}
+
+void _playerDash()
+{
+	if (cdTimer > 0) return;
+	velocity = 0.15;
+	factor = 1;
+	dashTimer = 100.0f;
+	cdTimer = 1000.0f;
+}
+
 void _playerShape()
 {
 	int localx = 0;
@@ -129,5 +129,4 @@ void _borderCheck()
 	if (player.eulerY < (MAP_OFFSET + 1)) player.eulerY = MAP_OFFSET + 1;
 	if (player.eulerX > (GAME_WIDTH - MAP_OFFSET - BOXSIZE)) player.eulerX = GAME_WIDTH - MAP_OFFSET - BOXSIZE;
 	if (player.eulerY > (GAME_HEIGHT - MAP_OFFSET - BOXSIZE)) player.eulerY = GAME_HEIGHT - MAP_OFFSET - BOXSIZE;
-
 }

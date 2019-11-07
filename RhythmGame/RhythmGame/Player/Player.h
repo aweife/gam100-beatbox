@@ -47,13 +47,28 @@ static double dashTimer;
 // Initialise player variables
 void p_playerInit();
 
-// Moves the player according to input
+// Moves the player according to input (WITH DASH MECHANISM)
 void p_playerMove();
-void p_playerDash();
-void _playerShape();
-extern void _playerSetVel(DIRECTION dir, EASEMOVEMENT EaseC);
-double _playerGetEaseFactor();
-int _playerGetDirection();
-void _borderCheck();
 
+// Renders the player location
 void p_Render();
+
+
+
+// Allows player to dash
+void _playerDash();
+
+// Prints BOXSIZE of player
+void _playerShape();
+
+// Sets direction and EaseMovement to allow movement in direction with Ease In Ease Out effect
+extern void _playerSetVel(DIRECTION dir, EASEMOVEMENT EaseC);
+
+// Returns value of factor
+double _playerGetEaseFactor();
+
+// Returns direction of player
+int _playerGetDirection();
+
+// Checks if player is out of border
+void _borderCheck();
