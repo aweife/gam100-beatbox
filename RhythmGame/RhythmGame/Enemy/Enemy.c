@@ -36,6 +36,19 @@ Projectile pArray[5];
 //Limits 5 bullets on-screen
 int pCount = 5; 
 
+void E_Init()
+{
+	E_CalculateBPM(132);
+}
+
+void E_Update()
+{
+	_getClock();
+	_spawnProjectile();
+	_updateProjectile();
+	_updateEnemy();
+}
+
 void _getClock()
 {
 	elapsedTimerTime += Clock_GetDeltaTime();
@@ -63,7 +76,7 @@ void _renderBoundary()
 	}
 }
 
-double calculateBPM(int x)
+double E_CalculateBPM(int x)
 {
 	result = 60.0 / (float)x;
 	result *= 1000.0;
@@ -101,12 +114,6 @@ void _spawnProjectile()
 			pArray[i].pArrayReady = 0;
 		}
 
-		if (pArray[i].state == 1)
-		{
-			//Print out projectile
-			Console_SetRenderBuffer_Char(pArray[i].x, pArray[i].y , '*');
-		}
-
 		//Collision
 		if (pArray[i].x > width - 2 || pArray[i].x < 1 || pArray[i].y > width - 2 || pArray[i].y < 1) 
 		{
@@ -131,12 +138,22 @@ void _updateProjectile()
 	}
 }
 
-void renderEnemy()
+void E_Render()
 {
+	
+
+	for (int i = 0; i < pCount; i++)
+	{
+		if (pArray[i].state == 1)
+		{
+			//Print out projectile
+			Console_SetRenderBuffer_Char(pArray[i].x, pArray[i].y, '*');
+		}
+	}
+
 	//Print Out Enemy
 	Console_SetRenderBuffer_Char(EnX, EnY, 'E');
 }
-
 
 void _updateEnemy()
 {

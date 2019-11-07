@@ -7,7 +7,8 @@ void Game_EnterState()
 	Map_Init();
 	AE_Init();
 	AE_LoadTrack("..//mysound.mp3", SFX);
-	AE_StartBGMWithDelay(0, 5.0);
+	AE_StartBGMWithDelay(0, 2.17);
+	E_Init();
 }
 
 void Game_ExitState()
@@ -49,10 +50,12 @@ void Game_Update()
 	p_playerMove();
 	AE_Update();
 	Map_SetOffset((int)AE_GetEnergy());
+	E_Update();
 }
 
 void Game_Render()
 {
 	p_Render();
 	Map_Render();
+	E_Render();
 }

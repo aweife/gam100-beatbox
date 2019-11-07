@@ -1,9 +1,12 @@
 #pragma once
 
 #include "Functions.h"
+#include "Audio/AudioEngine.h"
+
 #include "Player/Player.h"
 #include "Map/Map.h"
-#include "Audio/AudioEngine.h"
+#include "Enemy/Enemy.h"
+
 
 
 void Game_EnterState();

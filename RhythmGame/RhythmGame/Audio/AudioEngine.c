@@ -67,7 +67,7 @@ void AE_LoadTrack(const char *path, TRACK type)
 		bgmCount++;
 		break;
 	case SFX:
-		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &sfxList[sfxCount]);
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_LOOP_NORMAL, 0, &sfxList[sfxCount]);
 		sfxCount++;
 		break;
 	}
