@@ -3,6 +3,8 @@
 #include "../Map/Map.h"
 #include "../Enemy/Enemy.h"
 #include "../Testread.h"
+#include "../Game.h"
+#include "../StateMachine.h"
 
 #define BOXSIZE 3
 

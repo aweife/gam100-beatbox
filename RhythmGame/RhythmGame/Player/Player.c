@@ -151,12 +151,12 @@ void _CheckCollision()
 		for (int j = 0; j < ENEMY_SIZE; j++)
 			if (player.playerX[i] == (E_GetEnemy()->position[j][0] + E_GetEnemy()->Xposition) &&
 				player.playerY[i] == (E_GetEnemy()->position[j][1] + E_GetEnemy()->Yposition))
-				Global_Exit();
+				StateMachine_changeState(State_GameOver);
 
 	// Projectiles
 	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
 		for (int j = 0; j < ENEMY_SIZE; j++)
 			if (player.playerX[i] == E_GetProjectile()->x &&
 				player.playerY[i] == E_GetProjectile()->y)
-				Global_Exit();
+				StateMachine_changeState(State_GameOver);
 }

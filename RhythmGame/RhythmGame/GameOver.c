@@ -4,6 +4,7 @@
 #include "StateMachine.h"
 #include "Game.h"
 
+
 //*********************************************************************************
 //								LOCAL VARIABLES
 //*********************************************************************************
@@ -14,8 +15,8 @@
 //*********************************************************************************
 void GameOver_ProcessInput()
 {
-	/*if (GetAsyncKeyState(VK_ESCAPE) & 1)
-		StateMachine_ChangeState(State_MainMenu);*/
+	if (GetAsyncKeyState(VK_ESCAPE) & 1)
+		StateMachine_changeState(State_MainMenu);
 }
 
 //*********************************************************************************
