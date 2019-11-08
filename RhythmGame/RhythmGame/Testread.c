@@ -67,21 +67,22 @@ void _Readandstoretext()
 			}
 
 			printf("%d\n", charcount);
-
-			totalcharcount = newcharcount + charcount;
-
+			
 			for (int i = 0; i < charcount; i++)
 			{
-
-				s.position[newcharcount + i][0] = i;
-				s.position[newcharcount + i][1] = currentyposition;
-				s.printchar[newcharcount + i] = Charline[i];
-
+				if (Charline[i] != ' ')
+				{
+					s.position[newcharcount + iteration][0] = i;
+					s.position[newcharcount + iteration][1] = currentyposition;
+					s.printchar[newcharcount + iteration] = Charline[i];
+					iteration++;
+				}
 			}
+
+			totalcharcount = newcharcount + iteration;
+
 			newcharcount = totalcharcount;
 			currentyposition++;
-			iteration++;
-
 		}
 		fclose(pFile);
 	}
