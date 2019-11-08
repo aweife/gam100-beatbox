@@ -30,6 +30,7 @@
     <ClCompile Include="Main.c" />
     <ClCompile Include="MainMenu.c" />
     <ClCompile Include="Random\Random.c" />
+    <ClCompile Include="GameOver.c" />
     <ClCompile Include="StateMachine.c" />
     <ClCompile Include="Testread.c" />
   </ItemGroup>
@@ -40,6 +41,7 @@
     <ClInclude Include="Enemy\Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Functions.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Player\Player.h" />
