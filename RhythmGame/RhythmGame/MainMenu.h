@@ -1,6 +1,8 @@
-#ifndef MAINMENU_H
-#define MAINMENU_H
+#pragma once
 
+void MainMenu_EnterState();
+void MainMenu_ExitState();
 
-
-#endif
+void MainMenu_ProcessInput();
+void MainMenu_Update();
+void MainMenu_Render();
