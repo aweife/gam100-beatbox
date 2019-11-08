@@ -155,8 +155,8 @@ void _CheckCollision()
 
 	// Projectiles
 	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
-		for (int j = 0; j < ENEMY_SIZE; j++)
-			if (player.playerX[i] == E_GetProjectile()->x &&
-				player.playerY[i] == E_GetProjectile()->y)
+		for (int j = 0; j < NUMBER_OF_PROJECTILE; j++)
+			if (player.playerX[i] == (E_GetProjectile() + j)->x &&
+				player.playerY[i] == (E_GetProjectile() + j)->y)
 				StateMachine_changeState(State_GameOver);
 }

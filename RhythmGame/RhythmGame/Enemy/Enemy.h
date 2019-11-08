@@ -1,6 +1,5 @@
 #pragma once
 
-#define _CRT_SECURE_NO_DEPRECATE
 #include "../Console/Console.h"
 #include "../Random/Random.h"
 #include "../Clock/Clock.h"

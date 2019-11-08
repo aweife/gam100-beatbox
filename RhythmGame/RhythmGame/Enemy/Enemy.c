@@ -33,7 +33,7 @@ int pCount = NUMBER_OF_PROJECTILE;
 
 void E_Init()
 {
-	E_CalculateBPM(0);
+	E_CalculateBPM(132);
 	Text_Init();
 	skull = Text_CreateEnemy();
 }
