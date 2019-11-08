@@ -5,7 +5,7 @@ int main(void)
 {
 	// Game Init
 	Console_Init();
-	Console_SetTitle("FikrulEatPig");
+	Console_SetTitle("BeatBox");
 	Console_SetCursorVisibility(0);
 	Console_SetSquareFont();
 	Console_SetWindowedMode(GAME_WIDTH, GAME_HEIGHT, true);
