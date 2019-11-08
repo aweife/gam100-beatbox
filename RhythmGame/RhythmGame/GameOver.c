@@ -15,7 +15,9 @@
 //*********************************************************************************
 void GameOver_ProcessInput()
 {
-	if (GetAsyncKeyState(VK_ESCAPE) & 1)
+	if (GetAsyncKeyState(VK_ESCAPE))
+		Global_Exit();
+	if (GetAsyncKeyState(VK_SPACE))
 		StateMachine_changeState(State_MainMenu);
 }
 
