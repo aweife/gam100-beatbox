@@ -1,6 +1,8 @@
 #pragma once
 #include "../Functions.h"
 #include "../Map/Map.h"
+#include "../Enemy/Enemy.h"
+#include "../Testread.h"
 
 #define BOXSIZE 3
 
@@ -48,18 +50,15 @@ static double dashTimer;
 void p_playerInit();
 
 // Moves the player according to input (WITH DASH MECHANISM)
-void p_playerMove();
+void P_Update();
 
 // Renders the player location
-void p_Render();
+void P_Render();
 
 
 
 // Allows player to dash
 void _playerDash();
-
-// Prints BOXSIZE of player
-void _playerShape();
 
 // Sets direction and EaseMovement to allow movement in direction with Ease In Ease Out effect
 extern void _playerSetVel(DIRECTION dir, EASEMOVEMENT EaseC);
@@ -69,6 +68,3 @@ double _playerGetEaseFactor();
 
 // Returns direction of player
 int _playerGetDirection();
-
-// Checks if player is out of border
-void _borderCheck();

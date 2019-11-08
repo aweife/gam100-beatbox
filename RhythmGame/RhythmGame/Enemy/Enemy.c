@@ -25,23 +25,15 @@ char timeDisplay[10];
 
 //Skull Structure
 skullenemy skull;
-//Projectile Structure
-typedef struct //MUSTLEARNTHIS
-{
-	int x;
-	int y;
-	int state;
-	int pArrayReady;
-} Projectile;
 
 //Only stores 10 values
-Projectile pArray[10]; 
+Projectile pArray[NUMBER_OF_PROJECTILE];
 //Limits 10 bullets on-screen
-int pCount = 10; 
+int pCount = NUMBER_OF_PROJECTILE;
 
 void E_Init()
 {
-	E_CalculateBPM(132);
+	E_CalculateBPM(0);
 	Text_Init();
 	skull = Text_CreateEnemy();
 }
@@ -89,26 +81,34 @@ double E_CalculateBPM(int x)
 	return result;
 }
 
+skullenemy *E_GetEnemy()
+{
+	return &skull;
+}
 
+Projectile *E_GetProjectile()
+{
+	return pArray;
+}
 
 void _spawnProjectile()
 {
 	BPMProjSpawnTime += Clock_GetDeltaTime();
 	//It will ONLY spawn at 4s interval
-	if (BPMProjSpawnTime >= 4000.0) 
+	if (BPMProjSpawnTime >= 4000.0)
 	{
 		for (int i = 0; i < pCount; ++i)
 		{
 			//State and Ready ensures array don't spawn unnecessary projectiles > 10
 			if (pArray[i].pArrayReady == 0 && pArray[i].state == 0)
 			{
-				pArray[i].pArrayReady = 1; 
+				pArray[i].pArrayReady = 1;
 				//Reset spawn time
 				BPMProjSpawnTime = BPMProjSpawnTime - 3000.0;
 				break;
 			}
 		}
-		 
+
 	}
 
 	for (int i = 0; i < pCount; ++i)
@@ -125,12 +125,12 @@ void _spawnProjectile()
 		//Collision
 		if (pArray[i].x >= GAME_WIDTH - MAP_OFFSET ||
 			pArray[i].y >= GAME_HEIGHT - MAP_OFFSET ||
-			pArray[i].x < MAP_OFFSET || 
-			pArray[i].y < MAP_OFFSET) 
+			pArray[i].x < MAP_OFFSET ||
+			pArray[i].y < MAP_OFFSET)
 		{
 			pArray[i].state = 0;
 			//Hide away projectiles
-			pArray[i].x = 300; 
+			pArray[i].x = 300;
 			pArray[i].y = 300;
 		}
 	}
@@ -147,7 +147,7 @@ void _updateProjectile()
 			/*if (randEnShoot == 1)
 			{
 				//Right
-				pArray[i].x++; 
+				pArray[i].x++;
 			}
 			else if (randEnShoot == 2) {
 				//Left
@@ -161,7 +161,7 @@ void _updateProjectile()
 				//Down
 				pArray[i].y++;
 			}*/
-			pArray[i].y+=2;
+			pArray[i].y += 2;
 		}
 		BPMProjMoveTime = BPMProjMoveTime - result; //Resets enemy move time to move every 1 second
 	}
@@ -190,7 +190,7 @@ void _updateEnemy()
 	BPMEnTime += Clock_GetDeltaTime();
 
 	//Every 0.8s interval
-	if (BPMEnTime >= result) 
+	if (BPMEnTime >= result)
 	{
 		randEnMove = Random_Range(1, 6); //original is 4
 		if (randEnMove == 1)
@@ -242,7 +242,7 @@ int main()
 	Console_SetCursorVisibility(false);
 
 	randNo = Random_Range(1, 4);
-	
+
 	printf_s("%.1f", calculateBPM(132));
 
 	while (GameIsRunning = 1)

@@ -13,6 +13,17 @@
 #include "../Functions.h"
 #include "../Testread.h"
 
+#define NUMBER_OF_PROJECTILE 10
+
+//Projectile Structure
+typedef struct //MUSTLEARNTHIS
+{
+	int x;
+	int y;
+	int state;
+	int pArrayReady;
+} Projectile;
+
 void E_Init();
 
 void E_Update();
@@ -20,6 +31,10 @@ void E_Update();
 /*void _getClock();*/
 
 double E_CalculateBPM(int x);
+
+skullenemy *E_GetEnemy();
+
+Projectile *E_GetProjectile();
 
 void _spawnProjectile();
 

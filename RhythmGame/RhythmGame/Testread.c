@@ -26,7 +26,7 @@ skullenemy Text_CreateEnemy()
 
 void Text_RenderEnemy(skullenemy *s)
 {
-	for (int i = 0; i < 500; i++)
+	for (int i = 0; i < ENEMY_SIZE; i++)
 	{
 		
 		Console_SetRenderBuffer_Char((s->position[i][0])+s->Xposition,(s->position[i][1]+s->Yposition),(s->printchar[i]));

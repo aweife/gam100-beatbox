@@ -48,13 +48,12 @@ void Game_ProcessInput()
 	{
 		spaceDown = true;
 		_playerDash();
-	}
-	else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
+	} else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
 }
 
 void Game_Update()
 {
-	p_playerMove();
+	P_Update();
 	AE_Update();
 	E_Update();
 }
@@ -62,6 +61,6 @@ void Game_Update()
 void Game_Render()
 {
 	E_Render();
-	p_Render();
+	P_Render();
 	Map_Render();
 }

@@ -2,6 +2,13 @@
 
 Player player;
 
+// Internal functions
+void _MovePlayer();
+void _CheckCollision();
+// Checks if player is out of border
+void _CheckBorder();
+// Prints BOXSIZE of player
+void _UpdateShape();
 
 void p_playerInit()
 {
@@ -17,7 +24,16 @@ void p_playerInit()
 	velocity = 0.04;
 }
 
-void p_playerMove()
+void P_Update()
+{
+	_MovePlayer();
+	_CheckBorder();
+	_UpdateShape();
+
+	_CheckCollision();
+}
+
+void _MovePlayer()
 {
 	dt = Clock_GetDeltaTime();
 	EaseTimer += Clock_GetDeltaTime();
@@ -65,15 +81,12 @@ void p_playerMove()
 	default: break;
 	}
 
-	_borderCheck();
-
 	player.originX = player.eulerX;
 	player.originY = player.eulerY;
 }
 
-void p_Render()
+void P_Render()
 {
-	_playerShape();
 	for (int i = 0; i < 9; i++)
 	{
 		Console_SetRenderBuffer_CharColor(player.playerX[i], player.playerY[i], ' ', bRED);
@@ -105,7 +118,7 @@ void _playerDash()
 	cdTimer = 1000.0f;
 }
 
-void _playerShape()
+void _UpdateShape()
 {
 	int localx = 0;
 	int localy = 0;
@@ -123,10 +136,27 @@ void _playerShape()
 	}
 }
 
-void _borderCheck()
+void _CheckBorder()
 {
 	if (player.eulerX < (MAP_OFFSET + 1)) player.eulerX = MAP_OFFSET + 1;
 	if (player.eulerY < (MAP_OFFSET + 1)) player.eulerY = MAP_OFFSET + 1;
 	if (player.eulerX > (GAME_WIDTH - MAP_OFFSET - BOXSIZE)) player.eulerX = GAME_WIDTH - MAP_OFFSET - BOXSIZE;
 	if (player.eulerY > (GAME_HEIGHT - MAP_OFFSET - BOXSIZE)) player.eulerY = GAME_HEIGHT - MAP_OFFSET - BOXSIZE;
+}
+
+void _CheckCollision()
+{
+	// Enemy
+	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
+		for (int j = 0; j < ENEMY_SIZE; j++)
+			if (player.playerX[i] == (E_GetEnemy()->position[j][0] + E_GetEnemy()->Xposition) &&
+				player.playerY[i] == (E_GetEnemy()->position[j][1] + E_GetEnemy()->Yposition))
+				Global_Exit();
+
+	// Projectiles
+	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
+		for (int j = 0; j < ENEMY_SIZE; j++)
+			if (player.playerX[i] == E_GetProjectile()->x &&
+				player.playerY[i] == E_GetProjectile()->y)
+				Global_Exit();
 }

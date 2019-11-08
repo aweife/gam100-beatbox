@@ -1,10 +1,14 @@
+#pragma once
+
+#define ENEMY_SIZE 500
+
 
 typedef struct
 {
 	int Xposition;
 	int Yposition;
-	int position[500][2];
-	char printchar[500];
+	int position[ENEMY_SIZE][2];
+	char printchar[ENEMY_SIZE];
 
 }skullenemy;
 
