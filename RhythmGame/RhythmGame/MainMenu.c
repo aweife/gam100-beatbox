@@ -27,7 +27,6 @@ void MainMenu_ProcessInput()
 //*********************************************************************************
 void MainMenu_Update()
 {
-	Text_Moveenemy(&Logo,50,20);
 }
 
 
@@ -36,6 +35,7 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
+	Text_Moveenemy(&Logo,40, 20);
 	Text_RenderEnemy(&Logo);
 }
 

@@ -42,7 +42,7 @@ void GameOver_Render()
 	Console_SetRenderBuffer_String(16, 21, " | |__| | (_| | | | | | |  __/ | |__| |\\ V /  __/ |   ");
 	Console_SetRenderBuffer_String(16, 22, "  \\_____|\\__,_|_| |_| |_|\\___|  \\____/  \\_/ \\___|_|   ");
 	Console_SetRenderBuffer_String(16, 23, " _____________________________________________________");
-	Console_SetRenderBuffer_String(28, 30, "Press Esc to go back to Main Menu");
+	Console_SetRenderBuffer_String(28, 30, "Press Esc to exit game");
 }
 
 

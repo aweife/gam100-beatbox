@@ -9,7 +9,7 @@ int main(void)
 	Console_SetCursorVisibility(0);
 	Console_SetSquareFont();
 	Console_SetWindowedMode(GAME_WIDTH, GAME_HEIGHT, true);
-	StateMachine_changeState(State_Game);
+	StateMachine_changeState(State_MainMenu);
 
 	while (gameRunning())
 	{

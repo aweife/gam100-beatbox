@@ -1,11 +1,10 @@
 #define _CRT_SECURE_NO_DEPRECATE
-#include<stdlib.h>
-#include <stdio.h>
-#include"Console/Console.h"
+
 #include"Testread.h"
 
 FILE* pFile;
-skullenemy s;
+skullenemy s = { 0 };
+skullenemy logo = { 0 };
 char Charline[150] = { 0 };
 int length = 0;
 int charcount = 0;
@@ -16,12 +15,18 @@ int iteration = 0;
 
 void Text_Init()
 {
-	_Readandstoretext();
+	_Readandstoretext(&s,"skull.txt");
+	_Readandstoretext(&logo,"Logo2.txt");
 }
 
 skullenemy Text_CreateEnemy()
 {
 	return s;
+}
+
+skullenemy Text_CreateLogo()
+{
+	return logo;
 }
 
 void Text_RenderEnemy(skullenemy *s)
@@ -39,9 +44,10 @@ void Text_Moveenemy(skullenemy *skull,int x, int y)
 	skull->Yposition = y;
 }
 
-void _Readandstoretext()
+void _Readandstoretext(skullenemy *s, char* path)
 {
-	pFile = fopen("skull.txt", "r");
+
+	pFile = fopen(path, "r");
 	if (pFile == NULL) perror("Error opening file");
 	else
 	{
@@ -50,6 +56,7 @@ void _Readandstoretext()
 			charcount = 0;
 
 			fgets(Charline, 150, pFile);
+
 
 			for (int i = 0; i < 150; i++)
 			{
@@ -72,9 +79,9 @@ void _Readandstoretext()
 			{
 				if (Charline[i] != ' ')
 				{
-					s.position[newcharcount + iteration][0] = i;
-					s.position[newcharcount + iteration][1] = currentyposition;
-					s.printchar[newcharcount + iteration] = Charline[i];
+					s->position[newcharcount + iteration][0] = i;
+					s->position[newcharcount + iteration][1] = currentyposition;
+					s->printchar[newcharcount + iteration] = Charline[i];
 					iteration++;
 				}
 			}

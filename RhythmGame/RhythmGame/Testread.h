@@ -1,5 +1,7 @@
 #pragma once
-
+#include<stdlib.h>
+#include <stdio.h>
+#include"Console/Console.h"
 #define ENEMY_SIZE 500
 
 
@@ -25,5 +27,7 @@ void Text_RenderEnemy(skullenemy* s);
 void Text_Moveenemy(skullenemy* s, int x, int y);
 
 //Read from text file and store in array
-void _Readandstoretext();
+void _Readandstoretext(skullenemy *s,const char *path);
+
+skullenemy Text_CreateLogo();
 
