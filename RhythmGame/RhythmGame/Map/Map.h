@@ -1,8 +1,5 @@
 #pragma once
 
-#include "../Functions.h"
-#include "../Audio/AudioEngine.h"
-
 #define MAP_OFFSET 5
 
 // Initialise the static boundary

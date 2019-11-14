@@ -18,26 +18,11 @@
     <Filter Include="Random">
       <UniqueIdentifier>{2ce6280a-4ef7-408b-b989-58aac7b21397}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\States">
-      <UniqueIdentifier>{c04da36d-8922-4009-9fbd-6686724b54be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\States\MainMenu">
-      <UniqueIdentifier>{7797c208-ec71-46c1-bc7d-49ace404609e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\StateMachine">
-      <UniqueIdentifier>{14294d75-af0b-4942-8574-413b5265e69e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Functions">
-      <UniqueIdentifier>{6149259b-af6d-401c-b79f-6fc0b7e213ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\States\Game">
-      <UniqueIdentifier>{a731a715-cf0e-42f3-817b-39a42d8abc92}</UniqueIdentifier>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{2246e372-f896-46c1-b98b-be62d1c13f84}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Console\Console.c">
       <Filter>Console</Filter>
     </ClCompile>
@@ -47,34 +32,37 @@
     <ClCompile Include="Random\Random.c">
       <Filter>Random</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenu.c">
-      <Filter>Source Files\States\MainMenu</Filter>
-    </ClCompile>
-    <ClCompile Include="StateMachine.c">
-      <Filter>Source Files\StateMachine</Filter>
-    </ClCompile>
-    <ClCompile Include="Functions.c">
-      <Filter>Source Files\Functions</Filter>
+    <ClCompile Include="Main.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Audio\AudioEngine.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player\Player.c">
+    <ClCompile Include="Beat\Beat.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Enemy\Enemy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game.c">
-      <Filter>Source Files\States\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Map\Map.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Testread.c">
+    <ClCompile Include="Player\Player.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameOver.c">
+    <ClCompile Include="States\Game.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="States\GameOver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="States\MainMenu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="States\StateMachine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Text\TextReader.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -88,38 +76,60 @@
     <ClInclude Include="Random\Random.h">
       <Filter>Random</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>Source Files\States\MainMenu</Filter>
-    </ClInclude>
-    <ClInclude Include="StateMachine.h">
-      <Filter>Source Files\StateMachine</Filter>
-    </ClInclude>
-    <ClInclude Include="Functions.h">
-      <Filter>Source Files\Functions</Filter>
+    <ClInclude Include="Global.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Audio\AudioEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Player\Player.h">
+    <ClInclude Include="Beat\Beat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Enemy\Enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Source Files\States\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Map\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Testread.h">
+    <ClInclude Include="Player\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameOver.h">
+    <ClInclude Include="States\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="States\GameOver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="States\MainMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="States\StateMachine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Text\TextReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="skull.txt" />
+    <Text Include="$Resources\Logo.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="$Resources\Logo2.txt.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="$Resources\skull.txt">
+      <Filter>Resources</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="$Resources\Kick.wav">
+      <Filter>Resources</Filter>
+    </Media>
+    <Media Include="$Resources\Melody.wav">
+      <Filter>Resources</Filter>
+    </Media>
+    <Media Include="$Resources\Snare.wav">
+      <Filter>Resources</Filter>
+    </Media>
   </ItemGroup>
 </Project>

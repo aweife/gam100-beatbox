@@ -1,4 +1,7 @@
 #include "Map.h"
+#include "../Audio/AudioEngine.h"
+#include "../Console/Console.h"
+#include "../Global.h"
 
 // Static boundary
 static coords sMapOrigin;
@@ -26,8 +29,8 @@ void Map_Update()
 void Map_Render()
 {
 	_CreateStatic();
-	if (AE_GetFrequency(KICK)) _CreateTemporary(2, GREEN);
-	if (AE_GetFrequency(SNARE)) _CreateTemporary(4, RED);
+	if (Audio_GetFrequency(KICK)) _CreateTemporary(2, GREEN);
+	if (Audio_GetFrequency(SNARE)) _CreateTemporary(4, RED);
 }
 
 void _CreateStatic()

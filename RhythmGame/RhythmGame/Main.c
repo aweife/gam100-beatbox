@@ -1,20 +1,19 @@
-#include "StateMachine.h"
-#include "Functions.h"
+#include "Global.h"
+#include "Console/Console.h"
+#include "States/StateMachine.h"
+#include "States/Game.h"
 
 int main(void)
 {
-	// Game Init
 	Console_Init();
-	Console_SetTitle("BeatBox");
+	Console_SetTitle("Beat Box");
 	Console_SetCursorVisibility(0);
 	Console_SetSquareFont();
 	Console_SetWindowedMode(GAME_WIDTH, GAME_HEIGHT, true);
-	StateMachine_changeState(State_MainMenu);
+	StateMachine_ChangeState(State_MainMenu);
 
-	while (gameRunning())
+	while (Game_IsRunning())
 	{
-		Clock_GameLoopStart();
-
 		StateMachine_Start();
 		StateMachine_ProcessInput();
 		StateMachine_Update();

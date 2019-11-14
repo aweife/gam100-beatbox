@@ -1,24 +1,12 @@
 #include "AudioEngine.h"
-
-//static int on; //is sound on?
-//static int possible; //is it possible to play sound?
-//
-//static char *currentSound;
-//static FMOD_SOUND *sound;
+#include "fmod.h"
+#include "fmod_errors.h"
+#include <stdbool.h>
 
 #define NUMBER_OF_BGM_TRACKS 1
 #define NUMBER_OF_SFX_TRACKS 1
 #define NUMBER_OF_CHANNELS 20
 
-// State
-static bool bIsPlaying;
-static bool bHasError;
-
-// FMOD-specific stuff
-static FMOD_RESULT result;
-static FMOD_SYSTEM *fmodSystem;
-
-// BGM
 typedef struct track
 {
 	FMOD_DSP *dsp;
@@ -29,6 +17,16 @@ typedef struct track
 	double threshold;
 	double spectrum;
 } track;
+
+// State
+static bool bIsPlaying;
+static bool bHasError;
+
+// FMOD-specific stuff
+static FMOD_RESULT result;
+static FMOD_SYSTEM *fmodSystem;
+
+// BGM
 static track kick = { .dsp = 0, };
 static track snare = { 0 };
 static track bgmList[NUMBER_OF_BGM_TRACKS];
@@ -46,7 +44,7 @@ void _CheckResult(const char *debug);
 void _CountDownBGM();
 
 
-void AE_Init()
+void Audio_Init()
 {
 	// Initialise state
 	bIsPlaying = true;
@@ -62,13 +60,13 @@ void AE_Init()
 	_CheckResult("initialising");
 
 	// LOAD TRACKS
-	AE_LoadTrack("..//Kick.wav", KICK);
-	AE_LoadTrack("..//Snare.wav", SNARE);
-	AE_LoadTrack("..//Melody.wav", BGM);
-	AE_StartBGMWithDelay(0, 2.17);
+	Audio_Load("../RhythmGame//$Resources//Kick.wav", KICK);
+	Audio_Load("..//RhythmGame//$Resources//Snare.wav", SNARE);
+	Audio_Load("..//RhythmGame//$Resources//Melody.wav", BGM);
+	Audio_PlayBGMWithDelay(0, 2.17);
 }
 
-void AE_LoadTrack(const char *path, TRACKTYPE type)
+void Audio_Load(const char *path, TRACKTYPE type)
 {
 	switch (type)
 	{
@@ -92,7 +90,7 @@ void AE_LoadTrack(const char *path, TRACKTYPE type)
 	_CheckResult("loading sound");
 }
 
-void AE_PlayOneShot(int id, float volume)
+void Audio_PlayOneShot(int id, float volume)
 {
 	// Set the track paused
 	FMOD_CHANNEL *c;
@@ -109,7 +107,7 @@ void AE_PlayOneShot(int id, float volume)
 	_CheckResult("playing");
 }
 
-void AE_StartBGMWithDelay(int id, double delay)
+void Audio_PlayBGMWithDelay(int id, double delay)
 {
 	bgmDelay = delay * 1000.0;
 
@@ -132,7 +130,7 @@ void AE_StartBGMWithDelay(int id, double delay)
 	FMOD_DSP_SetActive(bgmList[id].dsp, true);
 }
 
-int AE_GetFrequency(TRACKTYPE type)
+int Audio_GetFrequency(TRACKTYPE type)
 {
 	int result;
 	switch (type)
@@ -147,7 +145,7 @@ int AE_GetFrequency(TRACKTYPE type)
 	return result;
 }
 
-void AE_Update()
+void Audio_Update()
 {
 	result = FMOD_System_Update(fmodSystem);
 	_CheckResult("updating");
@@ -167,7 +165,7 @@ void AE_Update()
 		_CountDownBGM();
 }
 
-void AE_Shutdown()
+void Audio_Shutdown()
 {
 	// All channels stop playing and released, main system too
 	result = FMOD_System_Release(fmodSystem);
@@ -182,6 +180,24 @@ void AE_Shutdown()
 	for (int i = 0; i < sfxCount; i++)
 		FMOD_Sound_Release(sfxList[i]);
 	_CheckResult("system shutdown");
+}
+
+void Audio_SetBGMVolume(float volume, TRACKTYPE type)
+{
+	switch (type)
+	{
+	case KICK:
+		FMOD_Channel_SetVolume(kick.channel, volume);
+	case SNARE:
+		FMOD_Channel_SetVolume(snare.channel, volume);
+	case BGM:
+		FMOD_Channel_SetVolume(bgmList[currentId].channel, volume);
+		break;
+	case SFX:
+		//result = FMOD_ChannelGroup_SetVolume(sfxGroup, volume);
+		break;
+	}
+	_CheckResult("setting volume");
 }
 
 void _CheckResult(const char *debug)
@@ -206,92 +222,3 @@ void _CountDownBGM()
 		FMOD_Channel_SetPaused(bgmList[0].channel, false);
 	}
 }
-
-void AE_SetBGMVolume(float volume, TRACKTYPE type)
-{
-	switch (type)
-	{
-	case KICK:
-		FMOD_Channel_SetVolume(kick.channel, volume);
-	case SNARE:
-		FMOD_Channel_SetVolume(snare.channel, volume);
-	case BGM:
-		FMOD_Channel_SetVolume(bgmList[currentId].channel, volume);
-		break;
-	case SFX:
-		//result = FMOD_ChannelGroup_SetVolume(sfxGroup, volume);
-		break;
-	}
-	_CheckResult("setting volume");
-}
-
-//sets the actual playing sound's volume
-//void setVolume(float v) {
-//	if (possible && on && v >= 0.0f && v <= 1.0f) {
-//		FMOD_Channel_SetVolume(bgmChannel, v);
-//	}
-//}
-//
-////loads a soundfile
-//void load(const char *filename) {
-//	//currentSound = (char *)filename;
-//	if (possible && on) {
-//		//result = FMOD_Sound_Release(sound);
-//		//result = FMOD_System_CreateStream(system, currentSound, FMOD_CREATESTREAM, 0, &sound);
-//		if (result != FMOD_OK)
-//		{
-//			possible = 0;
-//			printf("FMOD ERROR! (%d) %s\n", result, FMOD_ErrorString(result));
-//		}
-//	}
-//}
-//
-////frees the sound object
-//void unload(void) {
-//	if (possible) {
-//		//	result = FMOD_Sound_Release(sound);
-//	}
-//}
-//
-////plays a sound (no argument to leave pause as dafault)
-//void play(int pause)
-//{
-//	if (possible && on) {
-//		//	result = FMOD_System_PlaySound(system, sound, NULL, pause, &bgmChannel);
-//		FMOD_Channel_SetMode(bgmChannel, FMOD_LOOP_NORMAL);
-//	}
-//}
-//
-////toggles sound on and off
-//void toggleSound(void)
-//{
-//	on = !on;
-//	if (on == 1) { load(currentSound); play(0); }
-//	if (on == 0) { unload(); }
-//}
-//
-////pause or unpause the sound
-//void setPause(int pause)
-//{
-//	FMOD_Channel_SetPaused(bgmChannel, pause);
-//}
-//
-////turn sound on or off
-//void setSound(int s)
-//{
-//	on = s;
-//}
-//
-////toggle pause on and off
-//void togglePause(void)
-//{
-//	FMOD_BOOL p;
-//	FMOD_Channel_GetPaused(bgmChannel, &p);
-//	FMOD_Channel_SetPaused(bgmChannel, !p);
-//}
-//
-////tells whether the sound is on or off
-//int getSound(void)
-//{
-//	return on;
-//}

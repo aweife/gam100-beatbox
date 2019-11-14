@@ -1,4 +1,7 @@
 #include "Enemy.h"
+#include "../Clock/Clock.h"
+#include "../Global.h"
+#include "../Map/Map.h"
 
 //Game State
 int GameIsRunning = 0;
@@ -24,21 +27,21 @@ double elapsedTimerTime = 0.0;
 char timeDisplay[10];
 
 //Skull Structure
-skullenemy skull;
+sprite skull;
 
 //Only stores 10 values
 Projectile pArray[NUMBER_OF_PROJECTILE];
 //Limits 10 bullets on-screen
 int pCount = NUMBER_OF_PROJECTILE;
 
-void E_Init()
+void Enemy_Init()
 {
 	E_CalculateBPM(132);
 	Text_Init();
 	skull = Text_CreateEnemy();
 }
 
-void E_Update()
+void Enemy_Update()
 {
 	/*_getClock();*/
 	_updateEnemy();
@@ -81,7 +84,7 @@ double E_CalculateBPM(int x)
 	return result;
 }
 
-skullenemy *E_GetEnemy()
+sprite *E_GetEnemy()
 {
 	return &skull;
 }
@@ -167,7 +170,7 @@ void _updateProjectile()
 	}
 }
 
-void E_Render()
+void Enemy_Render()
 {
 	//ASCI ENEMY
 	Text_RenderEnemy(&skull);

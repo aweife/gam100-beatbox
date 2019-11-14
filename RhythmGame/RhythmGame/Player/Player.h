@@ -1,10 +1,6 @@
 #pragma once
-#include "../Functions.h"
-#include "../Map/Map.h"
-#include "../Enemy/Enemy.h"
-#include "../Testread.h"
-#include "../Game.h"
-#include "../StateMachine.h"
+
+#include "../Global.h"
 
 #define BOXSIZE 3
 
@@ -21,52 +17,35 @@ typedef enum DIRECTION
 	STAY = 0,
 }DIRECTION;
 
-typedef enum EASEMOVEMENT
-{
+typedef enum EASEMOVEMENT {
 	SpeedUp = 0,
 	SlowDown = 1,
 	Default = 2,
 }EASEMOVEMENT;
 
-typedef struct Player
-{
-	int originX;
-	int originY;
-	int playerX[BOXSIZE * BOXSIZE];
-	int playerY[BOXSIZE * BOXSIZE];
+typedef struct Player {
+	coords position;
+	coords body[BOXSIZE * BOXSIZE];
 	int direction;
-	double eulerX;
-	double eulerY;
 }Player;
 
-static double factor;
-static double dt;
-static int EaseBool;
-static int EaseCheck;
-static double EaseTimer;
-static double velocity;
-static double cdTimer;
-static double dashTimer;
-
 // Initialise player variables
-void p_playerInit();
+void Player_Init();
 
 // Moves the player according to input (WITH DASH MECHANISM)
-void P_Update();
+void Player_Update();
 
 // Renders the player location
-void P_Render();
-
-
+void Player_Render();
 
 // Allows player to dash
-void _playerDash();
+void Player_Dash();
 
 // Sets direction and EaseMovement to allow movement in direction with Ease In Ease Out effect
-extern void _playerSetVel(DIRECTION dir, EASEMOVEMENT EaseC);
+extern void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC);
 
 // Returns value of factor
-double _playerGetEaseFactor();
+double Player_GetEaseFactor();
 
 // Returns direction of player
-int _playerGetDirection();
+int Player_GetDirection();

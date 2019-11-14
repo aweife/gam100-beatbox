@@ -1,8 +1,25 @@
 #include "Player.h"
+#include "../Global.h"
+#include "../Console/Console.h"
+#include "../Map/Map.h"
+#include "../Text/TextReader.h"
+#include "../Enemy/Enemy.h"
+#include "../States/StateMachine.h"
+#include "../Clock/Clock.h"
 
 Player player;
 
-// Internal functions
+static double factor;
+static double dt;
+static int EaseBool;
+static int EaseCheck;
+static double EaseTimer;
+static double velocity;
+static double cdTimer;
+static double dashTimer;
+
+/* Internal functions */
+
 void _MovePlayer();
 void _CheckCollision();
 // Checks if player is out of border
@@ -10,13 +27,14 @@ void _CheckBorder();
 // Prints BOXSIZE of player
 void _UpdateShape();
 
-void p_playerInit()
+
+void Player_Init()
 {
-	player.originX = 50;
-	player.originY = 50;
-	player.direction = 0;
-	player.eulerX = 40.0;
-	player.eulerY = 40.0;
+	player = (Player){
+		.direction = 0,
+		.position.x = 50, .position.y = 50,
+		.position.eulerX = 50.0, .position.eulerY = 50.0, };
+
 	factor = 0.0;
 	EaseBool = 0;
 	EaseCheck = SlowDown;
@@ -24,13 +42,88 @@ void p_playerInit()
 	velocity = 0.04;
 }
 
-void P_Update()
+void Player_Update()
 {
 	_MovePlayer();
 	_CheckBorder();
 	_UpdateShape();
 
+	// Check collision after player's position update first
 	_CheckCollision();
+}
+
+void Player_Render()
+{
+	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
+		Console_SetRenderBuffer_CharColor(player.body[i].x, player.body[i].y, ' ', bRED);
+}
+
+void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
+{
+	player.direction = dir;
+	EaseCheck = EaseC;
+}
+
+double Player_GetEaseFactor()
+{
+	return factor;
+}
+
+int Player_GetDirection()
+{
+	return player.direction;
+}
+
+void Player_Dash()
+{
+	if (cdTimer > 0) return;
+	velocity = 0.15;
+	factor = 1;
+	dashTimer = 100.0f;
+	cdTimer = 1000.0f;
+}
+
+void _UpdateShape()
+{
+	int localx = 0;
+	int localy = 0;
+
+	localx = player.position.x--;
+	localy = player.position.y--;
+
+	for (int i = 0; i < BOXSIZE; i++)
+	{
+		for (int j = 0; j < BOXSIZE; j++)
+		{
+			player.body[i * 3 + j].x = localx + j;
+			player.body[i * 3 + j].y = localy + i;
+		}
+	}
+}
+
+void _CheckBorder()
+{
+	if (player.position.eulerX < (MAP_OFFSET + 1)) player.position.eulerX = MAP_OFFSET + 1;
+	if (player.position.eulerY< (MAP_OFFSET + 1)) player.position.eulerY = MAP_OFFSET + 1;
+	if (player.position.eulerX > (GAME_WIDTH - MAP_OFFSET - BOXSIZE)) player.position.eulerX = GAME_WIDTH - MAP_OFFSET - BOXSIZE;
+	if (player.position.eulerY > (GAME_HEIGHT - MAP_OFFSET - BOXSIZE)) player.position.eulerY = GAME_HEIGHT - MAP_OFFSET - BOXSIZE;
+}
+
+void _CheckCollision()
+{
+	// Enemy
+	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
+		for (int j = 0; j < SPRITE_SIZE; j++)
+			if (player.body[i].x == (E_GetEnemy()->position[j][0] + E_GetEnemy()->Xposition) &&
+				player.body[i].y == (E_GetEnemy()->position[j][1] + E_GetEnemy()->Yposition))
+				StateMachine_ChangeState(State_GameOver);
+
+	// Projectiles
+	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
+		for (int j = 0; j < NUMBER_OF_PROJECTILE; j++)
+			if (player.body[i].x == (E_GetProjectile() + j)->x &&
+				player.body[i].y == (E_GetProjectile() + j)->y)
+				StateMachine_ChangeState(State_GameOver);
 }
 
 void _MovePlayer()
@@ -58,105 +151,29 @@ void _MovePlayer()
 
 	switch (player.direction)
 	{
-	case 1:
-		player.eulerX += -1 * dt * velocity * factor;
-		player.eulerY += -1 * dt * velocity * factor;
+	case TOPLEFT:
+		player.position.eulerX += -1 * dt * velocity * factor;
+		player.position.eulerY += -1 * dt * velocity * factor;
 		break;
-	case 2:
-		player.eulerX += 1 * dt * velocity * factor;
-		player.eulerY += -1 * dt * velocity * factor;
+	case TOPRIGHT:
+		player.position.eulerX += 1 * dt * velocity * factor;
+		player.position.eulerY += -1 * dt * velocity * factor;
 		break;
-	case 3:
-		player.eulerX += 1 * dt * velocity * factor;
-		player.eulerY += 1 * dt * velocity * factor;
+	case BOTTOMRIGHT:
+		player.position.eulerX += 1 * dt * velocity * factor;
+		player.position.eulerY += 1 * dt * velocity * factor;
 		break;
-	case 4:
-		player.eulerX += -1 * dt * velocity * factor;
-		player.eulerY += 1 * dt * velocity * factor;
+	case BOTTOMLEFT:
+		player.position.eulerX += -1 * dt * velocity * factor;
+		player.position.eulerY += 1 * dt * velocity * factor;
 		break;
-	case 5: player.eulerY += -1 * dt * velocity * factor; break;
-	case 6: player.eulerX += 1 * dt * velocity * factor; break;
-	case 7: player.eulerY += 1 * dt * velocity * factor; break;
-	case 8: player.eulerX += -1 * dt * velocity * factor; break;
+	case UP: player.position.eulerY += -1 * dt * velocity * factor; break;
+	case RIGHT: player.position.eulerX += 1 * dt * velocity * factor; break;
+	case DOWN: player.position.eulerY += 1 * dt * velocity * factor; break;
+	case LEFT: player.position.eulerX += -1 * dt * velocity * factor; break;
 	default: break;
 	}
 
-	player.originX = player.eulerX;
-	player.originY = player.eulerY;
-}
-
-void P_Render()
-{
-	for (int i = 0; i < 9; i++)
-	{
-		Console_SetRenderBuffer_CharColor(player.playerX[i], player.playerY[i], ' ', bRED);
-	}
-}
-
-void _playerSetVel(DIRECTION dir, EASEMOVEMENT EaseC)
-{
-	player.direction = dir;
-	EaseCheck = EaseC;
-}
-
-double _playerGetEaseFactor()
-{
-	return factor;
-}
-
-int _playerGetDirection()
-{
-	return player.direction;
-}
-
-void _playerDash()
-{
-	if (cdTimer > 0) return;
-	velocity = 0.15;
-	factor = 1;
-	dashTimer = 100.0f;
-	cdTimer = 1000.0f;
-}
-
-void _UpdateShape()
-{
-	int localx = 0;
-	int localy = 0;
-
-	localy = player.originY--;
-	localx = player.originX--;
-
-	for (int i = 0; i < BOXSIZE; i++)
-	{
-		for (int j = 0; j < BOXSIZE; j++)
-		{
-			player.playerX[i * 3 + j] = localx + j;
-			player.playerY[i * 3 + j] = localy + i;
-		}
-	}
-}
-
-void _CheckBorder()
-{
-	if (player.eulerX < (MAP_OFFSET + 1)) player.eulerX = MAP_OFFSET + 1;
-	if (player.eulerY < (MAP_OFFSET + 1)) player.eulerY = MAP_OFFSET + 1;
-	if (player.eulerX > (GAME_WIDTH - MAP_OFFSET - BOXSIZE)) player.eulerX = GAME_WIDTH - MAP_OFFSET - BOXSIZE;
-	if (player.eulerY > (GAME_HEIGHT - MAP_OFFSET - BOXSIZE)) player.eulerY = GAME_HEIGHT - MAP_OFFSET - BOXSIZE;
-}
-
-void _CheckCollision()
-{
-	// Enemy
-	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
-		for (int j = 0; j < ENEMY_SIZE; j++)
-			if (player.playerX[i] == (E_GetEnemy()->position[j][0] + E_GetEnemy()->Xposition) &&
-				player.playerY[i] == (E_GetEnemy()->position[j][1] + E_GetEnemy()->Yposition))
-				StateMachine_changeState(State_GameOver);
-
-	// Projectiles
-	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
-		for (int j = 0; j < NUMBER_OF_PROJECTILE; j++)
-			if (player.playerX[i] == (E_GetProjectile() + j)->x &&
-				player.playerY[i] == (E_GetProjectile() + j)->y)
-				StateMachine_changeState(State_GameOver);
+	player.position.x = player.position.eulerX;
+	player.position.y = player.position.eulerY;
 }

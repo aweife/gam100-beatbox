@@ -1,21 +1,11 @@
 #pragma once
 
-#include "../Console/Console.h"
-#include "../Random/Random.h"
-#include "../Clock/Clock.h"
-#include <Windows.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <math.h>
-#include "../Map/Map.h"
-#include "../Functions.h"
-#include "../Testread.h"
+#include "../Text/TextReader.h"
 
 #define NUMBER_OF_PROJECTILE 10
 
 //Projectile Structure
-typedef struct //MUSTLEARNTHIS
+typedef struct Projectile//MUSTLEARNTHIS
 {
 	int x;
 	int y;
@@ -23,15 +13,15 @@ typedef struct //MUSTLEARNTHIS
 	int pArrayReady;
 } Projectile;
 
-void E_Init();
+void Enemy_Init();
 
-void E_Update();
+void Enemy_Update();
 
 /*void _getClock();*/
 
 double E_CalculateBPM(int x);
 
-skullenemy *E_GetEnemy();
+sprite *E_GetEnemy();
 
 Projectile *E_GetProjectile();
 
@@ -39,6 +29,6 @@ void _spawnProjectile();
 
 void _updateProjectile();
 
-void E_Render();
+void Enemy_Render();
 
 void _updateEnemy();
