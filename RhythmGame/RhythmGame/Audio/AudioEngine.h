@@ -32,3 +32,5 @@ extern void AE_Update();
 
 // Return true if frequency rises above certain threshold
 extern int AE_GetFrequency(TRACKTYPE type);
+
+extern void AE_SetBGMVolume(float volume);

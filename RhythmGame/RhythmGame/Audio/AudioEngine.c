@@ -44,8 +44,6 @@ static FMOD_SOUND *sfxList[NUMBER_OF_SFX_TRACKS];
 // For internal use
 void _CheckResult(const char *debug);
 void _CountDownBGM();
-void _StartBGM(FMOD_DSP *dsp, FMOD_SOUND *sound, FMOD_CHANNEL *channel);
-void _UpdateSpectrum(FMOD_DSP *dsp, FMOD_DSP_PARAMETER_FFT *dspFFT, double *spectrum);
 
 
 void AE_Init()
@@ -209,36 +207,23 @@ void _CountDownBGM()
 	}
 }
 
-//void AE_Play(int trackID, TRACK type)
-//{
-//	switch (type)
-//	{
-//	case BGM:
-//		// Returns the channel handle for manipulation
-//		result = FMOD_System_PlaySound(system, bgmSounds[trackID], 0, false, &bgmChannel);
-//		_CheckResult("playing");
-//		break;
-//	case SFX:
-//		// Automatically plays oneshot
-//		result = FMOD_System_PlaySound(system, sfxList[trackID], 0, false, 0);
-//		_CheckResult("playing");
-//		break;
-//	}
-//}
-
-//void AE_SetVolume(float volume, TRACK type)
-//{
-//	switch (type)
-//	{
-//	case BGM:
-//		result = FMOD_Channel_SetVolume(bgmChannel, volume);
-//		break;
-//	case SFX:
-//		//result = FMOD_ChannelGroup_SetVolume(sfxGroup, volume);
-//		break;
-//	}
-//	_CheckResult("setting volume");
-//}
+void AE_SetBGMVolume(float volume, TRACKTYPE type)
+{
+	switch (type)
+	{
+	case KICK:
+		FMOD_Channel_SetVolume(kick.channel, volume);
+	case SNARE:
+		FMOD_Channel_SetVolume(snare.channel, volume);
+	case BGM:
+		FMOD_Channel_SetVolume(bgmList[currentId].channel, volume);
+		break;
+	case SFX:
+		//result = FMOD_ChannelGroup_SetVolume(sfxGroup, volume);
+		break;
+	}
+	_CheckResult("setting volume");
+}
 
 //sets the actual playing sound's volume
 //void setVolume(float v) {
