@@ -4,8 +4,8 @@
 #include "../Global.h"
 
 // Static boundary
-static coords sMapOrigin;
-static coords sMapEnd;
+static Vector2d sMapOrigin;
+static Vector2d sMapEnd;
 static int sMapOffset = MAP_OFFSET;
 
 // Private functions

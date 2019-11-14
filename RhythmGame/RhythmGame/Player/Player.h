@@ -24,8 +24,8 @@ typedef enum EASEMOVEMENT {
 }EASEMOVEMENT;
 
 typedef struct Player {
-	coords position;
-	coords body[BOXSIZE * BOXSIZE];
+	Vector2d position;
+	Vector2d body[BOXSIZE * BOXSIZE];
 	int direction;
 }Player;
 

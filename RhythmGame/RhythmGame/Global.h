@@ -25,9 +25,9 @@ typedef enum CONSOLECOLOR {
 	bRED = BACKGROUND_RED,
 } CONSOLECOLOR;
 
-typedef struct coords {
+typedef struct Vector2d {
 	int x;
 	int y;
 	double eulerX;
 	double eulerY;
-} coords;
+} Vector2d;
