@@ -2,8 +2,8 @@
 
 #include <Windows.h>
 
-#define GAME_WIDTH 100
-#define GAME_HEIGHT 80
+#define GAME_WIDTH 400
+#define GAME_HEIGHT 200
 
 typedef enum CONSOLECOLOR {
 	BLACK = 0,

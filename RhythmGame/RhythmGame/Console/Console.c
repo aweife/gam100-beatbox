@@ -159,8 +159,8 @@ void Console_SetSquareFont()
 	CONSOLE_FONT_INFOEX fontInfo = { 0 };
 	fontInfo.cbSize = sizeof(fontInfo);
 	wcscpy_s(fontInfo.FaceName, _countof(fontInfo.FaceName), L"Terminal");
-	fontInfo.dwFontSize.X = 8;
-	fontInfo.dwFontSize.Y = 8;
+	fontInfo.dwFontSize.X = 1;
+	fontInfo.dwFontSize.Y = 1;
 	fontInfo.FontWeight = FW_NORMAL;
 	sConsoleDisplayRatio = fontInfo.dwFontSize.X / (float)fontInfo.dwFontSize.Y;
 	
