@@ -3,11 +3,6 @@
 #include "../Global.h"
 #include "../Map/Map.h"
 
-//Game State
-int GameIsRunning = 0;
-int height = 1;
-int width = 80;
-
 //Game Input
 int EnX = 50;
 int EnY = 20;
@@ -18,6 +13,8 @@ int randEnShoot = 0;
 int tmpX = 0;
 int tmpY = 0;
 double result = 0.0;
+
+Enemy enemyArray[1];
 
 //Game Time
 double BPMEnTime = 0.0;
@@ -31,68 +28,62 @@ sprite skull;
 
 //Only stores 10 values
 Projectile pArray[NUMBER_OF_PROJECTILE];
+
 //Limits 10 bullets on-screen
 int pCount = NUMBER_OF_PROJECTILE;
 
+/* Internal functions */
+
+void _spawnProjectile();
+void _updateProjectile();
+void _updateEnemy();
+
 void Enemy_Init()
 {
-	E_CalculateBPM(132);
-	skull = Text_CreateSprite();
-	Text_Init(&skull, "..//RhythmGame//$Resources//skull.txt");
-	
-
-
+	Enemy_CalculateBPM(132);
+	Text_Init();
+	skull = Text_CreateEnemy();
 }
 
 void Enemy_Update()
 {
-	/*_getClock();*/
 	_updateEnemy();
 	Text_Moveenemy(&skull, EnX - 9, EnY - 7);
 	_spawnProjectile();
 	_updateProjectile();
 }
 
-/*void _getClock()
-{
-	elapsedTimerTime += Clock_GetDeltaTime();
-	_itoa_s(elapsedTimerTime / CLOCKS_PER_SEC, timeDisplay, sizeof(timeDisplay), 10);
-	Console_SetRenderBuffer_String(63, 8, "Timer:");
-	Console_SetRenderBuffer_String(70, 8, timeDisplay);
-}*/
-
-/*void _renderBoundary()
-{
-	for (int i = 0; i < height; i++)
-	{
-		for (int j = 0; j < width; j += (width - 1))
-		{
-			Console_SetRenderBuffer_Char(j, i, '#');
-		}
-
-	}
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j += (width - 1))
-		{
-			Console_SetRenderBuffer_Char(i, j, '#');
-		}
-	}
-}*/
-
-double E_CalculateBPM(int x)
+double Enemy_CalculateBPM(int x)
 {
 	result = 60.0 / (double)x;
 	result *= 1000.0;
 	return result;
 }
 
-sprite *E_GetEnemy()
+void Enemy_Render()
+{
+	//ASCI ENEMY
+	Text_RenderEnemy(&skull);
+
+	for (int i = 0; i < pCount; i++)
+	{
+		if (pArray[i].visible)
+		{
+			//Print out projectile
+			Console_SetRenderBuffer_Char(pArray[i].position.x, pArray[i].position.y, '*');
+		}
+	}
+
+	//LETTER ENEMY
+	//Console_SetRenderBuffer_Char(EnX, EnY, 'E');
+}
+
+sprite *Enemy_GetEnemy()
 {
 	return &skull;
 }
 
-Projectile *E_GetProjectile()
+Projectile *Enemy_GetProjectile()
 {
 	return pArray;
 }
@@ -106,9 +97,9 @@ void _spawnProjectile()
 		for (int i = 0; i < pCount; ++i)
 		{
 			//State and Ready ensures array don't spawn unnecessary projectiles > 10
-			if (pArray[i].pArrayReady == 0 && pArray[i].state == 0)
+			if (!pArray[i].available && !pArray[i].visible)
 			{
-				pArray[i].pArrayReady = 1;
+				pArray[i].available = true;
 				//Reset spawn time
 				BPMProjSpawnTime = BPMProjSpawnTime - 3000.0;
 				break;
@@ -119,25 +110,25 @@ void _spawnProjectile()
 
 	for (int i = 0; i < pCount; ++i)
 	{
-		if (pArray[i].pArrayReady == 1 && pArray[i].state == 0)
+		if (pArray[i].available && !pArray[i].visible)
 		{
 			//Sets projectile to spawn at last location of enemy
-			pArray[i].state = 1;
-			pArray[i].x = EnX;
-			pArray[i].y = EnY;
-			pArray[i].pArrayReady = 0;
+			pArray[i].visible = true;
+			pArray[i].position.x = EnX;
+			pArray[i].position.y = EnY;
+			pArray[i].available = false;
 		}
 
 		//Collision
-		if (pArray[i].x >= GAME_WIDTH - MAP_OFFSET ||
-			pArray[i].y >= GAME_HEIGHT - MAP_OFFSET ||
-			pArray[i].x < MAP_OFFSET ||
-			pArray[i].y < MAP_OFFSET)
+		if (pArray[i].position.x >= GAME_WIDTH - MAP_OFFSET ||
+			pArray[i].position.y >= GAME_HEIGHT - MAP_OFFSET ||
+			pArray[i].position.x < MAP_OFFSET ||
+			pArray[i].position.y < MAP_OFFSET)
 		{
-			pArray[i].state = 0;
+			pArray[i].available = 0;
 			//Hide away projectiles
-			pArray[i].x = 300;
-			pArray[i].y = 300;
+			pArray[i].position.x = 300;
+			pArray[i].position.y = 300;
 		}
 	}
 }
@@ -167,28 +158,10 @@ void _updateProjectile()
 				//Down
 				pArray[i].y++;
 			}*/
-			pArray[i].y += 2;
+			pArray[i].position.y += 2;
 		}
 		BPMProjMoveTime = BPMProjMoveTime - result; //Resets enemy move time to move every 1 second
 	}
-}
-
-void Enemy_Render()
-{
-	//ASCI ENEMY
-	Text_RenderEnemy(&skull);
-
-	for (int i = 0; i < pCount; i++)
-	{
-		if (pArray[i].state == 1)
-		{
-			//Print out projectile
-			Console_SetRenderBuffer_Char(pArray[i].x, pArray[i].y, '*');
-		}
-	}
-
-	//LETTER ENEMY
-	//Console_SetRenderBuffer_Char(EnX, EnY, 'E');
 }
 
 void _updateEnemy()
@@ -233,35 +206,3 @@ void _updateEnemy()
 		EnY = 20;
 	}
 }
-
-/*
-int main()
-{
-	//Game Initialization
-	Random_Init();
-	Console_Init();
-
-	//Setup a square font and the window size, and remove cursor visibility
-	Console_SetTitle("Enemy Gameplay");
-	Console_SetSquareFont();
-	Console_SetWindowedMode(120, 60, false);
-	Console_SetCursorVisibility(false);
-
-	randNo = Random_Range(1, 4);
-
-	printf_s("%.1f", calculateBPM(132));
-
-	while (GameIsRunning = 1)
-	{
-		Console_ClearRenderBuffer();
-		Clock_GameLoopStart();
-		_getClock();
-		_renderBoundary();
-		_spawnProjectile();
-		_updateProjectile();
-		renderEnemy();
-		_updateEnemy();
-		Console_SwapRenderBuffer();
-	}
-}
-*/

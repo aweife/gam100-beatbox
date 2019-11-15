@@ -24,9 +24,10 @@ typedef enum EASEMOVEMENT {
 }EASEMOVEMENT;
 
 typedef struct Player {
-	coords position;
-	coords body[BOXSIZE * BOXSIZE];
+	Vector2d position;
+	Vector2d body[BOXSIZE * BOXSIZE];
 	int direction;
+	int health;
 }Player;
 
 // Initialise player variables
@@ -40,6 +41,9 @@ void Player_Render();
 
 // Allows player to dash
 void Player_Dash();
+
+// Damages Player
+void Player_Damage();
 
 // Sets direction and EaseMovement to allow movement in direction with Ease In Ease Out effect
 extern void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC);
