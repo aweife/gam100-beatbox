@@ -37,8 +37,11 @@ int pCount = NUMBER_OF_PROJECTILE;
 void Enemy_Init()
 {
 	E_CalculateBPM(132);
-	Text_Init();
-	skull = Text_CreateEnemy();
+	skull = Text_CreateSprite();
+	Text_Init(&skull, "..//RhythmGame//$Resources//skull.txt");
+	
+
+
 }
 
 void Enemy_Update()

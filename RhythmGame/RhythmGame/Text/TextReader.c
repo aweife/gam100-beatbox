@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include "TextReader.h"
 #include "../Console/Console.h"
+#include "../Global.h"
 
 FILE* pFile;
-sprite s = { 0 };
-sprite logo = { 0 };
+sprite skullenemy = { 0 };
 char Charline[150] = { 0 };
 int length = 0;
 int charcount = 0;
@@ -15,27 +15,24 @@ int totalcharcount = 0;
 int currentyposition = 0;
 int iteration = 0;
 
-void Text_Init()
-{
-	_Readandstoretext(&s,"..//RhythmGame//$Resources//skull.txt");
-	_Readandstoretext(&logo,"..//RhythmGame//$Resources//Logo2.txt");
+void Text_Init(sprite *s, char* path)
+{   
+	_Readandstoretext(s,path);
 }
 
-sprite Text_CreateEnemy()
+sprite Text_CreateSprite()
 {
-	return s;
+	return skullenemy;
 }
-
-sprite Text_CreateLogo()
-{
-	return logo;
-}
-
 void Text_RenderEnemy(sprite *s)
 {
 	for (int i = 0; i < SPRITE_SIZE; i++)
 	{
-		
+		if (s->printchar[i] == 'R')
+	      Console_SetRenderBuffer_CharColor((s->position[i][0]) + s->Xposition, (s->position[i][1] + s->Yposition), ' ', bRED);
+		else if(s->printchar[i] == 'W')
+		  Console_SetRenderBuffer_CharColor((s->position[i][0]) + s->Xposition, (s->position[i][1] + s->Yposition), ' ', WHITE);
+		else
 		Console_SetRenderBuffer_Char((s->position[i][0])+s->Xposition,(s->position[i][1]+s->Yposition),(s->printchar[i]));
     }
 }
@@ -48,6 +45,14 @@ void Text_Moveenemy(sprite *skull,int x, int y)
 
 void _Readandstoretext(sprite *s, char* path)
 {
+	iteration = 0;
+	newcharcount = 0;
+	totalcharcount = 0;
+
+	for (int i = 0; i < 150; i++)
+	{
+		Charline[i] = '0';
+	}
 
 	pFile = fopen(path, "r");
 	if (pFile == NULL) perror("Error opening file");
