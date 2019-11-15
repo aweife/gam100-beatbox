@@ -50,7 +50,7 @@ void _CheckBeats()
 			{
 				enemy.updated = true;
 				enemy.timer = bpm;
-				Enemy_FixedUpdate();
+				//Enemy_FixedUpdate();
 			}
 		}
 	}
