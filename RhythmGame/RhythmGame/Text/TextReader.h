@@ -1,6 +1,6 @@
 #pragma once
 
-#define SPRITE_SIZE 500
+#define SPRITE_SIZE 1000
 
 typedef struct sprite
 {
@@ -12,10 +12,10 @@ typedef struct sprite
 }sprite;
 
 //initialise for skullenemy
-void Text_Init();
+void Text_Init(sprite* s, char* path);
 
 //creates a skullenemy
-sprite Text_CreateEnemy();
+sprite Text_CreateSprite();
 
 //Renders enemy
 void Text_RenderEnemy(sprite *s);
@@ -26,4 +26,3 @@ void Text_Moveenemy(sprite *s, int x, int y);
 //Read from text file and store in array
 void _Readandstoretext(sprite *s, const char *path);
 
-sprite Text_CreateLogo();

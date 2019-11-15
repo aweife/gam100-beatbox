@@ -4,7 +4,7 @@
 #include "StateMachine.h"
 #include "Game.h"
 
-sprite Logo;
+sprite logo;
 
 //*********************************************************************************
 //								LOCAL VARIABLES
@@ -35,8 +35,8 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
-	Text_Moveenemy(&Logo,40, 20);
-	Text_RenderEnemy(&Logo);
+	Text_Moveenemy(&logo,40, 20);
+	Text_RenderEnemy(&logo);
 }
 
 
@@ -48,8 +48,9 @@ void MainMenu_Render()
 //*********************************************************************************
 void MainMenu_EnterState()
 {
-	Text_Init();
-	Logo = Text_CreateEnemy();
+	logo = Text_CreateSprite();
+	Text_Init(&logo, "..//RhythmGame//$Resources//logo2.txt");
+	
 }
 
 void MainMenu_ExitState()

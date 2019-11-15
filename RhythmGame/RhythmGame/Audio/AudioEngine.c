@@ -13,8 +13,6 @@ typedef struct track
 	FMOD_DSP_PARAMETER_FFT *dspFFT;
 	FMOD_SOUND *sound;
 	FMOD_CHANNEL *channel;
-
-	double threshold;
 	double spectrum;
 } track;
 
@@ -63,7 +61,7 @@ void Audio_Init()
 	Audio_Load("../RhythmGame//$Resources//Kick.wav", KICK);
 	Audio_Load("..//RhythmGame//$Resources//Snare.wav", SNARE);
 	Audio_Load("..//RhythmGame//$Resources//Melody.wav", BGM);
-	Audio_PlayBGMWithDelay(0, 2.17);
+	Audio_PlayBGMWithDelay(0, 0.1);
 }
 
 void Audio_Load(const char *path, TRACKTYPE type)
@@ -72,11 +70,9 @@ void Audio_Load(const char *path, TRACKTYPE type)
 	{
 	case KICK:
 		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &kick.sound);
-		kick.threshold = .0001;
 		break;
 	case SNARE:
 		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &snare.sound);
-		snare.threshold = .0001;
 		break;
 	case BGM:
 		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &bgmList[bgmCount].sound);
@@ -130,19 +126,15 @@ void Audio_PlayBGMWithDelay(int id, double delay)
 	FMOD_DSP_SetActive(bgmList[id].dsp, true);
 }
 
-int Audio_GetFrequency(TRACKTYPE type)
+double Audio_GetFrequency(TRACKTYPE type)
 {
-	int result;
 	switch (type)
 	{
 	case KICK:
-		result = kick.spectrum > kick.threshold ? 1 : 0;
-		break;
+		return kick.spectrum;
 	case SNARE:
-		result = snare.spectrum > snare.threshold ? 1 : 0;
-		break;
+		return snare.spectrum;
 	}
-	return result;
 }
 
 void Audio_Update()

@@ -40,15 +40,15 @@ void _UpdateTimer();
 void Player_Init()
 {
 	player = (Player){
-		.direction = 0,
+		.direction = STAY,
 		.position.x = 50, .position.y = 50,
 		.position.eulerX = 50.0, .position.eulerY = 50.0,
 		.health = 10};
 
 	factor = 0.0;
-	EaseBool = 0;
+	EaseBool = false;
 	EaseCheck = SlowDown;
-	EaseCheck = 1;
+	EaseCheck = true;
 	velocity = 0.04;
 
 	// Timers
@@ -160,15 +160,15 @@ void _CheckCollision()
 	// Enemy
 	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
 		for (int j = 0; j < SPRITE_SIZE; j++)
-			if (player.body[i].x == (E_GetEnemy()->position[j][0] + E_GetEnemy()->Xposition) &&
-				player.body[i].y == (E_GetEnemy()->position[j][1] + E_GetEnemy()->Yposition))
+			if (player.body[i].x == (Enemy_GetEnemy()->position[j][0] + Enemy_GetEnemy()->Xposition) &&
+				player.body[i].y == (Enemy_GetEnemy()->position[j][1] + Enemy_GetEnemy()->Yposition))
 				Player_Damage();
 
 	// Projectiles
 	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
 		for (int j = 0; j < NUMBER_OF_PROJECTILE; j++)
-			if (player.body[i].x == (E_GetProjectile() + j)->x &&
-				player.body[i].y == (E_GetProjectile() + j)->y)
+			if (player.body[i].x == (Enemy_GetProjectile() + j)->position.x &&
+				player.body[i].y == (Enemy_GetProjectile() + j)->position.y)
 				Player_Damage();
 }
 
