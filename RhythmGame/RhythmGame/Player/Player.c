@@ -8,15 +8,22 @@
 #include "../Clock/Clock.h"
 
 Player player;
+CONSOLECOLOR color;
 
 static double factor;
-static double dt;
-static int EaseBool;
-static int EaseCheck;
-static double EaseTimer;
 static double velocity;
-static double cdTimer;
-static double dashTimer;
+
+// CHECKS
+static int EaseCheck;
+static int EaseBool;
+static int invulCheck; // Check invulnerable state (1 = invul / 0 = not invul)
+
+// TIMERS
+static double dt; // Euler Movement
+static double EaseTimer; // Ease
+static double cdTimer; // Cooldown of Dash
+static double dashTimer; // Duration of Dash
+static double invulTimer; // Invulnerable timer
 
 /* Internal functions */
 
@@ -27,19 +34,29 @@ void _CheckBorder();
 // Prints BOXSIZE of player
 void _UpdateShape();
 
+void _UpdateTimer();
+
 
 void Player_Init()
 {
 	player = (Player){
 		.direction = 0,
 		.position.x = 50, .position.y = 50,
-		.position.eulerX = 50.0, .position.eulerY = 50.0, };
+		.position.eulerX = 50.0, .position.eulerY = 50.0,
+		.health = 10};
 
 	factor = 0.0;
 	EaseBool = 0;
 	EaseCheck = SlowDown;
 	EaseCheck = 1;
 	velocity = 0.04;
+
+	EaseTimer = 0.0; // Ease
+	cdTimer = 0.0;
+	dashTimer = 0.0;
+	invulTimer = 0.0;
+
+	invulCheck = 0;
 }
 
 void Player_Update()
@@ -50,12 +67,18 @@ void Player_Update()
 
 	// Check collision after player's position update first
 	_CheckCollision();
+	_UpdateTimer();
 }
 
 void Player_Render()
 {
+	if (invulCheck == 1)
+		color = bBLUE;
+	else
+		color = bRED;
+
 	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
-		Console_SetRenderBuffer_CharColor(player.body[i].x, player.body[i].y, ' ', bRED);
+		Console_SetRenderBuffer_CharColor(player.body[i].x, player.body[i].y, ' ', color);
 }
 
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
@@ -83,6 +106,27 @@ void Player_Dash()
 	cdTimer = 1000.0f;
 }
 
+void Player_Damage()
+{
+	if (invulCheck == 0)
+	{
+		player.health--;
+		invulCheck = 1;
+		invulTimer = 2000.0;
+	}
+}
+
+void _UpdateTimer()
+{
+	if (invulCheck == 1)
+	{
+		invulTimer -= Clock_GetDeltaTime();
+		
+		if (invulTimer < 0)
+			invulCheck = 0;
+	}
+		
+}
 void _UpdateShape()
 {
 	int localx = 0;
@@ -116,14 +160,14 @@ void _CheckCollision()
 		for (int j = 0; j < SPRITE_SIZE; j++)
 			if (player.body[i].x == (E_GetEnemy()->position[j][0] + E_GetEnemy()->Xposition) &&
 				player.body[i].y == (E_GetEnemy()->position[j][1] + E_GetEnemy()->Yposition))
-				StateMachine_ChangeState(State_GameOver);
+				Player_Damage();
 
 	// Projectiles
 	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
 		for (int j = 0; j < NUMBER_OF_PROJECTILE; j++)
 			if (player.body[i].x == (E_GetProjectile() + j)->x &&
 				player.body[i].y == (E_GetProjectile() + j)->y)
-				StateMachine_ChangeState(State_GameOver);
+				Player_Damage();
 }
 
 void _MovePlayer()
