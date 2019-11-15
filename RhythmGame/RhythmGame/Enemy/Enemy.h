@@ -21,7 +21,7 @@ typedef struct Projectile//MUSTLEARNTHIS
 } Projectile;
 
 extern void Enemy_Init();
-extern void Enemy_Update();
+extern void Enemy_FixedUpdate();
 extern double Enemy_CalculateBPM(int x);
 extern sprite *Enemy_GetEnemy();
 extern Projectile *Enemy_GetProjectile();
