@@ -40,15 +40,15 @@ void _UpdateTimer();
 void Player_Init()
 {
 	player = (Player){
-		.direction = 0,
+		.direction = STAY,
 		.position.x = 50, .position.y = 50,
 		.position.eulerX = 50.0, .position.eulerY = 50.0,
 		.health = 10};
 
 	factor = 0.0;
-	EaseBool = 0;
+	EaseBool = false;
 	EaseCheck = SlowDown;
-	EaseCheck = 1;
+	EaseCheck = true;
 	velocity = 0.04;
 
 	EaseTimer = 0.0; // Ease
