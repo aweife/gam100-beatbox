@@ -9,8 +9,8 @@ int main(void)
 	Console_SetTitle("Beat Box");
 	Console_SetCursorVisibility(0);
 	Console_SetSquareFont();
-	//Console_SetWindowedMode(GAME_WIDTH, GAME_HEIGHT, true);
-	Console_SetFullScreen();
+	Console_SetWindowedMode(GAME_WIDTH, GAME_HEIGHT, true);
+	//Console_SetFullScreen();
 	StateMachine_ChangeState(State_MainMenu);
 
 	while (Game_IsRunning())

@@ -40,7 +40,7 @@ void Beat_Update()
 
 void _CheckBeats()
 {
-	if (Audio_GetFrequency(KICK) > BEAT_THRESHOLD)
+	if (Audio_GetFrequency(SNARE) > BEAT_THRESHOLD)
 	{
 		if (enemy.timer <= 0.0)
 		{
@@ -55,7 +55,7 @@ void _CheckBeats()
 		}
 	}
 
-	if (Audio_GetFrequency(SNARE) > BEAT_THRESHOLD)
+	if (Audio_GetFrequency(KICK) > BEAT_THRESHOLD)
 	{
 		if (!player.updated)
 		{
