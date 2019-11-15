@@ -2,6 +2,7 @@
 #include "../Audio/AudioEngine.h"
 #include "../Console/Console.h"
 #include "../Global.h"
+#include "../Beat/Beat.h"
 
 // Static boundary
 static Vector2d sMapOrigin;
@@ -10,7 +11,7 @@ static int sMapOffset = MAP_OFFSET;
 
 // Private functions
 void _CreateStatic();
-void Map_Visualise(int offset, CONSOLECOLOR color);
+void _CreateVisualiser(int offset, CONSOLECOLOR color);
 
 void Map_Init()
 {
@@ -29,6 +30,10 @@ void Map_Update()
 void Map_Render()
 {
 	_CreateStatic();
+	if (Beat_GetKick())
+		_CreateVisualiser(2, GREEN);
+	if (Beat_GetSnare())
+		_CreateVisualiser(4, RED);
 }
 
 void _CreateStatic()
@@ -36,7 +41,7 @@ void _CreateStatic()
 	// Horizontal
 	for (int i = 0; i < sMapEnd.x - sMapOrigin.x; i++)
 	{
-		Console_SetRenderBuffer_CharColor(sMapOrigin.x + i, sMapOrigin.y, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(sMapOrigin.x + i+1, sMapOrigin.y, 'X', DARKCYAN);
 		Console_SetRenderBuffer_CharColor(sMapOrigin.x + i, sMapEnd.y, 'X', DARKCYAN);
 	}
 
@@ -44,16 +49,16 @@ void _CreateStatic()
 	for (int i = 0; i < sMapEnd.y - sMapOrigin.y; i++)
 	{
 		Console_SetRenderBuffer_CharColor(sMapOrigin.x, sMapOrigin.y + i, 'X', DARKCYAN);
-		Console_SetRenderBuffer_CharColor(sMapEnd.x, sMapOrigin.y + i, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(sMapEnd.x, sMapOrigin.y + i + 1, 'X', DARKCYAN);
 	}
 }
 
-void Map_Visualise(int offset, CONSOLECOLOR color)
+void _CreateVisualiser(int offset, CONSOLECOLOR color)
 {
 	// Horizontal
-	for (int i = 0; i < (sMapEnd.x+offset) - (sMapOrigin.x-offset); i++)
+	for (int i = 0; i < (sMapEnd.x + offset) - (sMapOrigin.x - offset); i++)
 	{
-		Console_SetRenderBuffer_CharColor((sMapOrigin.x - offset) + i, (sMapOrigin.y - offset), 'X', color);
+		Console_SetRenderBuffer_CharColor((sMapOrigin.x - offset) + i+1, (sMapOrigin.y - offset), 'X', color);
 		Console_SetRenderBuffer_CharColor((sMapOrigin.x - offset) + i, (sMapEnd.y + offset), 'X', color);
 	}
 
@@ -61,6 +66,6 @@ void Map_Visualise(int offset, CONSOLECOLOR color)
 	for (int i = 0; i < (sMapEnd.y + offset) - (sMapOrigin.y - offset); i++)
 	{
 		Console_SetRenderBuffer_CharColor((sMapOrigin.x - offset), (sMapOrigin.y - offset) + i, 'X', color);
-		Console_SetRenderBuffer_CharColor((sMapEnd.x + offset), (sMapOrigin.y - offset) + i, 'X', color);
+		Console_SetRenderBuffer_CharColor((sMapEnd.x + offset), (sMapOrigin.y - offset) + i + 1, 'X', color);
 	}
 }
