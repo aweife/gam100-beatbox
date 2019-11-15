@@ -26,7 +26,7 @@ extern void Audio_PlayBGMWithDelay(int id, double delay);
 extern void Audio_Update();
 
 // Return true if frequency rises above certain threshold
-extern int Audio_GetFrequency(TRACKTYPE type);
+extern double Audio_GetFrequency(TRACKTYPE type);
 
 // Specific which track and set its channel volume
 extern void Audio_SetBGMVolume(float volume, TRACKTYPE type);

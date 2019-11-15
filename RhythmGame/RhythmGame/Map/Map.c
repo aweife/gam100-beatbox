@@ -10,7 +10,7 @@ static int sMapOffset = MAP_OFFSET;
 
 // Private functions
 void _CreateStatic();
-void _CreateTemporary(int offset, CONSOLECOLOR color);
+void Map_Visualise(int offset, CONSOLECOLOR color);
 
 void Map_Init()
 {
@@ -29,8 +29,6 @@ void Map_Update()
 void Map_Render()
 {
 	_CreateStatic();
-	if (Audio_GetFrequency(KICK)) _CreateTemporary(2, GREEN);
-	if (Audio_GetFrequency(SNARE)) _CreateTemporary(4, RED);
 }
 
 void _CreateStatic()
@@ -50,7 +48,7 @@ void _CreateStatic()
 	}
 }
 
-void _CreateTemporary(int offset, CONSOLECOLOR color)
+void Map_Visualise(int offset, CONSOLECOLOR color)
 {
 	// Horizontal
 	for (int i = 0; i < (sMapEnd.x+offset) - (sMapOrigin.x-offset); i++)

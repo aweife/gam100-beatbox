@@ -5,6 +5,7 @@
 #include "../Audio/AudioEngine.h"
 #include "../Enemy/Enemy.h"
 #include "../Clock/Clock.h"
+#include "../Beat/Beat.h"
 
 static int reqExit = 0;
 
@@ -15,6 +16,7 @@ void Game_EnterState()
 	Map_Init();
 	Audio_Init();
 	Enemy_Init();
+	Beat_Init();
 }
 
 void Game_ExitState()
@@ -66,7 +68,7 @@ void Game_Update()
 
 	Player_Update();
 	Audio_Update();
-	Enemy_Update();
+	Beat_Update();
 }
 
 void Game_Render()
