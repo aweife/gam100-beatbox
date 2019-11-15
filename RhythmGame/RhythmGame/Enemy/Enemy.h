@@ -4,7 +4,7 @@
 #include "../Text/TextReader.h"
 #include <stdbool.h>
 
-#define NUMBER_OF_PROJECTILE 10
+#define NUMBER_OF_PROJECTILE 50
 
 typedef struct Enemy {
 	Vector2d position;

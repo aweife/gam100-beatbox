@@ -18,7 +18,7 @@ Enemy enemyArray[1];
 
 //Game Time
 double BPMEnTime = 0.0;
-double BPMProjSpawnTime = 0.0;
+int BPMProjSpawnTime = 0;
 double BPMProjMoveTime = 0.0;
 double elapsedTimerTime = 0.0;
 char timeDisplay[10];
@@ -90,7 +90,10 @@ Projectile *Enemy_GetProjectile()
 
 void _spawnProjectile()
 {
-
+	BPMProjSpawnTime++;
+	if (BPMProjSpawnTime <= 3) return;
+	BPMProjSpawnTime = 0;
+	
 	for (int i = 0; i < pCount; ++i)
 	{
 		//State and Ready ensures array don't spawn unnecessary projectiles > 10
@@ -98,7 +101,6 @@ void _spawnProjectile()
 		{
 			pArray[i].available = true;
 			//Reset spawn time
-			BPMProjSpawnTime = BPMProjSpawnTime - 3000.0;
 			break;
 		}
 	}
