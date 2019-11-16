@@ -18,10 +18,10 @@ void Text_Init(sprite* s, char* path);
 sprite Text_CreateSprite();
 
 //Renders enemy
-void Text_RenderEnemy(sprite *s);
+void Text_Render(sprite *s);
 
 // Set enemy position
-void Text_Moveenemy(sprite *s, int x, int y);
+void Text_Move(sprite *s, int x, int y);
 
 //Read from text file and store in array
 void _Readandstoretext(sprite *s, const char *path);

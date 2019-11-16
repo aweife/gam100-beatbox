@@ -6,6 +6,7 @@
 #include "../Enemy/Enemy.h"
 #include "../Clock/Clock.h"
 #include "../Beat/Beat.h"
+#include "../UI/UI.h"
 
 static int reqExit = 0;
 
@@ -17,6 +18,7 @@ void Game_EnterState()
 	Audio_Init();
 	Enemy_Init();
 	Beat_Init();
+	UI_Init();
 }
 
 void Game_ExitState()
@@ -76,6 +78,7 @@ void Game_Render()
 	Enemy_Render();
 	Player_Render();
 	Map_Render();
+	UI_Render();
 }
 
 void Game_Exit()
