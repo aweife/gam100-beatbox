@@ -33,6 +33,7 @@
     <ClCompile Include="States\MainMenu.c" />
     <ClCompile Include="States\StateMachine.c" />
     <ClCompile Include="Text\TextReader.c" />
+    <ClCompile Include="UI\UI.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioEngine.h" />
@@ -49,6 +50,7 @@
     <ClInclude Include="States\MainMenu.h" />
     <ClInclude Include="States\StateMachine.h" />
     <ClInclude Include="Text\TextReader.h" />
+    <ClInclude Include="UI\UI.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="$Resources\Logo.txt" />

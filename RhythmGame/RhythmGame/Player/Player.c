@@ -10,6 +10,8 @@
 Player player;
 CONSOLECOLOR color;
 
+sprite Player1;
+
 static double factor;
 static double velocity;
 
@@ -45,6 +47,9 @@ void Player_Init()
 		.position.eulerX = 50.0, .position.eulerY = 50.0,
 		.health = 10};
 
+	Player1 = Text_CreateSprite();
+	Text_Init(&Player1, "..//RhythmGame//$Resources//skull.txt");
+
 	factor = 0.0;
 	EaseBool = false;
 	EaseCheck = SlowDown;
@@ -79,8 +84,10 @@ void Player_Render()
 	else
 		color = bRED;
 
-	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
-		Console_SetRenderBuffer_CharColor(player.body[i].x, player.body[i].y, ' ', color);
+	Text_Render(&Player1);
+
+	/*for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
+		Console_SetRenderBuffer_CharColor(player.body[i].x, player.body[i].y, ' ', color);*/
 }
 
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
@@ -222,4 +229,6 @@ void _MovePlayer()
 
 	player.position.x = player.position.eulerX;
 	player.position.y = player.position.eulerY;
+
+	Text_Move(&Player1, player.position.x, player.position.y);
 }
