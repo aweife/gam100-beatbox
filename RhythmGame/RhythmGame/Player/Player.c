@@ -97,6 +97,11 @@ void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
 	EaseCheck = EaseC;
 }
 
+int Player_GetHealth()
+{
+	return player.health;
+}
+
 double Player_GetEaseFactor()
 {
 	return factor;
