@@ -9,7 +9,7 @@ typedef struct sprite
 	int Yposition;
 	int position[SPRITE_SIZE][2];
 	char printchar[SPRITE_SIZE];
-	CONSOLECOLOR printColor[SPRITE_SIZE];
+	int printColor[SPRITE_SIZE];
 }sprite;
 
 //initialise for skullenemy

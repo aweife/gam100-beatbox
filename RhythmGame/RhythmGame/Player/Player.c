@@ -2,16 +2,12 @@
 #include "../Global.h"
 #include "../Console/Console.h"
 #include "../Map/Map.h"
-#include "../Text/TextReader.h"
 #include "../Enemy/Enemy.h"
 #include "../States/StateMachine.h"
 #include "../Clock/Clock.h"
 
 Player player;
 CONSOLECOLOR color;
-
-sprite Player1;
-
 static double factor;
 static double velocity;
 
@@ -45,11 +41,12 @@ void Player_Init()
 		.direction = STAY,
 		.position.x = 50, .position.y = 50,
 		.position.eulerX = 50.0, .position.eulerY = 50.0,
-		.health = 10};
-
-	Player1 = Text_CreateSprite();
-	Text_Init(&Player1, "..//RhythmGame//$Resources//skull.txt");
-
+		.health = 10,
+		.PlayerSprite = Text_CreateSprite(),
+		.PlayerSprite.printColor = bRED, };
+	
+	Text_Init(&player.PlayerSprite, "..//RhythmGame//$Resources//skull.txt");
+	
 	factor = 0.0;
 	EaseBool = false;
 	EaseCheck = SlowDown;
@@ -83,8 +80,9 @@ void Player_Render()
 		color = bBLUE;
 	else
 		color = bRED;
-
-	Text_Render(&Player1);
+	PlayerSprite.printColor = color;
+	Text_Render(&player.PlayerSprite);
+	
 
 	/*for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
 		Console_SetRenderBuffer_CharColor(player.body[i].x, player.body[i].y, ' ', color);*/
@@ -230,5 +228,5 @@ void _MovePlayer()
 	player.position.x = player.position.eulerX;
 	player.position.y = player.position.eulerY;
 
-	Text_Move(&Player1, player.position.x, player.position.y);
+	Text_Move(&player.PlayerSprite, player.position.x, player.position.y);
 }

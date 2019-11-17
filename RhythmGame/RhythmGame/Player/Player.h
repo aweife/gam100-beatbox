@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Global.h"
+#include "../Text/TextReader.h"
 
 #define BOXSIZE 3
 
@@ -28,6 +29,7 @@ typedef struct Player {
 	Vector2d body[BOXSIZE * BOXSIZE];
 	int direction;
 	int health;
+	sprite PlayerSprite;
 }Player;
 
 // Initialise player variables
