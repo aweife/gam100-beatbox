@@ -25,15 +25,13 @@ Projectile pArray[NUMBER_OF_PROJECTILE];
 int pCount = NUMBER_OF_PROJECTILE;
 
 /* Internal functions */
-
-void _spawnProjectile();
-void _updateProjectile();
 void _updateEnemy();
+void _spawnProjectile();
 
 void Enemy_Init()
 {
 	// Initialise skull enemy
-	skullEnemy = (Enemy) {.position.x = 50, .position.y = 20, enemySprite = Text_CreateSprite(),};
+	skullEnemy = (Enemy) {.position.x = 50, .position.y = 20, .enemySprite = Text_CreateSprite(),};
 	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
 }
 
@@ -75,7 +73,7 @@ void _spawnProjectile()
 	if (BPMProjSpawnTime <= 3) return;
 	BPMProjSpawnTime = 0;
 	
-	Attack_spawnProjectile(skullEnemy.position, DOWN, 4);
+	Attack_SpawnProjectile(skullEnemy.position, DOWN, 1);
 }
 
 void _updateEnemy()

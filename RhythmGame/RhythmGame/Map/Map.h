@@ -2,7 +2,7 @@
 
 #include "../Global.h"
 
-#define MAP_OFFSET 5
+#define MAP_OFFSET 20
 
 // Initialise the static boundary
 extern void Map_Init();

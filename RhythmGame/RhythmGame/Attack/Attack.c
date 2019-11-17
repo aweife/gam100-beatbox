@@ -96,7 +96,7 @@ void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int spe
 	}
 }
 
-void Attack_UpdateProjectile()
+void _UpdateProjectile()
 {
 	for (int i = 0; i < pCount; i++)
 	{
