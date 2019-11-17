@@ -1,6 +1,7 @@
 #pragma once
 
 #define SPRITE_SIZE 1000
+#include "../Global.h"
 
 typedef struct sprite
 {
@@ -8,7 +9,7 @@ typedef struct sprite
 	int Yposition;
 	int position[SPRITE_SIZE][2];
 	char printchar[SPRITE_SIZE];
-
+	CONSOLECOLOR printColor[SPRITE_SIZE];
 }sprite;
 
 //initialise for skullenemy
