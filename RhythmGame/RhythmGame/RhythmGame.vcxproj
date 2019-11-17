@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Attack\Attack.c" />
     <ClCompile Include="Audio\AudioEngine.c" />
     <ClCompile Include="Beat\Beat.c" />
     <ClCompile Include="Clock\Clock.cpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="UI\UI.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Attack\Attack.h" />
     <ClInclude Include="Audio\AudioEngine.h" />
     <ClInclude Include="Beat\Beat.h" />
     <ClInclude Include="Clock\Clock.h" />

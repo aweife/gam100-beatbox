@@ -155,22 +155,15 @@ void _CheckBorder()
 	if (player.position.eulerY > (GAME_HEIGHT - MAP_OFFSET - BOXSIZE)) player.position.eulerY = GAME_HEIGHT - MAP_OFFSET - BOXSIZE;
 }
 
-void _CheckCollision()
-{
-	// Enemy
-	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
-		for (int j = 0; j < SPRITE_SIZE; j++)
-			if (player.body[i].x == (Enemy_GetEnemy()->position[j][0] + Enemy_GetEnemy()->Xposition) &&
-				player.body[i].y == (Enemy_GetEnemy()->position[j][1] + Enemy_GetEnemy()->Yposition))
-				Player_Damage();
-
-	// Projectiles
-	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
-		for (int j = 0; j < NUMBER_OF_PROJECTILE; j++)
-			if (player.body[i].x == (Enemy_GetProjectile() + j)->position.x &&
-				player.body[i].y == (Enemy_GetProjectile() + j)->position.y)
-				Player_Damage();
-}
+//void _CheckCollision()
+//{
+//	// Enemy
+//	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
+//		for (int j = 0; j < SPRITE_SIZE; j++)
+//			if (player.body[i].x == (Enemy_GetEnemy()->position[j][0] + Enemy_GetEnemy()->Xposition) &&
+//				player.body[i].y == (Enemy_GetEnemy()->position[j][1] + Enemy_GetEnemy()->Yposition))
+//				Player_Damage();
+//}
 
 void _MovePlayer()
 {

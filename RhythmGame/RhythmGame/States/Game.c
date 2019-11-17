@@ -7,6 +7,7 @@
 #include "../Clock/Clock.h"
 #include "../Beat/Beat.h"
 #include "../UI/UI.h"
+#include "../Attack/Attack.h"
 
 static int reqExit = 0;
 
@@ -19,6 +20,7 @@ void Game_EnterState()
 	Enemy_Init();
 	Beat_Init();
 	//UI_Init();
+	Attack_Init();
 }
 
 void Game_ExitState()
@@ -61,11 +63,7 @@ void Game_ProcessInput()
 		spaceDown = true;
 		Player_Dash();
 	}
-	else if (!GetAsyncKeyState(VK_SPACE)) 
-		spaceDown = false;
-
-	if(GetAsyncKeyState(VK_ESCAPE))
-		Audio_FadeOutBGM(300.0);
+	else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
 }
 
 void Game_Update()
@@ -75,6 +73,7 @@ void Game_Update()
 	Player_Update();
 	Audio_Update();
 	Beat_Update();
+	Attack_Update();
 }
 
 void Game_Render()
@@ -83,6 +82,7 @@ void Game_Render()
 	Player_Render();
 	Map_Render();
 	//UI_Render();
+	Attack_Render();
 }
 
 void Game_Exit()

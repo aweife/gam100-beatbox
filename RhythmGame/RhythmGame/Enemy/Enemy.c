@@ -1,30 +1,22 @@
 #include "Enemy.h"
+#include "../Attack/Attack.h"
 #include "../Clock/Clock.h"
 #include "../Global.h"
 #include "../Map/Map.h"
 
 //Game Input
-int EnX = 50;
-int EnY = 20;
-int ProjX = 1;
-int ProjY = 1;
 int randEnMove = 0;
-int randEnShoot = 0;
-int tmpX = 0;
-int tmpY = 0;
 double result = 0.0;
 
-Enemy enemyArray[1];
+// The skull enemy
+Enemy skullEnemy;
 
 //Game Time
-double BPMEnTime = 0.0;
+//double BPMEnTime = 0.0;
 int BPMProjSpawnTime = 0;
-double BPMProjMoveTime = 0.0;
-double elapsedTimerTime = 0.0;
-char timeDisplay[10];
-
-//Skull Structure
-sprite skull;
+//double BPMProjMoveTime = 0.0;
+//double elapsedTimerTime = 0.0;
+//char timeDisplay[10];
 
 //Only stores 10 values
 Projectile pArray[NUMBER_OF_PROJECTILE];
@@ -33,46 +25,38 @@ Projectile pArray[NUMBER_OF_PROJECTILE];
 int pCount = NUMBER_OF_PROJECTILE;
 
 /* Internal functions */
-
-void _spawnProjectile();
-void _updateProjectile();
 void _updateEnemy();
+void _spawnProjectile();
 
 void Enemy_Init()
 {
-	Enemy_CalculateBPM(132);
-	skull = Text_CreateSprite();
-	Text_Init(&skull, "..//RhythmGame//$Resources//skull.txt");
+	// Initialise skull enemy
+	skullEnemy = (Enemy) {.position.x = 50, .position.y = 20, .enemySprite = Text_CreateSprite(),};
+	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
 }
 
 void Enemy_FixedUpdate()
 {
 	_updateEnemy();
-	Text_Move(&skull, EnX - 9, EnY - 7);
-	_spawnProjectile();
-	_updateProjectile();
-}
+	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
 
-double Enemy_CalculateBPM(int x)
-{
-	result = 60.0 / (double)x;
-	result *= 1000.0;
-	return result;
+	// For testing only
+	_spawnProjectile();
 }
 
 void Enemy_Render()
 {
 	//ASCI ENEMY
-	Text_Render(&skull);
+	Text_Render(&skullEnemy.enemySprite);
 
-	for (int i = 0; i < pCount; i++)
-	{
-		if (pArray[i].visible)
-		{
-			//Print out projectile
-			Console_SetRenderBuffer_Char(pArray[i].position.x, pArray[i].position.y, '*');
-		}
-	}
+	//for (int i = 0; i < pCount; i++)
+	//{
+	//	if (pArray[i].visible)
+	//	{
+	//		//Print out projectile
+	//		Console_SetRenderBuffer_Char(pArray[i].position.x, pArray[i].position.y, '*');
+	//	}
+	//}
 
 	//LETTER ENEMY
 	//Console_SetRenderBuffer_Char(EnX, EnY, 'E');
@@ -80,12 +64,7 @@ void Enemy_Render()
 
 sprite *Enemy_GetEnemy()
 {
-	return &skull;
-}
-
-Projectile *Enemy_GetProjectile()
-{
-	return pArray;
+	return &skullEnemy.enemySprite;
 }
 
 void _spawnProjectile()
@@ -94,69 +73,7 @@ void _spawnProjectile()
 	if (BPMProjSpawnTime <= 3) return;
 	BPMProjSpawnTime = 0;
 	
-	for (int i = 0; i < pCount; ++i)
-	{
-		//State and Ready ensures array don't spawn unnecessary projectiles > 10
-		if (!pArray[i].available && !pArray[i].visible)
-		{
-			pArray[i].available = true;
-			//Reset spawn time
-			break;
-		}
-	}
-
-
-
-	for (int i = 0; i < pCount; ++i)
-	{
-		if (pArray[i].available && !pArray[i].visible)
-		{
-			//Sets projectile to spawn at last location of enemy
-			pArray[i].visible = true;
-			pArray[i].position.x = EnX;
-			pArray[i].position.y = EnY;
-			pArray[i].available = false;
-		}
-
-		//Collision
-		if (pArray[i].position.x >= GAME_WIDTH - MAP_OFFSET ||
-			pArray[i].position.y >= GAME_HEIGHT - MAP_OFFSET ||
-			pArray[i].position.x < MAP_OFFSET ||
-			pArray[i].position.y < MAP_OFFSET)
-		{
-			pArray[i].available = 0;
-			//Hide away projectiles
-			pArray[i].position.x = 300;
-			pArray[i].position.y = 300;
-		}
-	}
-}
-
-
-void _updateProjectile()
-{
-		//randEnShoot = Random_Range(1, 4);
-		for (int i = 0; i < pCount; i++)
-		{
-			/*if (randEnShoot == 1)
-			{
-				//Right
-				pArray[i].x++;
-			}
-			else if (randEnShoot == 2) {
-				//Left
-				pArray[i].x--;
-			}
-			else if (randEnShoot == 3) {
-				//Up
-				pArray[i].y--;
-			}
-			else if (randEnShoot == 4) {
-				//Down
-				pArray[i].y++;
-			}*/
-			pArray[i].position.y += 2;
-		}
+	Attack_SpawnProjectile(skullEnemy.position, DOWN, 1);
 }
 
 void _updateEnemy()
@@ -166,33 +83,26 @@ void _updateEnemy()
 		if (randEnMove == 1)
 		{
 			//LEFT
-			EnX -= 2;
+			skullEnemy.position.x -= 2;
 		}
 		else if (randEnMove == 2) {
 			//RIGHT
-			EnX += 2;
+			skullEnemy.position.x += 2;
 		}
 		else if (randEnMove == 3) {
-			//UP
+			//UPskullEnemy.position.x
 			//EnY -= 1;
-			EnX -= 4;
+			skullEnemy.position.x -= 4;
 		}
 		else if (randEnMove == 4) {
 			//DOWN
 			//EnY += 1;
-			EnX += 4;
+			skullEnemy.position.x += 4;
 		}
 		else if (randEnMove == 5) { //just for the prototype
-			EnX -= 6;
+			skullEnemy.position.x -= 6;
 		}
 		else if (randEnMove == 6) {
-			EnX += 6;
+			skullEnemy.position.x += 6;
 		}
-	
-
-	if (EnX >= 80 || EnX <= 20) //Reset Position if too near the border
-	{
-		EnX = 50;
-		EnY = 20;
-	}
 }
