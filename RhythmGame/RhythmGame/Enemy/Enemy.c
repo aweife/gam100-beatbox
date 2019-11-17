@@ -4,11 +4,11 @@
 #include "../Map/Map.h"
 
 //Game Input
-int EnX = 50;
-int EnY = 20;
+int EnX;
+int EnY;
 int ProjX = 1;
 int ProjY = 1;
-int randEnMove = 0;
+int randEnMove = 1;
 int randEnShoot = 0;
 int tmpX = 0;
 int tmpY = 0;
@@ -43,12 +43,18 @@ void Enemy_Init()
 	Enemy_CalculateBPM(132);
 	skull = Text_CreateSprite();
 	Text_Init(&skull, "..//RhythmGame//$Resources//skull.txt");
+	_decideEnemyMove();
+	EnX = enemyArray->newPosition.x;
+	EnY = enemyArray->newPosition.y;
+	Text_Move(&skull, EnX, EnY);
 }
 
 void Enemy_FixedUpdate()
 {
-	_updateEnemy();
-	Text_Move(&skull, EnX - 9, EnY - 7);
+	//_updateEnemy();
+	//Text_Move(&skull, EnX - 9, EnY - 7);
+	Enemy_MoveTo();
+	Text_Move(&skull, EnX, EnY);
 	_spawnProjectile();
 	_updateProjectile();
 }
@@ -161,7 +167,6 @@ void _updateProjectile()
 
 void _updateEnemy()
 {
-
 		randEnMove = Random_Range(1, 6); //original is 4
 		if (randEnMove == 1)
 		{
@@ -194,5 +199,64 @@ void _updateEnemy()
 	{
 		EnX = 50;
 		EnY = 20;
+	}
+}
+
+void Enemy_MoveTo()
+{
+	if (EnX == enemyArray->newPosition.x && EnY == enemyArray->newPosition.y)
+		_decideEnemyMove();
+	else
+	{
+		if (EnX != enemyArray->newPosition.x)
+			EnX += (EnX > enemyArray->newPosition.x) ? -1 : +1;
+
+		if (EnY != enemyArray->newPosition.y)
+			EnY += (EnY > enemyArray->newPosition.y) ? -1 : +1;
+	}
+}
+
+void _decideEnemyMove()
+{
+	randEnMove = Random_Range(1, 9);
+	
+	switch (randEnMove)
+	{
+	case 1: 
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6);
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6);
+		break;
+	case 2:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 3;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6);
+		break;
+	case 3:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 5;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6);
+		break;
+	case 4:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6);
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 3;
+		break;
+	case 5:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 3;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 3;
+		break;
+	case 6:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 5;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 3;
+		break;
+	case 7:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6);
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 5;
+		break;
+	case 8:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 3;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 5;
+		break;
+	case 9:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 5;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 5;
+		break;
 	}
 }

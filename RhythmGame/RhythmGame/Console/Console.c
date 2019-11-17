@@ -79,7 +79,7 @@ void Console_SwapRenderBuffer()
 		assert(1);
 	}
 }
-
+//Hi I am Nico Wong
 void Console_SetRenderBuffer_Char(int x, int y, char c)
 {
 #ifdef _DEBUG

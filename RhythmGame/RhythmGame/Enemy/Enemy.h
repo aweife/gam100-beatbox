@@ -8,6 +8,7 @@
 
 typedef struct Enemy {
 	Vector2d position;
+	Vector2d newPosition;
 	bool visible;
 	bool available;
 } Enemy;
@@ -26,3 +27,5 @@ extern double Enemy_CalculateBPM(int x);
 extern sprite *Enemy_GetEnemy();
 extern Projectile *Enemy_GetProjectile();
 extern void Enemy_Render();
+extern void _decideEnemyMove();
+extern void Enemy_MoveTo();
