@@ -16,8 +16,8 @@ typedef struct BeatTimer
 
 static double bpm;
 
-static BeatTimer enemy;
-static BeatTimer player;
+static BeatTimer kick;
+static BeatTimer snare;
 
 /* Internal functions */
 
@@ -28,8 +28,8 @@ void _SetBPM(int bpm);
 void Beat_Init()
 {
 	_SetBPM(132);
-	enemy = (BeatTimer){ .timer = 0,.updated = false, };
-	player = (BeatTimer){ .timer = 0,.updated = false, };
+	snare = (BeatTimer){ .timer = 0,.updated = false, };
+	kick = (BeatTimer){ .timer = 0,.updated = false, };
 }
 
 void Beat_Update()
@@ -38,40 +38,45 @@ void Beat_Update()
 	_DecrementTimers();
 }
 
+bool Beat_GetKick()
+{
+	return kick.updated;
+}
+
+bool Beat_GetSnare()
+{
+	return snare.updated;
+}
+
 void _CheckBeats()
 {
 	if (Audio_GetFrequency(KICK) > BEAT_THRESHOLD)
 	{
-		if (enemy.timer <= 0.0)
+		if (kick.timer <= 0.0)
 		{
-			enemy.updated = false;
-
-			if (!enemy.updated)
-			{
-				enemy.updated = true;
-				enemy.timer = bpm;
-				//Enemy_FixedUpdate();
-			}
+			kick.updated = !kick.updated;
+			kick.timer = bpm;
 		}
 	}
 
 	if (Audio_GetFrequency(SNARE) > BEAT_THRESHOLD)
 	{
-		if (!player.updated)
+		if (snare.timer <= 0.0)
 		{
-			player.updated = true;
-			player.timer = 1000.0;
+			snare.updated = !snare.updated;
+			snare.timer = bpm;
+			Enemy_FixedUpdate();
 		}
 	}
 }
 
 void _DecrementTimers()
 {
-	if (enemy.timer > 0.0)
-		enemy.timer -= Clock_GetDeltaTime();
+	if (snare.timer > 0.0)
+		snare.timer -= Clock_GetDeltaTime();
 
-	if (player.timer > 0.0)
-		player.timer -= Clock_GetDeltaTime();
+	if (kick.timer > 0.0)
+		kick.timer -= Clock_GetDeltaTime();
 }
 
 void _SetBPM(int x)

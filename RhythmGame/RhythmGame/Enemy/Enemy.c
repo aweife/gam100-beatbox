@@ -10,13 +10,15 @@ int ProjX = 1;
 int ProjY = 1;
 int randEnMove = 0;
 int randEnShoot = 0;
+int tmpX = 0;
+int tmpY = 0;
 double result = 0.0;
 
 Enemy enemyArray[1];
 
 //Game Time
 double BPMEnTime = 0.0;
-double BPMProjSpawnTime = 0.0;
+int BPMProjSpawnTime = 0;
 double BPMProjMoveTime = 0.0;
 double elapsedTimerTime = 0.0;
 char timeDisplay[10];
@@ -43,10 +45,10 @@ void Enemy_Init()
 	Text_Init(&skull, "..//RhythmGame//$Resources//skull.txt");
 }
 
-void Enemy_Update()
+void Enemy_FixedUpdate()
 {
 	_updateEnemy();
-	Text_Moveenemy(&skull, EnX - 9, EnY - 7);
+	Text_Move(&skull, EnX - 9, EnY - 7);
 	_spawnProjectile();
 	_updateProjectile();
 }
@@ -61,7 +63,7 @@ double Enemy_CalculateBPM(int x)
 void Enemy_Render()
 {
 	//ASCI ENEMY
-	Text_RenderEnemy(&skull);
+	Text_Render(&skull);
 
 	for (int i = 0; i < pCount; i++)
 	{
@@ -88,23 +90,22 @@ Projectile *Enemy_GetProjectile()
 
 void _spawnProjectile()
 {
-	BPMProjSpawnTime += Clock_GetDeltaTime();
-	//It will ONLY spawn at 4s interval
-	if (BPMProjSpawnTime >= 4000.0)
+	BPMProjSpawnTime++;
+	if (BPMProjSpawnTime <= 3) return;
+	BPMProjSpawnTime = 0;
+	
+	for (int i = 0; i < pCount; ++i)
 	{
-		for (int i = 0; i < pCount; ++i)
+		//State and Ready ensures array don't spawn unnecessary projectiles > 10
+		if (!pArray[i].available && !pArray[i].visible)
 		{
-			//State and Ready ensures array don't spawn unnecessary projectiles > 10
-			if (!pArray[i].available && !pArray[i].visible)
-			{
-				pArray[i].available = true;
-				//Reset spawn time
-				BPMProjSpawnTime = BPMProjSpawnTime - 3000.0;
-				break;
-			}
+			pArray[i].available = true;
+			//Reset spawn time
+			break;
 		}
-
 	}
+
+
 
 	for (int i = 0; i < pCount; ++i)
 	{
@@ -131,11 +132,9 @@ void _spawnProjectile()
 	}
 }
 
+
 void _updateProjectile()
 {
-	BPMProjMoveTime += Clock_GetDeltaTime();
-	if (BPMProjMoveTime >= result)
-	{
 		//randEnShoot = Random_Range(1, 4);
 		for (int i = 0; i < pCount; i++)
 		{
@@ -158,17 +157,11 @@ void _updateProjectile()
 			}*/
 			pArray[i].position.y += 2;
 		}
-		BPMProjMoveTime = BPMProjMoveTime - result; //Resets enemy move time to move every 1 second
-	}
 }
 
 void _updateEnemy()
 {
-	BPMEnTime += Clock_GetDeltaTime();
 
-	//Every 0.8s interval
-	if (BPMEnTime >= result)
-	{
 		randEnMove = Random_Range(1, 6); //original is 4
 		if (randEnMove == 1)
 		{
@@ -195,8 +188,7 @@ void _updateEnemy()
 		else if (randEnMove == 6) {
 			EnX += 6;
 		}
-		BPMEnTime = BPMEnTime - result;
-	}
+	
 
 	if (EnX >= 80 || EnX <= 20) //Reset Position if too near the border
 	{

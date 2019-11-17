@@ -33,7 +33,7 @@ void _CheckCollision();
 void _CheckBorder();
 // Prints BOXSIZE of player
 void _UpdateShape();
-
+// Updates Timer
 void _UpdateTimer();
 
 
@@ -51,11 +51,13 @@ void Player_Init()
 	EaseCheck = true;
 	velocity = 0.04;
 
+	// Timers
 	EaseTimer = 0.0; // Ease
 	cdTimer = 0.0;
 	dashTimer = 0.0;
 	invulTimer = 0.0;
 
+	// Timer Check
 	invulCheck = 0;
 }
 
