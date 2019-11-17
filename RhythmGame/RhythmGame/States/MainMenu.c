@@ -3,6 +3,7 @@
 #include "../Text/TextReader.h"
 #include "StateMachine.h"
 #include "Game.h"
+#include"../UI/UI.h"
 
 sprite logo;
 
@@ -35,8 +36,10 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
-	Text_Moveenemy(&logo,40, 20);
-	Text_RenderEnemy(&logo);
+	Text_Move(&logo,70, 20);
+	Text_Render(&logo);
+	UI_Render();
+
 }
 
 
@@ -50,6 +53,8 @@ void MainMenu_EnterState()
 {
 	logo = Text_CreateSprite();
 	Text_Init(&logo, "..//RhythmGame//$Resources//logo2.txt");
+
+	UI_Init();
 	
 }
 

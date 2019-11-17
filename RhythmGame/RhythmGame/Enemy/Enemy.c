@@ -48,7 +48,7 @@ void Enemy_Init()
 void Enemy_FixedUpdate()
 {
 	_updateEnemy();
-	Text_Moveenemy(&skull, EnX - 9, EnY - 7);
+	Text_Move(&skull, EnX - 9, EnY - 7);
 	_spawnProjectile();
 	_updateProjectile();
 }
@@ -63,7 +63,7 @@ double Enemy_CalculateBPM(int x)
 void Enemy_Render()
 {
 	//ASCI ENEMY
-	Text_RenderEnemy(&skull);
+	Text_Render(&skull);
 
 	for (int i = 0; i < pCount; i++)
 	{

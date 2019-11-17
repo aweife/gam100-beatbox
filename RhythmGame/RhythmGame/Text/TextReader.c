@@ -24,20 +24,20 @@ sprite Text_CreateSprite()
 {
 	return skullenemy;
 }
-void Text_RenderEnemy(sprite *s)
+void Text_Render(sprite *s)
 {
 	for (int i = 0; i < SPRITE_SIZE; i++)
 	{
 		if (s->printchar[i] == 'R')
-	      Console_SetRenderBuffer_CharColor((s->position[i][0]) + s->Xposition, (s->position[i][1] + s->Yposition), ' ', bRED);
+	      Console_SetRenderBuffer_CharColor((s->position[i][0]) + s->Xposition, (s->position[i][1] + s->Yposition),s->printchar[i], bRED);
 		else if(s->printchar[i] == 'W')
-		  Console_SetRenderBuffer_CharColor((s->position[i][0]) + s->Xposition, (s->position[i][1] + s->Yposition), ' ', WHITE);
+		  Console_SetRenderBuffer_CharColor((s->position[i][0]) + s->Xposition, (s->position[i][1] + s->Yposition),s->printchar[i], WHITE);
 		else
 		Console_SetRenderBuffer_Char((s->position[i][0])+s->Xposition,(s->position[i][1]+s->Yposition),(s->printchar[i]));
     }
 }
 
-void Text_Moveenemy(sprite *skull,int x, int y)
+void Text_Move(sprite *skull,int x, int y)
 {
 	skull->Xposition = x;
 	skull->Yposition = y;

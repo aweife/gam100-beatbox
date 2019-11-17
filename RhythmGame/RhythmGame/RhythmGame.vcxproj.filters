@@ -65,6 +65,9 @@
     <ClCompile Include="Text\TextReader.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UI.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console\Console.h">
@@ -107,6 +110,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Text\TextReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
