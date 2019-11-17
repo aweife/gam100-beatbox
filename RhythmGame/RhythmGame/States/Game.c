@@ -18,6 +18,9 @@ void Game_EnterState()
 	Audio_Init();
 	Enemy_Init();
 	Beat_Init();
+
+	//UI_Init();
+
 }
 
 void Game_ExitState()
@@ -77,6 +80,7 @@ void Game_Render()
 	Enemy_Render();
 	Player_Render();
 	Map_Render();
+	//UI_Render();
 }
 
 void Game_Exit()
