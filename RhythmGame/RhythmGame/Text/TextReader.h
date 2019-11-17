@@ -5,11 +5,11 @@
 
 typedef struct sprite
 {
-	int Xposition;
-	int Yposition;
-	int position[SPRITE_SIZE][2];
+	Vector2d origin;
+	Vector2d position[SPRITE_SIZE];
 	char printchar[SPRITE_SIZE];
 	CONSOLECOLOR printColor[SPRITE_SIZE];
+	int charCount;
 }sprite;
 
 //initialise for skullenemy

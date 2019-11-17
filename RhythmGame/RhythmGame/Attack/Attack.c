@@ -2,6 +2,7 @@
 #include "../Clock/Clock.h"
 #include "../Global.h"
 #include "../Map/Map.h"
+#include "../Player/Player.h"
 
 //Game Input
 //Game Time
@@ -48,12 +49,16 @@ void _chooseAttack() //to be in enemy.c
 void Attack_Init()
 {
 	pCount = 0;
+
+	// Make all projectiles available for use
+	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
+		pArray[i].available = true;
 }
 
 void Attack_FixedUpdate() // put in game.c
 {
 	// If no projectile, dont do anything
-	if (pCount == 0) return; 
+	if (pCount == 0) return;
 
 	_UpdateProjectile();
 	_CheckCollision();
@@ -64,11 +69,11 @@ void Attack_FixedUpdate() // put in game.c
 void Attack_Render() // put in game.c
 {
 	// If no projectile, dont do anything
-	if (pCount == 0) return; 
+	if (pCount == 0) return;
 
 	for (int i = 0; i < pCount; i++)
 	{
-		if (pArray[i - 1].visible == true)
+		if (pArray[i - 1].visible)
 		{
 			//Print out projectile
 			Console_SetRenderBuffer_Char(pArray[i - 1].position.x, pArray[i - 1].position.y, 'P');
@@ -84,10 +89,12 @@ void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int spe
 	{
 		if (pArray[i - 1].available)
 		{
+			pArray[i - 1].available = false;
+
+
 			pArray[i - 1].position.x = spawnPosition.x;
 			pArray[i - 1].position.y = spawnPosition.y;
 			pArray[i - 1].visible = true;
-			pArray[i - 1].available = false;
 			pArray[i - 1].direction = direction;
 			pArray[i - 1].speed = speed;
 			pArray[i - 1].distanceToTravel = distance;
@@ -130,16 +137,39 @@ void _CheckCollision()
 	//Collision to Boundary
 	for (int i = 0; i < pCount; i++)
 	{
-		if (pArray[i - 1].position.x > GAME_WIDTH - MAP_OFFSET ||
-			pArray[i - 1].position.y > GAME_HEIGHT - MAP_OFFSET ||
-			pArray[i - 1].position.x < MAP_OFFSET ||
-			pArray[i - 1].position.y < MAP_OFFSET)
+		// If projectile is in use
+		if (pArray[i - 1].available) return;
+
+		if (pArray[i - 1].position.x > GAME_WIDTH - MAP_OFFSET || pArray[i - 1].position.y > GAME_HEIGHT - MAP_OFFSET
+			|| pArray[i - 1].position.x < MAP_OFFSET || pArray[i - 1].position.y < MAP_OFFSET)
 		{
 			//Hide away projectiles
 			pArray[i - 1].visible = false;
-			pArray[i - 1].available = true; 
+			pArray[i - 1].available = true;
 			pCount--;
 			break;
+		}
+	}
+
+	// Collision with player
+	sprite *player = Player_GetSprite();
+	for (int j = 0; j < player->charCount; j++)
+	{
+		for (int i = 0; i < pCount; i++)
+		{
+			// If projectile is in use
+			if (pArray[i - 1].available) return;
+
+			if (pArray[i - 1].position.x == player->position[j].x + player->origin.x &&
+				pArray[i - 1].position.y == player->position[j].y + player->origin.y)
+			{
+				//Hide away projectiles
+				pArray[i - 1].visible = false;
+				pArray[i - 1].available = true;
+				pCount--;
+				Player_Damage();
+				break;
+			}
 		}
 	}
 }

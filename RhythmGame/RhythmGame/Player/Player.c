@@ -131,6 +131,11 @@ void Player_Damage()
 	}
 }
 
+sprite* Player_GetSprite()
+{
+	return &player.PlayerSprite;
+}
+
 void _UpdateTimer()
 {
 	if (invulCheck == 1)
@@ -142,6 +147,7 @@ void _UpdateTimer()
 	}
 		
 }
+
 void _UpdateShape()
 {
 	int localx = 0;
@@ -167,16 +173,6 @@ void _CheckBorder()
 	if (player.position.eulerX > (GAME_WIDTH - MAP_OFFSET - BOXSIZE)) player.position.eulerX = GAME_WIDTH - MAP_OFFSET - BOXSIZE;
 	if (player.position.eulerY > (GAME_HEIGHT - MAP_OFFSET - BOXSIZE)) player.position.eulerY = GAME_HEIGHT - MAP_OFFSET - BOXSIZE;
 }
-
-//void _CheckCollision()
-//{
-//	// Enemy
-//	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
-//		for (int j = 0; j < SPRITE_SIZE; j++)
-//			if (player.body[i].x == (Enemy_GetEnemy()->position[j][0] + Enemy_GetEnemy()->Xposition) &&
-//				player.body[i].y == (Enemy_GetEnemy()->position[j][1] + Enemy_GetEnemy()->Yposition))
-//				Player_Damage();
-//}
 
 void _MovePlayer()
 {
