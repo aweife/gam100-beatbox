@@ -18,6 +18,30 @@ int Xoffset = 0;
 
 void Text_Init(sprite *s, char* path)
 {   
+	_Readandstoretext(s, path);
+}
+
+sprite Text_CreateSprite()
+{
+
+	return skullenemy;
+}
+void Text_Render(sprite *s)
+{
+	for (int i = 0; i < SPRITE_SIZE; i++)
+	{
+		Console_SetRenderBuffer_CharColor((s->position[i][0]) + s->Xposition, (s->position[i][1] + s->Yposition), s->printchar[i], s->printColor[i]);
+	}
+}
+
+void Text_Move(sprite *skull,int x, int y)
+{
+	skull->Xposition = x;
+	skull->Yposition = y;
+}
+
+void _Readandstoretext(sprite* s, const char* path)
+{
 	iteration = 0;
 	newcharcount = 0;
 	totalcharcount = 0;
@@ -85,25 +109,6 @@ void Text_Init(sprite *s, char* path)
 		}
 		fclose(pFile);
 	}
-}
-
-sprite Text_CreateSprite()
-{
-
-	return skullenemy;
-}
-void Text_Render(sprite *s)
-{
-	for (int i = 0; i < SPRITE_SIZE; i++)
-	{
-		Console_SetRenderBuffer_CharColor((s->position[i][0]) + s->Xposition, (s->position[i][1] + s->Yposition), s->printchar[i], s->printColor[i]);
-	}
-}
-
-void Text_Move(sprite *skull,int x, int y)
-{
-	skull->Xposition = x;
-	skull->Yposition = y;
 }
 
 
