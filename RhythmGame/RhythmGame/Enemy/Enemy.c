@@ -10,8 +10,6 @@ int ProjX = 1;
 int ProjY = 1;
 int randEnMove = 0;
 int randEnShoot = 0;
-int tmpX = 0;
-int tmpY = 0;
 double result = 0.0;
 
 Enemy enemyArray[1];
