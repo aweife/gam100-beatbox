@@ -66,6 +66,7 @@ void _CheckBeats()
 			snare.updated = !snare.updated;
 			snare.timer = bpm;
 			Enemy_FixedUpdate();
+			Attack_FixedUpdate();
 		}
 	}
 }

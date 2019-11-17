@@ -50,7 +50,7 @@ void Attack_Init()
 	pCount = 0;
 }
 
-void Attack_Update() // put in game.c
+void Attack_FixedUpdate() // put in game.c
 {
 	// If no projectile, dont do anything
 	if (pCount == 0) return; 
@@ -76,7 +76,7 @@ void Attack_Render() // put in game.c
 	}
 }
 
-void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int speed)
+void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int speed, int distance)
 {
 	pCount++;
 	// Number of projectiles in game currently
@@ -90,7 +90,7 @@ void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int spe
 			pArray[i - 1].available = false;
 			pArray[i - 1].direction = direction;
 			pArray[i - 1].speed = speed;
-			pArray[i - 1].distanceToTravel = 150;
+			pArray[i - 1].distanceToTravel = distance;
 			break;
 		}
 	}
@@ -102,25 +102,24 @@ void _UpdateProjectile()
 	{
 		if (pArray[i - 1].distanceToTravel > 0)
 		{
-			pArray[i - 1].distanceToTravel--;
+			pArray[i - 1].distanceToTravel -= pArray[i - 1].speed;
+
 			switch (pArray[i - 1].direction)
 			{
 			case UP:
-
 				pArray[i - 1].position.y -= pArray[i - 1].speed;
 				break;
 			case DOWN:
-				pArray[i - 1].distanceToTravel--;
 				pArray[i - 1].position.y += pArray[i - 1].speed;
 				break;
 			case RIGHT:
-				pArray[i - 1].distanceToTravel--;
 				pArray[i - 1].position.x += pArray[i - 1].speed;
 				break;
 			case LEFT:
-				pArray[i - 1].distanceToTravel--;
 				pArray[i - 1].position.x -= pArray[i - 1].speed;
 				break;
+			default:
+				pArray[i - 1].position.y += pArray[i - 1].speed;
 			}
 		}
 	}
@@ -131,8 +130,8 @@ void _CheckCollision()
 	//Collision to Boundary
 	for (int i = 0; i < pCount; i++)
 	{
-		if (pArray[i - 1].position.x >= GAME_WIDTH - MAP_OFFSET ||
-			pArray[i - 1].position.y >= GAME_HEIGHT - MAP_OFFSET ||
+		if (pArray[i - 1].position.x > GAME_WIDTH - MAP_OFFSET ||
+			pArray[i - 1].position.y > GAME_HEIGHT - MAP_OFFSET ||
 			pArray[i - 1].position.x < MAP_OFFSET ||
 			pArray[i - 1].position.y < MAP_OFFSET)
 		{
@@ -140,6 +139,7 @@ void _CheckCollision()
 			pArray[i - 1].visible = false;
 			pArray[i - 1].available = true; 
 			pCount--;
+			break;
 		}
 	}
 }

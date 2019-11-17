@@ -75,7 +75,7 @@ void _spawnProjectile()
 	if (BPMProjSpawnTime <= 3) return;
 	BPMProjSpawnTime = 0;
 	
-	Attack_SpawnProjectile(skullEnemy.position, DOWN, 1);
+	Attack_SpawnProjectile(skullEnemy.position, DOWN, 5, 100);
 }
 
 void _updateEnemy()

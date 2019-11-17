@@ -34,9 +34,9 @@ typedef struct ClusterBomb
 
 //void _chooseAttack();
 extern void Attack_Init();
-extern void Attack_Update();
+extern void Attack_FixedUpdate();
 extern void Attack_Render();
-extern void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int speed);
+extern void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int speed, int distance);
 //void Attack_spawnLaser();
 //void Attack_updateLaser();
 //void Attack_spawnClusterBomb();

@@ -73,7 +73,6 @@ void Game_Update()
 	Player_Update();
 	Audio_Update();
 	Beat_Update();
-	Attack_Update();
 }
 
 void Game_Render()
