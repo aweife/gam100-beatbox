@@ -2,14 +2,12 @@
 #include "../Global.h"
 #include "../Console/Console.h"
 #include "../Map/Map.h"
-#include "../Text/TextReader.h"
 #include "../Enemy/Enemy.h"
 #include "../States/StateMachine.h"
 #include "../Clock/Clock.h"
 
 Player player;
 CONSOLECOLOR color;
-
 static double factor;
 static double velocity;
 
@@ -43,8 +41,12 @@ void Player_Init()
 		.direction = STAY,
 		.position.x = 50, .position.y = 50,
 		.position.eulerX = 50.0, .position.eulerY = 50.0,
-		.health = 10};
+		.health = 10,
+		.PlayerSprite = Text_CreateSprite(),
+		.PlayerSprite.printColor = bRED, };
 
+	Text_Init(&player.PlayerSprite, "..//RhythmGame//$Resources//skull.txt");
+	
 	factor = 0.0;
 	EaseBool = false;
 	EaseCheck = SlowDown;
@@ -79,14 +81,25 @@ void Player_Render()
 	else
 		color = bRED;
 
-	for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
-		Console_SetRenderBuffer_CharColor(player.body[i].x, player.body[i].y, ' ', color);
+	for (int i = 0; i < SPRITE_SIZE; i++)
+		player.PlayerSprite.printColor[i] = color;
+
+	Text_Render(&player.PlayerSprite);
+	
+
+	/*for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
+		Console_SetRenderBuffer_CharColor(player.body[i].x, player.body[i].y, ' ', color);*/
 }
 
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
 {
 	player.direction = dir;
 	EaseCheck = EaseC;
+}
+
+int Player_GetHealth()
+{
+	return player.health;
 }
 
 double Player_GetEaseFactor()
@@ -215,4 +228,6 @@ void _MovePlayer()
 
 	player.position.x = player.position.eulerX;
 	player.position.y = player.position.eulerY;
+
+	Text_Move(&player.PlayerSprite, player.position.x, player.position.y);
 }

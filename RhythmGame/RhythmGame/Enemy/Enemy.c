@@ -78,7 +78,6 @@ void _spawnProjectile()
 
 void _updateEnemy()
 {
-
 		randEnMove = Random_Range(1, 6); //original is 4
 		if (randEnMove == 1)
 		{
@@ -105,4 +104,63 @@ void _updateEnemy()
 		else if (randEnMove == 6) {
 			skullEnemy.position.x += 6;
 		}
+}
+
+void Enemy_MoveTo()
+{
+	if (EnX == enemyArray->newPosition.x && EnY == enemyArray->newPosition.y)
+		_decideEnemyMove();
+	else
+	{
+		if (EnX != enemyArray->newPosition.x)
+			EnX += (EnX > enemyArray->newPosition.x) ? -1 : +1;
+
+		if (EnY != enemyArray->newPosition.y)
+			EnY += (EnY > enemyArray->newPosition.y) ? -1 : +1;
+	}
+}
+
+void _decideEnemyMove()
+{
+	randEnMove = Random_Range(1, 9);
+	
+	switch (randEnMove)
+	{
+	case 1: 
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6);
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6);
+		break;
+	case 2:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 3;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6);
+		break;
+	case 3:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 5;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6);
+		break;
+	case 4:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6);
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 3;
+		break;
+	case 5:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 3;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 3;
+		break;
+	case 6:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 5;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 3;
+		break;
+	case 7:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6);
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 5;
+		break;
+	case 8:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 3;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 5;
+		break;
+	case 9:
+		enemyArray->newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 5;
+		enemyArray->newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 5;
+		break;
+	}
 }
