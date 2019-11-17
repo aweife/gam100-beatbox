@@ -14,14 +14,16 @@ int newcharcount = 0;
 int totalcharcount = 0;
 int currentyposition = 0;
 int iteration = 0;
+int Xoffset = 0;
 
 void Text_Init(sprite *s, char* path)
 {   
-	_Readandstoretext(s,path);
+	_Readandstoretext(s, path);
 }
 
 sprite Text_CreateSprite()
 {
+
 	return skullenemy;
 }
 void Text_Render(sprite *s)
@@ -38,11 +40,13 @@ void Text_Move(sprite *skull,int x, int y)
 	skull->Yposition = y;
 }
 
-void _Readandstoretext(sprite *s, char* path)
+void _Readandstoretext(sprite* s, const char* path)
 {
 	iteration = 0;
 	newcharcount = 0;
 	totalcharcount = 0;
+	Xoffset = 0;
+	currentyposition = 0;
 
 	for (int i = 0; i < 150; i++)
 	{
@@ -56,6 +60,7 @@ void _Readandstoretext(sprite *s, char* path)
 		while (!feof(pFile))
 		{
 			charcount = 0;
+			Xoffset = 0;
 
 			fgets(Charline, 150, pFile);
 
@@ -76,23 +81,25 @@ void _Readandstoretext(sprite *s, char* path)
 			}
 
 			printf("%d\n", charcount);
-			
+
 			for (int i = 0; i < charcount; i++)
 			{
 				if (Charline[i] != ' ')
 				{
-					s->position[newcharcount + iteration][0] = i;
+					s->position[newcharcount + iteration][0] = Xoffset;
 					s->position[newcharcount + iteration][1] = currentyposition;
 					s->printchar[newcharcount + iteration] = Charline[i];
-					if(Charline[i] == 'R')
-					  s->printColor[newcharcount + iteration] = bRED;
-					else if(Charline[i] == 'W')
-					  s->printColor[newcharcount + iteration] = WHITE;
+					if (Charline[i] == 'R')
+						s->printColor[newcharcount + iteration] = bRED;
+					else if (Charline[i] == 'W')
+						s->printColor[newcharcount + iteration] = WHITE;
 					else
-				      s->printColor[newcharcount + iteration] = WHITE;
+						s->printColor[newcharcount + iteration] = WHITE;
 
 					iteration++;
 				}
+
+				Xoffset++;
 			}
 
 			totalcharcount = newcharcount + iteration;
@@ -103,3 +110,5 @@ void _Readandstoretext(sprite *s, char* path)
 		fclose(pFile);
 	}
 }
+
+
