@@ -8,21 +8,18 @@
 
 typedef struct Enemy {
 	Vector2d position;
-	bool visible;
-	bool available;
+	sprite enemySprite;
 } Enemy;
 
-//Projectile Structure
-typedef struct Projectile//MUSTLEARNTHIS
-{
-	Vector2d position;
-	bool visible;
-	bool available;
-} Projectile;
+////Projectile Structure
+//typedef struct Projectile//MUSTLEARNTHIS
+//{
+//	Vector2d position;
+//	bool visible;
+//	bool available;
+//} Projectile;
 
 extern void Enemy_Init();
 extern void Enemy_FixedUpdate();
-extern double Enemy_CalculateBPM(int x);
-extern sprite *Enemy_GetEnemy();
-extern Projectile *Enemy_GetProjectile();
 extern void Enemy_Render();
+extern sprite *Enemy_GetEnemy();
