@@ -22,6 +22,9 @@ extern void Audio_PlayOneShot(int id, float volume);
 // Play a BGM (provide its magic number/delay)
 extern void Audio_PlayBGMWithDelay(int id, double delay);
 
+// Fade out the BGM
+extern void Audio_FadeOutBGM(double time);
+
 // Need to update fmod to get info about state of our fmod variables
 extern void Audio_Update();
 

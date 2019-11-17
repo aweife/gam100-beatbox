@@ -59,7 +59,11 @@ void Game_ProcessInput()
 		spaceDown = true;
 		Player_Dash();
 	}
-	else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
+	else if (!GetAsyncKeyState(VK_SPACE)) 
+		spaceDown = false;
+
+	if(GetAsyncKeyState(VK_ESCAPE))
+		Audio_FadeOutBGM(300.0);
 }
 
 void Game_Update()

@@ -25,12 +25,15 @@ static FMOD_RESULT result;
 static FMOD_SYSTEM *fmodSystem;
 
 // BGM
-static track kick = { .dsp = 0, };
+static track kick = { 0 };
 static track snare = { 0 };
 static track bgmList[NUMBER_OF_BGM_TRACKS];
 static int bgmCount = 0;
 static double bgmDelay;
 static int currentId = 0;
+static bool startFadeOut = false;
+static double fadeTimer = 0;
+static double initialFadeValue = 0;
 
 
 // SFX
@@ -40,6 +43,7 @@ static FMOD_SOUND *sfxList[NUMBER_OF_SFX_TRACKS];
 // For internal use
 void _CheckResult(const char *debug);
 void _CountDownBGM();
+void _FadeOutBGM();
 
 
 void Audio_Init()
@@ -61,7 +65,7 @@ void Audio_Init()
 	Audio_Load("../RhythmGame//$Resources//Kick.wav", KICK);
 	Audio_Load("..//RhythmGame//$Resources//Snare.wav", SNARE);
 	Audio_Load("..//RhythmGame//$Resources//Melody.wav", BGM);
-	Audio_PlayBGMWithDelay(0, 0.1);
+	Audio_PlayBGMWithDelay(0, .000001);
 }
 
 void Audio_Load(const char *path, TRACKTYPE type)
@@ -126,6 +130,13 @@ void Audio_PlayBGMWithDelay(int id, double delay)
 	FMOD_DSP_SetActive(bgmList[id].dsp, true);
 }
 
+void Audio_FadeOutBGM(double time)
+{
+	startFadeOut = true;
+	fadeTimer = time;
+	initialFadeValue = time;
+}
+
 double Audio_GetFrequency(TRACKTYPE type)
 {
 	switch (type)
@@ -155,6 +166,10 @@ void Audio_Update()
 	// If StartBGMWithDelay has been called
 	if (bgmDelay > 0.0)
 		_CountDownBGM();
+
+	// If FadeOutBGM has been called
+	if (startFadeOut)
+		_FadeOutBGM();
 }
 
 void Audio_Shutdown()
@@ -212,5 +227,26 @@ void _CountDownBGM()
 		FMOD_Channel_SetPaused(kick.channel, false);
 		FMOD_Channel_SetPaused(snare.channel, false);
 		FMOD_Channel_SetPaused(bgmList[0].channel, false);
+	}
+}
+
+void _FadeOutBGM()
+{
+	fadeTimer -= Clock_GetDeltaTime();
+	double volume = fadeTimer / initialFadeValue;
+
+	FMOD_Channel_SetVolume(snare.channel, volume);
+	FMOD_Channel_SetVolume(kick.channel, volume);
+	FMOD_Channel_SetVolume(bgmList[0].channel, volume);
+
+	if (volume < 0.0)
+	{
+		startFadeOut = false;
+		fadeTimer = 0.0;
+		initialFadeValue = 0.0;
+
+		FMOD_Channel_SetPaused(kick.channel, true);
+		FMOD_Channel_SetPaused(snare.channel, true);
+		FMOD_Channel_SetPaused(bgmList[0].channel, true);
 	}
 }
