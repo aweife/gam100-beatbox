@@ -44,7 +44,7 @@ void Player_Init()
 		.health = 10,
 		.PlayerSprite = Text_CreateSprite(),
 		.PlayerSprite.printColor = bRED, };
-	
+
 	Text_Init(&player.PlayerSprite, "..//RhythmGame//$Resources//skull.txt");
 	
 	factor = 0.0;
@@ -80,7 +80,10 @@ void Player_Render()
 		color = bBLUE;
 	else
 		color = bRED;
-	PlayerSprite.printColor = color;
+
+	for (int i = 0; i < SPRITE_SIZE; i++)
+		player.PlayerSprite.printColor[i] = color;
+
 	Text_Render(&player.PlayerSprite);
 	
 
