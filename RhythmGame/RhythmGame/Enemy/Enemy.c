@@ -7,6 +7,7 @@
 //Game Input
 int randEnMove = 0;
 double result = 0.0;
+int score = 0;
 
 // The skull enemy
 Enemy skullEnemy;
@@ -16,7 +17,7 @@ Enemy skullEnemy;
 int BPMProjSpawnTime = 0;
 //double BPMProjMoveTime = 0.0;
 //double elapsedTimerTime = 0.0;
-//char timeDisplay[10];
+char timeDisplay[10];
 
 //Only stores 10 values
 Projectile pArray[NUMBER_OF_PROJECTILE];
@@ -28,6 +29,7 @@ int pCount = NUMBER_OF_PROJECTILE;
 void _updateEnemy();
 void _spawnProjectile();
 void _decideEnemyMove(int seed);
+void _Scoreboard();
 
 void Enemy_Init()
 {
@@ -62,11 +64,17 @@ void Enemy_Render()
 
 	//LETTER ENEMY
 	//Console_SetRenderBuffer_Char(EnX, EnY, 'E');
+	Console_SetRenderBuffer_Char(skullEnemy.position.x, skullEnemy.position.y, 'E');
 }
 
 sprite *Enemy_GetEnemy()
 {
 	return &skullEnemy.enemySprite;
+}
+
+void _Scoreboard()
+{
+
 }
 
 void _spawnProjectile()

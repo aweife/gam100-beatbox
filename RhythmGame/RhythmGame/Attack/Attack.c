@@ -4,22 +4,18 @@
 #include "../Map/Map.h"
 #include "../Player/Player.h"
 
-//Game Input
-//Game Time
-//int BPMProjSpawnTime;
-
 //Only stores 100 values
 Projectile pArray[NUMBER_OF_PROJECTILE];
+<<<<<<< Updated upstream
+=======
+
+Laser lArray;
+Vector2d laserPosition[LENGTH_OF_LASER];
+>>>>>>> Stashed changes
 
 // Keep tracks of how many projectiles are currently in use
 // then we update all in-use projectiles
 int pCount;
-
-
-/*Projectile* Enemy_GetProjectile()
-{
-	return pArray;
-}*/
 
 /* Internal functions */
 void _UpdateProjectile();
@@ -151,6 +147,26 @@ void _CheckCollision()
 		}
 	}
 
+<<<<<<< Updated upstream
+=======
+	//Collision of Laser to Boundary
+	for (int i = 0; i < lArray.distanceToTravel; i++)
+	{
+		if (laserPosition[i].x > GAME_WIDTH - MAP_OFFSET || laserPosition[i].y > GAME_HEIGHT - MAP_OFFSET
+			|| laserPosition[i].x < MAP_OFFSET || laserPosition[i].y < MAP_OFFSET)
+		{
+			//Hide away projectiles
+			lArray.visible = false;
+			lArray.available = true;
+			laserPosition[i].x = 500;
+			laserPosition[i].y = 500;
+			lArray.distanceToTravel--;
+			break;
+		}
+	}
+
+
+>>>>>>> Stashed changes
 	// Collision with player
 	sprite *player = Player_GetSprite();
 	for (int j = 0; j < player->charCount; j++)
@@ -181,7 +197,40 @@ void _CheckCollision()
 
 void Attack_updateLaser()
 {
+<<<<<<< Updated upstream
 
+=======
+	for (int i = 0; i < lArray.distanceToTravel; i++)
+	{
+		if (lArray.available)
+		{
+			//if laser has not been used, don't do anything.
+			return;
+		}
+  		switch (lArray.direction)
+		{
+		case UP:
+			laserPosition[i].x = lArray.position.x;
+			laserPosition[i].y = lArray.position.y - i;
+			break;
+		case DOWN:
+			laserPosition[i].x = lArray.position.x;
+			laserPosition[i].y = lArray.position.y + i;
+			break;
+		case RIGHT:
+			laserPosition[i].y = lArray.position.y;
+			laserPosition[i].x = lArray.position.x + i;
+			break;
+		case LEFT:
+			laserPosition[i].y = lArray.position.y;
+			laserPosition[i].x = lArray.position.x - i;
+			break;
+		default:
+			laserPosition[i].x = lArray.position.x;
+			laserPosition[i].y = lArray.position.y + i;
+		}
+	}
+>>>>>>> Stashed changes
 }
 
 void Attack_spawnClusterBomb()
