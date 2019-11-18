@@ -3,6 +3,7 @@
 #include "../Clock/Clock.h"
 #include "../Global.h"
 #include "../Map/Map.h"
+#include "../Console/Console.h"
 
 //Game Input
 int randEnMove = 0;
@@ -35,12 +36,13 @@ void Enemy_Init()
 	skullEnemy = (Enemy) {.position.x = 45, .position.y = 45, .enemySprite = Text_CreateSprite(),};
 	_decideEnemyMove(1);
 	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
+	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
 }
 
 void Enemy_FixedUpdate()
 {
 	Enemy_MoveTo(0);
-	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x - 9 , skullEnemy.position.y - 7);
+	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
 
 	// For testing only
 	_spawnProjectile();
@@ -50,7 +52,9 @@ void Enemy_Render()
 {
 	//ASCI ENEMY
 	Text_Render(&skullEnemy.enemySprite);
-	Console_SetRenderBuffer_Char(skullEnemy.position.x, skullEnemy.position.y, 'E');
+
+	// Debug origin point
+	Console_SetRenderBuffer_CharColor(skullEnemy.position.x, skullEnemy.position.y, '+', CYAN);
 
 	//for (int i = 0; i < pCount; i++)
 	//{

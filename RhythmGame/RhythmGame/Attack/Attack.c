@@ -3,6 +3,7 @@
 #include "../Global.h"
 #include "../Map/Map.h"
 #include "../Player/Player.h"
+#include "../Console/Console.h"
 
 //Game Input
 //Game Time
@@ -10,13 +11,12 @@
 
 //Only stores 100 values
 Projectile pArray[NUMBER_OF_PROJECTILE];
-Laser lArray;
-Vector2d laserPosition[LENGTH_OF_LASER];
-
 // Keep tracks of how many projectiles are currently in use
 // then we update all in-use projectiles
 int pCount;
+Projectile lArray[LENGTH_OF_LASER];
 int lCount;
+int laserSpeed = 10;
 
 
 /*Projectile* Enemy_GetProjectile()
@@ -26,6 +26,8 @@ int lCount;
 
 /* Internal functions */
 void _UpdateProjectile();
+void _UpdateLaser();
+void _ClearLaser();
 void _CheckCollision();
 
 void _chooseAttack() //to be in enemy.c
@@ -55,21 +57,30 @@ void Attack_Init()
 
 	// Make all projectiles available for use
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
+	{
+		pArray[i].debugChar = 'P';
 		pArray[i].available = true;
+	}
 
-	lArray.available = true;
+	// Make all projectiles available for use
+	lArray[0].available = true;
+	lCount = 0;
+	for (int i = 0; i < LENGTH_OF_LASER; i++)
+	{
+		lArray[i].debugChar = 'L';
+	}
 }
 
 void Attack_FixedUpdate() // put in game.c
 {
-	Attack_UpdateLaser();
+	_UpdateLaser();
 
 	// If no projectile, dont do anything
 	if (pCount == 0)
 	{
 		return;
 	}
-	Attack_UpdateProjectile();
+	_UpdateProjectile();
 	_CheckCollision();
 	//Attack_updateLaser();
 	//Attack_updateClusterBomb();
@@ -85,17 +96,16 @@ void Attack_Render() // put in game.c
 
 	for (int i = 0; i < pCount; i++)
 	{
-		if (pArray[i - 1].visible)
-		{
-			//Print out projectile
-			Console_SetRenderBuffer_Char(pArray[i - 1].position.x, pArray[i - 1].position.y, 'P');
-		}
+		if (!pArray[i - 1].visible) return;
+		//Print out projectile
+		Console_SetRenderBuffer_Char(pArray[i - 1].position.x, pArray[i - 1].position.y, pArray[i - 1].debugChar);
 	}
 
 	for (int i = 0; i < LENGTH_OF_LASER; i++)
 	{
-			//Print out projectile
-			Console_SetRenderBuffer_Char(laserPosition[i].x, laserPosition[i].y, 'L');
+		if (!lArray[i].visible) return;
+		//Print out projectile
+		Console_SetRenderBuffer_Char(lArray[i].position.x, lArray[i].position.y, lArray[i].debugChar);
 	}
 }
 
@@ -121,7 +131,7 @@ void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int spe
 	}
 }
 
-void Attack_UpdateProjectile()
+void _UpdateProjectile()
 {
 	for (int i = 0; i < pCount; i++)
 	{
@@ -172,23 +182,14 @@ void _CheckCollision()
 		}
 	}
 
-	//Collision of Laser to Boundary
-	for (int i = 0; i < lArray.distanceToTravel; i++)
+	// Collision of laser with boundary
+	if (lCount > 0)
 	{
-		// If projectile is in use
-		if (lArray.available)
+		if (lArray[lCount - 1].position.x > GAME_WIDTH - MAP_OFFSET || lArray[lCount - 1].position.y > GAME_HEIGHT - MAP_OFFSET ||
+			lArray[lCount - 1].position.x < MAP_OFFSET || lArray[lCount - 1].position.y < MAP_OFFSET ||
+			lArray[lCount - 1].distanceToTravel < 0)
 		{
-			return;
-		}
-
-		if (laserPosition[i].x > GAME_WIDTH - MAP_OFFSET || laserPosition[i].y > GAME_HEIGHT - MAP_OFFSET
-			|| laserPosition[i].x < MAP_OFFSET || laserPosition[i].y < MAP_OFFSET)
-		{
-			//Hide away projectiles
-			lArray.visible = false;
-			lArray.available = true;
-			lCount--;
-			break;
+			_ClearLaser();
 		}
 	}
 
@@ -197,7 +198,8 @@ void _CheckCollision()
 	sprite *player = Player_GetSprite();
 	for (int j = 0; j < player->charCount; j++)
 	{
-		for (int i = 0; i < pCount; i++)
+		// Projectile
+		for (int i = 1; i < pCount; i++)
 		{
 			// If projectile is in use
 			if (pArray[i - 1].available)
@@ -216,59 +218,74 @@ void _CheckCollision()
 				break;
 			}
 		}
+
+		// Laser
+		for (int i = 0; i < lCount; i++)
+		{
+			// If laser is in use
+			if (lArray[i].available)
+				return;
+
+			if (lArray[i].position.x == player->position[j].x + player->origin.x &&
+				lArray[i].position.y == player->position[j].y + player->origin.y)
+			{
+				_ClearLaser();
+				Player_Damage();
+				break;
+			}
+		}
 	}
 }
 
-void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int distance)
+void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int length)
 {
-		if (lArray.available)
-		{
-			lArray.available = false;
-			lArray.position.y = spawnPosition.y;
-			lArray.position.x = spawnPosition.x;
-			lArray.visible = true;
-			lArray.direction = direction;
-			lArray.distanceToTravel = distance;
-		}
+	if (!lArray[0].available) return;
+
+	lArray[0].position.x = spawnPosition.x;
+	lArray[0].position.y = spawnPosition.y;
+	lArray[0].direction = direction;
+	lArray[0].available = false;
+	lArray[0].visible = true;
+	lArray[0].distanceToTravel = length;
+	lCount = 1;
 }
 
-void Attack_UpdateLaser()
+void _UpdateLaser()
 {
-	if (lArray.available) return; //if laser has not been used, don't do anything.
-	for (int i = 0; i < lArray.distanceToTravel; i++)
+	if (lArray[0].available) return;
+
+	for (int i = lCount; i < lCount + laserSpeed; i++)
 	{
-  		switch (lArray.direction)
+		if (lArray[i].distanceToTravel < 0) return;
+		lArray[i] = lArray[i - 1];
+		lArray[i].distanceToTravel = lArray[i - 1].distanceToTravel - 1;
+
+		switch (lArray[i - 1].direction)
 		{
 		case UP:
-			laserPosition[i].x = lArray.position.x;
-			laserPosition[i].y = lArray.position.y - i;
+			lArray[i].position.y = lArray[i - 1].position.y - 1;
 			break;
 		case DOWN:
-			laserPosition[i].x = lArray.position.x;
-			laserPosition[i].y = lArray.position.y + i;
-			break;
-		case RIGHT:
-			laserPosition[i].y = lArray.position.y;
-			laserPosition[i].x = lArray.position.x + i;
+			lArray[i].position.y = lArray[i - 1].position.y + 1;
 			break;
 		case LEFT:
-			laserPosition[i].y = lArray.position.y;
-			laserPosition[i].x = lArray.position.x - i;
+			lArray[i].position.x = lArray[i - 1].position.x - 1;
 			break;
-		default:
-			laserPosition[i].x = lArray.position.x;
-			laserPosition[i].y = lArray.position.y + i;
+		case RIGHT:
+			lArray[i].position.x = lArray[i - 1].position.x + 1;
+			break;
 		}
 	}
+
+	lCount += laserSpeed;
 }
 
-/*
-void Attack_spawnClusterBomb()
+void _ClearLaser()
 {
-
+	for (int i = 0; i < LENGTH_OF_LASER; i++)
+	{
+		lArray[i].available = true;
+		lArray[i].visible = false;
+	}
+	lCount = 0;
 }
-
-void Attack_updateClusterBomb()
-{
-
-}*/

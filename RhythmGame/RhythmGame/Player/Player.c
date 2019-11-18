@@ -67,7 +67,6 @@ void Player_Update()
 {
 	_MovePlayer();
 	_CheckBorder();
-	_UpdateShape();
 
 	// Check collision after player's position update first
 	_CheckCollision();
@@ -86,9 +85,8 @@ void Player_Render()
 
 	Text_Render(&player.PlayerSprite);
 	
-
-	/*for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
-		Console_SetRenderBuffer_CharColor(player.body[i].x, player.body[i].y, ' ', color);*/
+	// Debug origin
+	Console_SetRenderBuffer_CharColor(player.position.x, player.position.y, '+', CYAN);
 }
 
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
@@ -146,24 +144,6 @@ void _UpdateTimer()
 			invulCheck = 0;
 	}
 		
-}
-
-void _UpdateShape()
-{
-	int localx = 0;
-	int localy = 0;
-
-	localx = player.position.x--;
-	localy = player.position.y--;
-
-	for (int i = 0; i < BOXSIZE; i++)
-	{
-		for (int j = 0; j < BOXSIZE; j++)
-		{
-			player.body[i * 3 + j].x = localx + j;
-			player.body[i * 3 + j].y = localy + i;
-		}
-	}
 }
 
 void _CheckBorder()
