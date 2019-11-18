@@ -26,7 +26,6 @@ typedef enum EASEMOVEMENT {
 
 typedef struct Player {
 	Vector2d position;
-	Vector2d body[BOXSIZE * BOXSIZE];
 	int direction;
 	int health;
 	sprite PlayerSprite;
