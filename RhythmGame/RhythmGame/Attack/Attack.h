@@ -12,7 +12,6 @@
 typedef struct Projectile {
 	Vector2d position;
 	bool visible;
-	bool available;
 	DIRECTION direction;
 	int speed;
 	int distanceToTravel;

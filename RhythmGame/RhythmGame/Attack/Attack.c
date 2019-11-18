@@ -4,19 +4,22 @@
 #include "../Map/Map.h"
 #include "../Player/Player.h"
 #include "../Console/Console.h"
+#include "../Enemy/Enemy.h"
 
 //Game Input
 //Game Time
 //int BPMProjSpawnTime;
 
 //Only stores 100 values
-Projectile pArray[NUMBER_OF_PROJECTILE];
+Projectile pArray[NUMBER_OF_PROJECTILE] = { 0 };
 // Keep tracks of how many projectiles are currently in use
 // then we update all in-use projectiles
-int pCount;
-Projectile lArray[LENGTH_OF_LASER];
-int lCount;
+Projectile lArray[LENGTH_OF_LASER] = { 0 };
+int lCount = 0;
 int laserSpeed = 10;
+
+sprite *self;
+sprite *player;
 
 
 /*Projectile* Enemy_GetProjectile()
@@ -28,7 +31,8 @@ int laserSpeed = 10;
 void _UpdateProjectile();
 void _UpdateLaser();
 void _ClearLaser();
-void _CheckCollision();
+void _CheckProjectileCollision();
+void _CheckLaserCollision();
 
 void _chooseAttack() //to be in enemy.c
 {
@@ -53,18 +57,13 @@ void _chooseAttack() //to be in enemy.c
 
 void Attack_Init()
 {
-	pCount = 0;
-
 	// Make all projectiles available for use
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
 		pArray[i].debugChar = 'P';
-		pArray[i].available = true;
 	}
 
-	// Make all projectiles available for use
-	lArray[0].available = true;
-	lCount = 0;
+	// Make all projectiles available for lArray[0].available = true;
 	for (int i = 0; i < LENGTH_OF_LASER; i++)
 	{
 		lArray[i].debugChar = 'L';
@@ -73,186 +72,108 @@ void Attack_Init()
 
 void Attack_FixedUpdate() // put in game.c
 {
+	// Get info about player
+	self = Enemy_GetEnemy();
+	player = Player_GetSprite();
 	_UpdateLaser();
-
-	// If no projectile, dont do anything
-	if (pCount == 0)
-	{
-		return;
-	}
 	_UpdateProjectile();
-	_CheckCollision();
-	//Attack_updateLaser();
-	//Attack_updateClusterBomb();
+
+	// Check collision
+	_CheckProjectileCollision();
+	_CheckLaserCollision();
 }
 
 void Attack_Render() // put in game.c
 {
-	// If no projectile, dont do anything
-	/*if (pCount == 0)
+	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
-		return;
-	}*/
-
-	for (int i = 0; i < pCount; i++)
-	{
-		if (!pArray[i - 1].visible) return;
 		//Print out projectile
-		Console_SetRenderBuffer_Char(pArray[i - 1].position.x, pArray[i - 1].position.y, pArray[i - 1].debugChar);
+		if (pArray[i].visible)
+			Console_SetRenderBuffer_Char(pArray[i].position.x, pArray[i].position.y, pArray[i].debugChar);
 	}
 
-	for (int i = 0; i < LENGTH_OF_LASER; i++)
+	if (lCount > 0)
 	{
-		if (!lArray[i].visible) return;
-		//Print out projectile
-		Console_SetRenderBuffer_Char(lArray[i].position.x, lArray[i].position.y, lArray[i].debugChar);
+		for (int i = 0; i < LENGTH_OF_LASER; i++)
+		{
+			if (!lArray[i].visible) return;
+			//Print out projectile
+			Console_SetRenderBuffer_Char(lArray[i].position.x, lArray[i].position.y, lArray[i].debugChar);
+		}
 	}
 }
 
 void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int speed, int distance)
 {
-	pCount++;
 	// Number of projectiles in game currently
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
-		if (pArray[i - 1].available)
+		if (!pArray[i].visible)
 		{
-			pArray[i - 1].available = false;
-
-
-			pArray[i - 1].position.x = spawnPosition.x;
-			pArray[i - 1].position.y = spawnPosition.y;
-			pArray[i - 1].visible = true;
-			pArray[i - 1].direction = direction;
-			pArray[i - 1].speed = speed;
-			pArray[i - 1].distanceToTravel = distance;
+			pArray[i].position.x = spawnPosition.x;
+			pArray[i].position.y = spawnPosition.y;
+			pArray[i].visible = true;
+			pArray[i].direction = direction;
+			pArray[i].speed = speed;
+			pArray[i].distanceToTravel = distance;
 			break;
-		}
-	}
-}
-
-void _UpdateProjectile()
-{
-	for (int i = 0; i < pCount; i++)
-	{
-		if (pArray[i - 1].distanceToTravel > 0)
-		{
-			pArray[i - 1].distanceToTravel -= pArray[i - 1].speed;
-
-			switch (pArray[i - 1].direction)
-			{
-			case UP:
-				pArray[i - 1].position.y -= pArray[i - 1].speed;
-				break;
-			case DOWN:
-				pArray[i - 1].position.y += pArray[i - 1].speed;
-				break;
-			case RIGHT:
-				pArray[i - 1].position.x += pArray[i - 1].speed;
-				break;
-			case LEFT:
-				pArray[i - 1].position.x -= pArray[i - 1].speed;
-				break;
-			default:
-				pArray[i - 1].position.y += pArray[i - 1].speed;
-			}
-		}
-	}
-}
-
-void _CheckCollision()
-{
-	//Collision of Projectile to Boundary
-	for (int i = 0; i < pCount; i++)
-	{
-		// If projectile is in use
-		if (pArray[i - 1].available)
-		{
-			return;
-		}
-
-		if (pArray[i - 1].position.x > GAME_WIDTH - MAP_OFFSET || pArray[i - 1].position.y > GAME_HEIGHT - MAP_OFFSET
-			|| pArray[i - 1].position.x < MAP_OFFSET || pArray[i - 1].position.y < MAP_OFFSET)
-		{
-			//Hide away projectiles
-			pArray[i - 1].visible = false;
-			pArray[i - 1].available = true;
-			pCount--;
-			break;
-		}
-	}
-
-	// Collision of laser with boundary
-	if (lCount > 0)
-	{
-		if (lArray[lCount - 1].position.x > GAME_WIDTH - MAP_OFFSET || lArray[lCount - 1].position.y > GAME_HEIGHT - MAP_OFFSET ||
-			lArray[lCount - 1].position.x < MAP_OFFSET || lArray[lCount - 1].position.y < MAP_OFFSET ||
-			lArray[lCount - 1].distanceToTravel < 0)
-		{
-			_ClearLaser();
-		}
-	}
-
-
-	// Collision with player
-	sprite *player = Player_GetSprite();
-	for (int j = 0; j < player->charCount; j++)
-	{
-		// Projectile
-		for (int i = 1; i < pCount; i++)
-		{
-			// If projectile is in use
-			if (pArray[i - 1].available)
-			{
-				return;
-			}
-
-			if (pArray[i - 1].position.x == player->position[j].x + player->origin.x &&
-				pArray[i - 1].position.y == player->position[j].y + player->origin.y)
-			{
-				//Hide away projectiles
-				pArray[i - 1].visible = false;
-				pArray[i - 1].available = true;
-				pCount--;
-				Player_Damage();
-				break;
-			}
-		}
-
-		// Laser
-		for (int i = 0; i < lCount; i++)
-		{
-			// If laser is in use
-			if (lArray[i].available)
-				return;
-
-			if (lArray[i].position.x == player->position[j].x + player->origin.x &&
-				lArray[i].position.y == player->position[j].y + player->origin.y)
-			{
-				_ClearLaser();
-				Player_Damage();
-				break;
-			}
 		}
 	}
 }
 
 void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int length)
 {
-	if (!lArray[0].available) return;
+	if (lArray[0].visible) return;
 
 	lArray[0].position.x = spawnPosition.x;
 	lArray[0].position.y = spawnPosition.y;
 	lArray[0].direction = direction;
-	lArray[0].available = false;
 	lArray[0].visible = true;
 	lArray[0].distanceToTravel = length;
 	lCount = 1;
 }
 
+void _UpdateProjectile()
+{
+	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
+		if (!pArray[i].visible)
+			pArray[i].position = self->origin;
+
+	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
+	{
+		if (pArray[i].distanceToTravel > 0)
+		{
+			pArray[i].distanceToTravel -= pArray[i].speed;
+
+			switch (pArray[i].direction)
+			{
+			case UP:
+				pArray[i].position.y -= pArray[i].speed;
+				break;
+			case DOWN:
+				pArray[i].position.y += pArray[i].speed;
+				break;
+			case RIGHT:
+				pArray[i].position.x += pArray[i].speed;
+				break;
+			case LEFT:
+				pArray[i].position.x -= pArray[i].speed;
+				break;
+			default:
+				pArray[i].position.y += pArray[i].speed;
+			}
+		}
+	}
+}
+
 void _UpdateLaser()
 {
-	if (lArray[0].available) return;
+	for (int i = 0; i < LENGTH_OF_LASER; i++)
+		if (!lArray[i].visible)
+			lArray[i].position = *self->position;
+
+	if (lCount == 0)
+		return; 
 
 	for (int i = lCount; i < lCount + laserSpeed; i++)
 	{
@@ -283,9 +204,66 @@ void _UpdateLaser()
 void _ClearLaser()
 {
 	for (int i = 0; i < LENGTH_OF_LASER; i++)
-	{
-		lArray[i].available = true;
 		lArray[i].visible = false;
-	}
+
 	lCount = 0;
+}
+
+void _CheckProjectileCollision()
+{
+	//Collision of Projectile to Boundary
+	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
+	{
+		if (pArray[i].position.x > GAME_WIDTH - MAP_OFFSET || pArray[i].position.y > GAME_HEIGHT - MAP_OFFSET ||
+			pArray[i].position.x < MAP_OFFSET || pArray[i].position.y < MAP_OFFSET)
+		{
+			//Hide away projectiles
+			pArray[i].visible = false;
+			return;
+		}
+	}
+
+	// Collision with player
+	for (int j = 0; j < player->charCount; j++)
+	{
+		// Projectile
+		for (int i = 1; i < NUMBER_OF_PROJECTILE; i++)
+		{
+			if (pArray[i - 1].position.x == player->position[j].x + player->origin.x &&
+				pArray[i - 1].position.y == player->position[j].y + player->origin.y)
+			{
+				//Hide away projectiles
+				pArray[i - 1].visible = false;
+				Player_Damage();
+				break;
+			}
+		}
+	}
+}
+
+void _CheckLaserCollision()
+{
+	if (lCount < 1)
+		return;
+
+	if (lArray[lCount - 1].position.x > GAME_WIDTH - MAP_OFFSET || lArray[lCount - 1].position.y > GAME_HEIGHT - MAP_OFFSET ||
+		lArray[lCount - 1].position.x < MAP_OFFSET || lArray[lCount - 1].position.y < MAP_OFFSET ||
+		lArray[lCount - 1].distanceToTravel < 0)
+	{
+		_ClearLaser();
+	}
+
+	for (int j = 0; j < player->charCount; j++)
+	{
+		for (int i = 0; i < lCount; i++)
+		{
+			if (lArray[i].position.x == player->position[j].x + player->origin.x &&
+				lArray[i].position.y == player->position[j].y + player->origin.y)
+			{
+				_ClearLaser();
+				Player_Damage();
+				break;
+			}
+		}
+	}
 }

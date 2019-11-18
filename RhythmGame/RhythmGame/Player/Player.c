@@ -26,11 +26,8 @@ static double invulTimer; // Invulnerable timer
 /* Internal functions */
 
 void _MovePlayer();
-void _CheckCollision();
 // Checks if player is out of border
 void _CheckBorder();
-// Prints BOXSIZE of player
-void _UpdateShape();
 // Updates Timer
 void _UpdateTimer();
 
@@ -67,9 +64,6 @@ void Player_Update()
 {
 	_MovePlayer();
 	_CheckBorder();
-
-	// Check collision after player's position update first
-	_CheckCollision();
 	_UpdateTimer();
 }
 

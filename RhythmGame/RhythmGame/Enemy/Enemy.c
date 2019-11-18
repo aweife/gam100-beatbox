@@ -80,7 +80,7 @@ void _spawnProjectile()
 	if (BPMProjSpawnTime <= 3) return;
 	BPMProjSpawnTime = 0;
 	
-	//Attack_SpawnProjectile(skullEnemy.position, DOWN, 5, 100);
+	//Attack_SpawnProjectile(skullEnemy.position, DOWN, 5, 2000);
 	Attack_SpawnLaser(skullEnemy.position, DOWN, 100);
 }
 
