@@ -30,14 +30,14 @@ void Text_Render(sprite *s)
 {
 	for (int i = 0; i < SPRITE_SIZE; i++)
 	{
-		Console_SetRenderBuffer_CharColor((s->position[i][0]) + s->Xposition, (s->position[i][1] + s->Yposition), s->printchar[i], s->printColor[i]);
+		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y), s->printchar[i], s->printColor[i]);
 	}
 }
 
-void Text_Move(sprite *skull,int x, int y)
+void Text_Move(sprite *s,int x, int y)
 {
-	skull->Xposition = x;
-	skull->Yposition = y;
+	s->origin.x = x;
+	s->origin.y = y;
 }
 
 void _Readandstoretext(sprite* s, const char* path)
@@ -86,8 +86,8 @@ void _Readandstoretext(sprite* s, const char* path)
 			{
 				if (Charline[i] != ' ')
 				{
-					s->position[newcharcount + iteration][0] = Xoffset;
-					s->position[newcharcount + iteration][1] = currentyposition;
+					s->position[newcharcount + iteration].x = Xoffset;
+					s->position[newcharcount + iteration].y = currentyposition;
 					s->printchar[newcharcount + iteration] = Charline[i];
 					if (Charline[i] == 'R')
 						s->printColor[newcharcount + iteration] = bRED;
@@ -103,7 +103,7 @@ void _Readandstoretext(sprite* s, const char* path)
 			}
 
 			totalcharcount = newcharcount + iteration;
-
+			s->charCount = totalcharcount;
 			newcharcount = totalcharcount;
 			currentyposition++;
 		}

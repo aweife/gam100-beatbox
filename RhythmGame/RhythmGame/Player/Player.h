@@ -33,25 +33,28 @@ typedef struct Player {
 }Player;
 
 // Initialise player variables
-void Player_Init();
+extern void Player_Init();
 
 // Moves the player according to input (WITH DASH MECHANISM)
-void Player_Update();
+extern void Player_Update();
 
 // Renders the player location
-void Player_Render();
+extern void Player_Render();
 
 // Allows player to dash
-void Player_Dash();
+extern void Player_Dash();
 
 // Damages Player
-void Player_Damage();
+extern void Player_Damage();
 
 // Sets direction and EaseMovement to allow movement in direction with Ease In Ease Out effect
 extern void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC);
 
 // Returns value of factor
-double Player_GetEaseFactor();
+extern double Player_GetEaseFactor();
 
 // Returns direction of player
-int Player_GetDirection();
+extern int Player_GetDirection();
+
+// Returns sprite of player
+extern sprite *Player_GetSprite();
