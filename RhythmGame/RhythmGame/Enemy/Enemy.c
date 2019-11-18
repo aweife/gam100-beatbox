@@ -9,12 +9,14 @@
 int randEnMove = 0;
 double result = 0.0;
 
+
 // The skull enemy
 Enemy skullEnemy;
 
 //Game Time
 //double BPMEnTime = 0.0;
 int BPMProjSpawnTime = 0;
+double gameRunningTime = 0;
 //double BPMProjMoveTime = 0.0;
 //double elapsedTimerTime = 0.0;
 //char timeDisplay[10];
@@ -37,6 +39,8 @@ void Enemy_Init()
 	_decideEnemyMove(1);
 	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
 	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
+
+	// Start Game Time and Score
 }
 
 void Enemy_FixedUpdate()
@@ -56,6 +60,8 @@ void Enemy_Render()
 	// Debug origin point
 	Console_SetRenderBuffer_CharColor(skullEnemy.position.x, skullEnemy.position.y, '+', CYAN);
 
+
+
 	//for (int i = 0; i < pCount; i++)
 	//{
 	//	if (pArray[i].visible)
@@ -73,6 +79,7 @@ sprite *Enemy_GetEnemy()
 {
 	return &skullEnemy.enemySprite;
 }
+
 
 void _spawnProjectile()
 {

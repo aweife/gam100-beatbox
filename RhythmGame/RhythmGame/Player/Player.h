@@ -55,5 +55,8 @@ extern double Player_GetEaseFactor();
 // Returns direction of player
 extern int Player_GetDirection();
 
+// Returns Player Score
+extern int Player_GetScore();
+
 // Returns sprite of player
 extern sprite *Player_GetSprite();

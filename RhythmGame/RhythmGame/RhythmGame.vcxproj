@@ -29,6 +29,7 @@
     <ClCompile Include="Map\Map.c" />
     <ClCompile Include="Player\Player.c" />
     <ClCompile Include="Random\Random.c" />
+    <ClCompile Include="Score\Score.c" />
     <ClCompile Include="States\Game.c" />
     <ClCompile Include="States\GameOver.c" />
     <ClCompile Include="States\MainMenu.c" />
@@ -47,6 +48,7 @@
     <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Random\Random.h" />
+    <ClInclude Include="Score\Score.h" />
     <ClInclude Include="States\Game.h" />
     <ClInclude Include="States\GameOver.h" />
     <ClInclude Include="States\MainMenu.h" />
@@ -58,6 +60,7 @@
     <Text Include="$Resources\Logo.txt" />
     <Text Include="$Resources\Logo2.txt.txt" />
     <Text Include="$Resources\skull.txt" />
+    <Text Include="Score\Score.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$Resources\Kick.wav" />

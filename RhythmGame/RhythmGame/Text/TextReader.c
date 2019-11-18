@@ -62,7 +62,7 @@ void _Readandstoretext(sprite* s, const char* path)
 			charcount = 0;
 			Xoffset = 0;
 
-			fgets(Charline, 150, pFile);
+			fgets(Charline, 150, pFile); 
 
 
 			for (int i = 0; i < 150; i++)

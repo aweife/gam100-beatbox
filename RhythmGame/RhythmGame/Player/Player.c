@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../Score/Score.h"
 #include "../Global.h"
 #include "../Console/Console.h"
 #include "../Map/Map.h"
@@ -14,6 +15,7 @@ static double velocity;
 // CHECKS
 static int EaseCheck;
 static int EaseBool;
+static int score;
 static int invulCheck; // Check invulnerable state (1 = invul / 0 = not invul)
 
 // TIMERS
@@ -22,6 +24,7 @@ static double EaseTimer; // Ease
 static double cdTimer; // Cooldown of Dash
 static double dashTimer; // Duration of Dash
 static double invulTimer; // Invulnerable timer
+static double gameTimer;
 
 /* Internal functions */
 
@@ -33,6 +36,7 @@ void _CheckBorder();
 void _UpdateShape();
 // Updates Timer
 void _UpdateTimer();
+void _UpdateScore();
 
 
 void Player_Init()
@@ -65,9 +69,9 @@ void Player_Init()
 
 void Player_Update()
 {
+	_UpdateScore();
 	_MovePlayer();
 	_CheckBorder();
-
 	// Check collision after player's position update first
 	_CheckCollision();
 	_UpdateTimer();
@@ -87,6 +91,8 @@ void Player_Render()
 	
 	// Debug origin
 	Console_SetRenderBuffer_CharColor(player.position.x, player.position.y, '+', CYAN);
+
+	_RenderScoreBoard(score);
 }
 
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
@@ -108,6 +114,11 @@ double Player_GetEaseFactor()
 int Player_GetDirection()
 {
 	return player.direction;
+}
+
+int Player_GetScore()
+{
+	return score;
 }
 
 void Player_Dash()
@@ -206,4 +217,14 @@ void _MovePlayer()
 	player.position.y = player.position.eulerY;
 
 	Text_Move(&player.PlayerSprite, player.position.x, player.position.y);
+}
+
+void _UpdateScore()
+{
+	gameTimer += Clock_GetDeltaTime();
+	if (gameTimer >= 1000.0)
+	{
+		score += 10;
+		gameTimer -= 1000.0;
+	}
 }
