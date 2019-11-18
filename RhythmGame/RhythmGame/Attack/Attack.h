@@ -6,6 +6,7 @@
 #include "../Player/Player.h"
 
 #define NUMBER_OF_PROJECTILE 100
+#define LENGTH_OF_LASER 100
 
 //Projectile Structure
 typedef struct Projectile
@@ -23,22 +24,24 @@ typedef struct Projectile
 // Attack_Spawn(myown.position);
 
 //ClusterBomb Structure
-typedef struct ClusterBomb
+typedef struct Laser
 {
 	Vector2d position;
 	bool visible;
 	bool available;
-	int speed;
-	int distance;
-} ClusterBomb;
+	DIRECTION direction;
+	int distanceToTravel;
+	sprite laserSprite;
+} Laser;
 
 //void _chooseAttack();
 extern void Attack_Init();
 extern void Attack_FixedUpdate();
 extern void Attack_Render();
 extern void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int speed, int distance);
-//void Attack_spawnLaser();
-//void Attack_updateLaser();
+extern void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int distance);
+void Attack_UpdateLaser();
+void Attack_UpdateProjectile();
 //void Attack_spawnClusterBomb();
 //void Attack_updateClusterBomb();
 

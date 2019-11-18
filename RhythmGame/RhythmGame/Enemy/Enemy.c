@@ -40,7 +40,7 @@ void Enemy_Init()
 void Enemy_FixedUpdate()
 {
 	Enemy_MoveTo(0);
-	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
+	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x - 9 , skullEnemy.position.y - 7);
 
 	// For testing only
 	_spawnProjectile();
@@ -50,6 +50,7 @@ void Enemy_Render()
 {
 	//ASCI ENEMY
 	Text_Render(&skullEnemy.enemySprite);
+	Console_SetRenderBuffer_Char(skullEnemy.position.x, skullEnemy.position.y, 'E');
 
 	//for (int i = 0; i < pCount; i++)
 	//{
@@ -75,7 +76,8 @@ void _spawnProjectile()
 	if (BPMProjSpawnTime <= 3) return;
 	BPMProjSpawnTime = 0;
 	
-	Attack_SpawnProjectile(skullEnemy.position, DOWN, 5, 100);
+	//Attack_SpawnProjectile(skullEnemy.position, DOWN, 5, 100);
+	Attack_SpawnLaser(skullEnemy.position, DOWN, 100);
 }
 
 void _updateEnemy()

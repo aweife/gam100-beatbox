@@ -4,7 +4,6 @@
 #include "../Text/TextReader.h"
 #include <stdbool.h>
 
-#define NUMBER_OF_PROJECTILE 50
 
 typedef struct Enemy {
 	Vector2d position;
@@ -12,13 +11,6 @@ typedef struct Enemy {
 	sprite enemySprite;
 } Enemy;
 
-////Projectile Structure
-//typedef struct Projectile//MUSTLEARNTHIS
-//{
-//	Vector2d position;
-//	bool visible;
-//	bool available;
-//} Projectile;
 
 extern void Enemy_Init();
 extern void Enemy_FixedUpdate();
