@@ -131,40 +131,40 @@ void _decideEnemyMove(int seed)
 	switch (seed)
 	{
 	case 1: 
-		skullEnemy.newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6);
-		skullEnemy.newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6);
+		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6);
+		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6);
 		break;
 	case 2:
-		skullEnemy.newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 3;
-		skullEnemy.newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6);
+		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 3;
+		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6);
 		break;
 	case 3:
-		skullEnemy.newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 5;
-		skullEnemy.newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6);
+		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 5;
+		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6);
 		break;
 	case 4:
-		skullEnemy.newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6);
-		skullEnemy.newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 3;
+		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6);
+		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 3;
 		break;
 	case 5:
-		skullEnemy.newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 3;
-		skullEnemy.newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 3;
+		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 3;
+		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 3;
 		break;
 	case 6:
-		skullEnemy.newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 5;
-		skullEnemy.newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 3;
+		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 5;
+		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 3;
 		break;
 	case 7:
-		skullEnemy.newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6);
-		skullEnemy.newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 5;
+		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6);
+		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 5;
 		break;
 	case 8:
-		skullEnemy.newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 3;
-		skullEnemy.newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 5;
+		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 3;
+		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 5;
 		break;
 	case 9:
-		skullEnemy.newPosition.x = MAP_OFFSET + (GAME_WIDTH / 6) * 5;
-		skullEnemy.newPosition.y = MAP_OFFSET + (GAME_HEIGHT / 6) * 5;
+		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 5;
+		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 5;
 		break;
 	}
 }
