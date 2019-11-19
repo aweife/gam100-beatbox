@@ -92,7 +92,6 @@ void Player_Render()
 	// Debug origin
 	Console_SetRenderBuffer_CharColor(player.position.x, player.position.y, '+', CYAN);
 
-	_RenderScoreBoard(score);
 }
 
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)

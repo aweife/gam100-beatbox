@@ -8,11 +8,11 @@ FILE* readScoreFile;
 static char scoreDisplay[256];
 static char buffer[BUFFER_SIZE];
 
-Player temp;
-Player p[SIZE];
+/*Player temp;
+Player p[SIZE];*/
 
-//Internal Functions
 
+//Render Scoreboard
 void _RenderScoreBoard(int score, int x, int y)
 {
 	_itoa_s(score, scoreDisplay, sizeof(scoreDisplay), 10);
@@ -20,9 +20,9 @@ void _RenderScoreBoard(int score, int x, int y)
 	Console_SetRenderBuffer_String(x + 7, y, scoreDisplay);
 }
 
-void _InputScore(char* path)
+//Write Score to File
+void _InputScore(char* path, int Get_Score())
 {
-	//Write To Score File
 	writeScoreFile = fopen(path, "a");
 	if (writeScoreFile == NULL)
 	{
@@ -34,9 +34,9 @@ void _InputScore(char* path)
 	}
 }
 
+//Read from Score File
 void _OutputScore(char* path, int x, int y)
 {
-	//Read from Score File
 	readScoreFile = fopen(path, "rt");
 	if (readScoreFile == NULL)
 	{
