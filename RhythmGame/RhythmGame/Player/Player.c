@@ -69,6 +69,9 @@ void Player_Update()
 
 void Player_Render()
 {
+	// Debug origin
+	Console_SetRenderBuffer_CharColor(player.position.x, player.position.y, '+', BLUE);
+
 	switch (player.state)
 	{
 	case Normal:
@@ -86,9 +89,6 @@ void Player_Render()
 		player.PlayerSprite.printColor[i] = color;
 
 	Text_Render(&player.PlayerSprite, Map_GetShakeFactor(RIGHT)/2, 0);
-
-	// Debug origin
-	Console_SetRenderBuffer_CharColor(player.position.x, player.position.y, '+', CYAN);
 }
 
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
@@ -143,7 +143,7 @@ void Player_Damage()
 	player.health--;
 	player.state = Invul;
 	invulTimer = 2000.0;
-	Map_Shake(RIGHT, 50.0, 5);
+	Map_Shake(RIGHT, 100.0, 5);
 }
 
 sprite *Player_GetSprite()
