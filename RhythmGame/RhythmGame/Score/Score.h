@@ -16,5 +16,5 @@
 } Player;*/
 
 extern void _RenderScoreBoard(int score, int x, int y);
-extern void _InputScore(char* path);
+extern void _InputScore(char* path, int Get_Score());
 extern void _OutputScore(char* path, int x, int y);
