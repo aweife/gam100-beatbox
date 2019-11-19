@@ -14,13 +14,13 @@ static double velocity;
 // CHECKS
 static int EaseCheck;
 static int EaseBool;
-static int invulCheck; // Check invulnerable state (1 = invul / 0 = not invul)
+static bool canAttack;
 
 // TIMERS
 static double dt; // Euler Movement
 static double EaseTimer; // Ease
-static double cdTimer; // Cooldown of Dash
-static double dashTimer; // Duration of Dash
+static double dashCooldownTimer; // Cooldown of Dash
+static double speedUpTimer; // Duration of Dash
 static double invulTimer; // Invulnerable timer
 
 /* Internal functions */
@@ -29,18 +29,20 @@ void _MovePlayer();
 // Checks if player is out of border
 void _CheckBorder();
 // Updates Timer
-void _UpdateTimer();
+void _UpdateState();
 
 
 void Player_Init()
 {
 	player = (Player){
 		.direction = STAY,
-		.position.x = 50, .position.y = 50,
-		.position.eulerX = 50.0, .position.eulerY = 50.0,
+		.position.x = 100, .position.y = 100,
+		.position.eulerX = 100.0, .position.eulerY = 100.0,
 		.health = 10,
 		.PlayerSprite = Text_CreateSprite(),
-		.PlayerSprite.printColor = bRED, };
+		.PlayerSprite.printColor = bRED,
+		.state = Normal,
+	};
 
 	Text_Init(&player.PlayerSprite, "..//RhythmGame//$Resources//skull.txt");
 
@@ -48,36 +50,42 @@ void Player_Init()
 	EaseBool = false;
 	EaseCheck = SlowDown;
 	EaseCheck = true;
+	canAttack = true;
 	velocity = 0.04;
 
 	// Timers
 	EaseTimer = 0.0; // Ease
-	cdTimer = 0.0;
-	dashTimer = 0.0;
+	dashCooldownTimer = 0.0;
+	speedUpTimer = 0.0;
 	invulTimer = 0.0;
-
-	// Timer Check
-	invulCheck = 0;
 }
 
 void Player_Update()
 {
 	_MovePlayer();
 	_CheckBorder();
-	_UpdateTimer();
+	_UpdateState();
 }
 
 void Player_Render()
 {
-	if (invulCheck == 1)
-		color = bBLUE;
-	else
-		color = bRED;
+	switch (player.state)
+	{
+	case Normal:
+		color = BLUE;
+		break;
+	case Invul:
+		color = RED;
+		break;
+	default:
+		color = CYAN;
+		break;
+	}
 
 	for (int i = 0; i < SPRITE_SIZE; i++)
 		player.PlayerSprite.printColor[i] = color;
 
-	Text_Render(&player.PlayerSprite);
+	Text_Render(&player.PlayerSprite, Map_GetShakeFactor(RIGHT)/2, 0);
 
 	// Debug origin
 	Console_SetRenderBuffer_CharColor(player.position.x, player.position.y, '+', CYAN);
@@ -107,23 +115,35 @@ int Player_GetDirection()
 void Player_Dash()
 {
 	// If cdTimer is running
-	if (cdTimer > 0.0)
+	if (dashCooldownTimer > 0.0)
 		return;
 
-	velocity = 0.15;
 	factor = 1;
-	dashTimer = 100.0f;
-	cdTimer = 1000.0f;
+	speedUpTimer = 100.0;
+	invulTimer = 200.0;
+	player.state = Dash;
+	dashCooldownTimer = 1000.0;
+}
+
+void Player_ExtendDash()
+{
+	if (!canAttack) return;
+	canAttack = false;
+	factor = 1;
+	speedUpTimer += 20.0;
+	player.state = ExDash;
+	invulTimer += 100.0;
+	Map_Shake(UP, 50.0, 2);
 }
 
 void Player_Damage()
 {
-	if (invulCheck != 0)
-		return;
+	if (invulTimer > 0.0) return;
 
 	player.health--;
-	invulCheck = 1;
+	player.state = Invul;
 	invulTimer = 2000.0;
+	Map_Shake(RIGHT, 50.0, 5);
 }
 
 sprite *Player_GetSprite()
@@ -131,34 +151,42 @@ sprite *Player_GetSprite()
 	return &player.PlayerSprite;
 }
 
-void _UpdateTimer()
+PLAYERSTATE Player_GetState()
 {
-	if (invulCheck == 1)
-	{
-		invulTimer -= Clock_GetDeltaTime();
-
-		if (invulTimer < 0)
-			invulCheck = 0;
-	}
-
+	return player.state;
 }
 
-void _CheckBorder()
-{
-	if (player.position.eulerX < (MAP_OFFSET + 1)) player.position.eulerX = MAP_OFFSET + 1;
-	if (player.position.eulerY < (MAP_OFFSET + 1)) player.position.eulerY = MAP_OFFSET + 1;
-	if (player.position.eulerX > (GAME_WIDTH - MAP_OFFSET - BOXSIZE)) player.position.eulerX = GAME_WIDTH - MAP_OFFSET - BOXSIZE;
-	if (player.position.eulerY > (GAME_HEIGHT - MAP_OFFSET - BOXSIZE)) player.position.eulerY = GAME_HEIGHT - MAP_OFFSET - BOXSIZE;
-}
-
-void _MovePlayer()
+void _UpdateState()
 {
 	dt = Clock_GetDeltaTime();
 	EaseTimer += Clock_GetDeltaTime();
 
-	if (cdTimer > 0) cdTimer -= Clock_GetDeltaTime();
-	if (dashTimer > 0) dashTimer -= Clock_GetDeltaTime();
-	else velocity = 0.02;
+	if (invulTimer > 0.0)
+		invulTimer -= Clock_GetDeltaTime();
+	if (speedUpTimer > 0.0)
+		speedUpTimer -= Clock_GetDeltaTime();
+	if (dashCooldownTimer > 0.0)
+		dashCooldownTimer -= Clock_GetDeltaTime();
+
+	switch (player.state)
+	{
+	case Invul:
+		if (invulTimer < 0.0)
+			player.state = Normal;
+		break;
+	case Dash:
+		if (speedUpTimer < 0.0)
+			player.state = Normal;
+		break;
+	case ExDash:
+		if (speedUpTimer < 0.0)
+			player.state = Normal;
+		break;
+	default:
+		if (dashCooldownTimer < 0.0)
+			canAttack = true;
+		break;
+	}
 
 	if (EaseTimer >= 25.0)
 	{
@@ -173,7 +201,30 @@ void _MovePlayer()
 			factor = 1.0;
 		EaseTimer -= EaseTimer;
 	}
+}
 
+void _CheckBorder()
+{
+	if (player.position.eulerX < (MAP_OFFSET + 1)) player.position.eulerX = MAP_OFFSET + 1;
+	if (player.position.eulerY < (MAP_OFFSET + 1)) player.position.eulerY = MAP_OFFSET + 1;
+	if (player.position.eulerX > (GAME_WIDTH - MAP_OFFSET - BOXSIZE)) player.position.eulerX = GAME_WIDTH - MAP_OFFSET - BOXSIZE;
+	if (player.position.eulerY > (GAME_HEIGHT - MAP_OFFSET - BOXSIZE)) player.position.eulerY = GAME_HEIGHT - MAP_OFFSET - BOXSIZE;
+}
+
+void _MovePlayer()
+{
+	switch (player.state)
+	{
+	case ExDash:
+		velocity = 0.15;
+		break;
+	case Dash:
+		velocity = 0.3;
+		break;
+	default:
+		velocity = 0.02;
+		break;
+	}
 	switch (player.direction)
 	{
 	case TOPLEFT:
@@ -199,7 +250,7 @@ void _MovePlayer()
 	default: break;
 	}
 
-	player.position.x = player.position.eulerX + Map_GetShakeFactor();
+	player.position.x = player.position.eulerX;
 	player.position.y = player.position.eulerY;
 
 	Text_Move(&player.PlayerSprite, player.position.x, player.position.y);

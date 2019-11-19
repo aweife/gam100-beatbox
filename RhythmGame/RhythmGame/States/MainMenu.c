@@ -37,7 +37,7 @@ void MainMenu_Update()
 void MainMenu_Render()
 {
 	Text_Move(&logo,70, 20);
-	Text_Render(&logo);
+	Text_Render(&logo,0,0);
 	UI_Render();
 
 }

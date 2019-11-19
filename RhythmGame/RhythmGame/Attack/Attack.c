@@ -28,11 +28,12 @@ sprite *player;
 }*/
 
 /* Internal functions */
-void _UpdateProjectile();
-void _UpdateLaser();
+void _MoveProjectile();
+void _MoveLaser();
 void _ClearLaser();
-void _CheckProjectileCollision();
-void _CheckLaserCollision();
+void _CheckProjectileBoundary();
+void _CheckLaserBoundary();
+void _CheckPlayerCollisionWithEnemy();
 
 void _chooseAttack() //to be in enemy.c
 {
@@ -70,17 +71,22 @@ void Attack_Init()
 	}
 }
 
-void Attack_FixedUpdate() // put in game.c
+void Attack_Update()
 {
 	// Get info about player
 	self = Enemy_GetEnemy();
 	player = Player_GetSprite();
-	_UpdateLaser();
-	_UpdateProjectile();
+	_CheckPlayerCollisionWithEnemy();
+}
+
+void Attack_FixedUpdate() // put in game.c
+{
+	_MoveLaser();
+	_MoveProjectile();
 
 	// Check collision
-	_CheckProjectileCollision();
-	_CheckLaserCollision();
+	_CheckProjectileBoundary();
+	_CheckLaserBoundary();
 }
 
 void Attack_Render() // put in game.c
@@ -133,7 +139,7 @@ void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int length)
 	lCount = 1;
 }
 
-void _UpdateProjectile()
+void _MoveProjectile()
 {
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 		if (!pArray[i].visible)
@@ -166,14 +172,14 @@ void _UpdateProjectile()
 	}
 }
 
-void _UpdateLaser()
+void _MoveLaser()
 {
 	for (int i = 0; i < LENGTH_OF_LASER; i++)
 		if (!lArray[i].visible)
 			lArray[i].position = *self->position;
 
 	if (lCount == 0)
-		return; 
+		return;
 
 	for (int i = lCount; i < lCount + laserSpeed; i++)
 	{
@@ -209,7 +215,7 @@ void _ClearLaser()
 	lCount = 0;
 }
 
-void _CheckProjectileCollision()
+void _CheckProjectileBoundary()
 {
 	//Collision of Projectile to Boundary
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
@@ -222,27 +228,9 @@ void _CheckProjectileCollision()
 			return;
 		}
 	}
-
-	// Collision with player
-	for (int j = 0; j < player->charCount; j++)
-	{
-		// Projectile
-		for (int i = 1; i < NUMBER_OF_PROJECTILE; i++)
-		{
-			if (pArray[i - 1].position.x == player->position[j].x + player->origin.x &&
-				pArray[i - 1].position.y == player->position[j].y + player->origin.y)
-			{
-				//Hide away projectiles
-				pArray[i - 1].visible = false;
-				Player_Damage();
-				Map_Shake(500.0, 5);
-				break;
-			}
-		}
-	}
 }
 
-void _CheckLaserCollision()
+void _CheckLaserBoundary()
 {
 	if (lCount < 1)
 		return;
@@ -252,19 +240,73 @@ void _CheckLaserCollision()
 		lArray[lCount - 1].distanceToTravel < 0)
 	{
 		_ClearLaser();
-	}
+	}	
+}
 
-	for (int j = 0; j < player->charCount; j++)
+void _CheckPlayerCollisionWithEnemy()
+{
+	// Player collision 
+	if (Player_GetState() == Dash)
 	{
-		for (int i = 0; i < lCount; i++)
+		for (int j = 0; j < player->charCount; j++)
 		{
-			if (lArray[i].position.x == player->position[j].x + player->origin.x &&
-				lArray[i].position.y == player->position[j].y + player->origin.y)
+			for (int i = 0; i < self->charCount; i++)
 			{
-				_ClearLaser();
-				Player_Damage();
-				Map_Shake(500.0, 5);
-				break;
+				if (self->origin.x + self->position[i].x == player->position[j].x + player->origin.x &&
+					self->origin.y + self->position[i].y == player->position[j].y + player->origin.y)
+				{
+					Player_ExtendDash();
+					// Add score
+					break;
+				}
+			}
+		}
+	}
+	else if(Player_GetState() == Normal)
+	{
+		// Enemy itself
+		for (int j = 0; j < player->charCount; j++)
+		{
+			for (int i = 0; i < self->charCount; i++)
+			{
+				if (self->origin.x + self->position[i].x == player->position[j].x + player->origin.x &&
+					self->origin.y + self->position[i].y == player->position[j].y + player->origin.y)
+				{
+					Player_Damage();
+					break;
+				}
+			}
+		}
+
+		//Projectile
+		for (int j = 0; j < player->charCount; j++)
+		{
+			// Projectile
+			for (int i = 1; i < NUMBER_OF_PROJECTILE; i++)
+			{
+				if (pArray[i - 1].position.x == player->position[j].x + player->origin.x &&
+					pArray[i - 1].position.y == player->position[j].y + player->origin.y)
+				{
+					//Hide away projectiles
+					pArray[i - 1].visible = false;
+					Player_Damage();
+					break;
+				}
+			}
+		}
+
+		// Laser
+		for (int j = 0; j < player->charCount; j++)
+		{
+			for (int i = 0; i < lCount; i++)
+			{
+				if (lArray[i].position.x == player->position[j].x + player->origin.x &&
+					lArray[i].position.y == player->position[j].y + player->origin.y)
+				{
+					_ClearLaser();
+					Player_Damage();
+					break;
+				}
 			}
 		}
 	}

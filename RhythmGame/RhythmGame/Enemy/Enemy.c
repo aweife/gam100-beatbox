@@ -51,7 +51,7 @@ void Enemy_FixedUpdate()
 void Enemy_Render()
 {
 	//ASCI ENEMY
-	Text_Render(&skullEnemy.enemySprite);
+	Text_Render(&skullEnemy.enemySprite, 0, Map_GetShakeFactor(UP)/2);
 
 	// Debug origin point
 	Console_SetRenderBuffer_CharColor(skullEnemy.position.x, skullEnemy.position.y, '+', CYAN);

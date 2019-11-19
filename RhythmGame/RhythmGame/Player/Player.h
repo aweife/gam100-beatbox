@@ -5,6 +5,13 @@
 
 #define BOXSIZE 3
 
+typedef enum PLAYERSTATE {
+	Normal,
+	ExDash,
+	Dash,
+	Invul,
+}PLAYERSTATE;
+
 typedef enum EASEMOVEMENT {
 	SpeedUp = 0,
 	SlowDown = 1,
@@ -16,6 +23,7 @@ typedef struct Player {
 	int direction;
 	int health;
 	sprite PlayerSprite;
+	PLAYERSTATE state;
 }Player;
 
 // Initialise player variables
@@ -44,3 +52,9 @@ extern int Player_GetDirection();
 
 // Returns sprite of player
 extern sprite *Player_GetSprite();
+
+// Returns the attack state of player
+extern PLAYERSTATE Player_GetState();
+
+// If player hits the boss, extend his dash
+extern void Player_ExtendDash();

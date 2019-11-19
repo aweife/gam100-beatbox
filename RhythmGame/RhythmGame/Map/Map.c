@@ -15,7 +15,8 @@ static int MapOffset = MAP_OFFSET;
 static double shakeDuration = 0;
 static double shakeTimer = 0;
 static int shakeCount = 0;
-static int shakeFactor = 0;
+static int shakeFactorX = 0;
+static int shakeFactorY = 0;
 
 // Private functions
 void _CreateStatic();
@@ -32,7 +33,8 @@ void Map_Init()
 
 	// Map shake
 	shakeDuration = 0;
-	shakeFactor = 0;
+	shakeFactorX = 0;
+	shakeFactorY = 0;
 }
 
 void Map_Update()
@@ -50,16 +52,22 @@ void Map_Render()
 		_CreateVisualiser(4, RED);
 }
 
-void Map_Shake(double duration, int intensity)
+void Map_Shake(DIRECTION dir, double duration, int intensity)
 {
 	shakeDuration = duration;
 	shakeCount = intensity;
-	shakeFactor = shakeCount;
+	if(dir == UP)
+		shakeFactorY = shakeCount;
+	else
+		shakeFactorX = shakeCount;
 }
 
-int Map_GetShakeFactor()
+int Map_GetShakeFactor(DIRECTION dir)
 {
-	return shakeFactor % 2;
+	if(dir == UP)
+		return shakeFactorY;
+	else
+		return shakeFactorX;
 }
 
 void _CreateStatic()
@@ -100,21 +108,28 @@ void _ShakeMap()
 {
 	shakeTimer += Clock_GetDeltaTime();
 
-	if (shakeTimer > (double)(shakeDuration/10))
+	if (shakeTimer > shakeDuration)
 	{
 		shakeTimer = 0.0;
-		shakeFactor *= -1;
+		shakeFactorX *= -1;
+		shakeFactorY *= -1;
 		shakeCount--;
 
 		// Shake map
-		MapOrigin.x += shakeFactor;
-		MapEnd.x += shakeFactor;
+		MapOrigin.x += shakeFactorX;
+		MapEnd.x += shakeFactorX;
+
+		MapOrigin.y += shakeFactorY;
+		MapEnd.y += shakeFactorY;
 	}
 
-	if (!shakeCount)
+	if (shakeCount < 1)
 	{
-		shakeFactor = 0;
+		shakeFactorX = 0;
+		shakeFactorY = 0;
 		MapOrigin.x = MapOffset;
 		MapEnd.x = GAME_WIDTH - MapOffset;
+		MapOrigin.y = MapOffset;
+		MapEnd.y = GAME_HEIGHT - MapOffset;
 	}
 }
