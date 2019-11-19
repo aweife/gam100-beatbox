@@ -8,11 +8,15 @@
 #include "../Beat/Beat.h"
 #include "../UI/UI.h"
 #include "../Attack/Attack.h"
+#include "../Random/Random.h"
 
 static int reqExit = 0;
 
 void Game_EnterState()
 {
+	// Random
+	Random_Init();
+
 	// Call this to init player
 	Player_Init();
 	Map_Init();
@@ -62,6 +66,7 @@ void Game_ProcessInput()
 	{
 		spaceDown = true;
 		Player_Dash();
+		Map_Shake(500.0);
 	}
 	else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
 }
@@ -73,6 +78,7 @@ void Game_Update()
 	Player_Update();
 	Audio_Update();
 	Beat_Update();
+	Map_Update();
 }
 
 void Game_Render()

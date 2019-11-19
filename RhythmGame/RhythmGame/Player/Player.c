@@ -43,7 +43,7 @@ void Player_Init()
 		.PlayerSprite.printColor = bRED, };
 
 	Text_Init(&player.PlayerSprite, "..//RhythmGame//$Resources//skull.txt");
-	
+
 	factor = 0.0;
 	EaseBool = false;
 	EaseCheck = SlowDown;
@@ -78,7 +78,7 @@ void Player_Render()
 		player.PlayerSprite.printColor[i] = color;
 
 	Text_Render(&player.PlayerSprite);
-	
+
 	// Debug origin
 	Console_SetRenderBuffer_CharColor(player.position.x, player.position.y, '+', CYAN);
 }
@@ -106,7 +106,10 @@ int Player_GetDirection()
 
 void Player_Dash()
 {
-	if (cdTimer > 0) return;
+	// If cdTimer is running
+	if (cdTimer > 0.0)
+		return;
+
 	velocity = 0.15;
 	factor = 1;
 	dashTimer = 100.0f;
@@ -115,15 +118,15 @@ void Player_Dash()
 
 void Player_Damage()
 {
-	if (invulCheck == 0)
-	{
-		player.health--;
-		invulCheck = 1;
-		invulTimer = 2000.0;
-	}
+	if (invulCheck != 0)
+		return;
+
+	player.health--;
+	invulCheck = 1;
+	invulTimer = 2000.0;
 }
 
-sprite* Player_GetSprite()
+sprite *Player_GetSprite()
 {
 	return &player.PlayerSprite;
 }
@@ -133,17 +136,17 @@ void _UpdateTimer()
 	if (invulCheck == 1)
 	{
 		invulTimer -= Clock_GetDeltaTime();
-		
+
 		if (invulTimer < 0)
 			invulCheck = 0;
 	}
-		
+
 }
 
 void _CheckBorder()
 {
 	if (player.position.eulerX < (MAP_OFFSET + 1)) player.position.eulerX = MAP_OFFSET + 1;
-	if (player.position.eulerY< (MAP_OFFSET + 1)) player.position.eulerY = MAP_OFFSET + 1;
+	if (player.position.eulerY < (MAP_OFFSET + 1)) player.position.eulerY = MAP_OFFSET + 1;
 	if (player.position.eulerX > (GAME_WIDTH - MAP_OFFSET - BOXSIZE)) player.position.eulerX = GAME_WIDTH - MAP_OFFSET - BOXSIZE;
 	if (player.position.eulerY > (GAME_HEIGHT - MAP_OFFSET - BOXSIZE)) player.position.eulerY = GAME_HEIGHT - MAP_OFFSET - BOXSIZE;
 }
