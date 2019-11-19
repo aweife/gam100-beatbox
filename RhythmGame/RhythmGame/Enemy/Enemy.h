@@ -24,4 +24,4 @@ extern void Enemy_Init();
 extern void Enemy_FixedUpdate();
 extern void Enemy_Render();
 extern sprite *Enemy_GetEnemy();
-extern void Enemy_MoveTo(int seed);
+extern void Enemy_MoveTo(int seed, int speed);

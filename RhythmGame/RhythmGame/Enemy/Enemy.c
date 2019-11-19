@@ -39,7 +39,7 @@ void Enemy_Init()
 
 void Enemy_FixedUpdate()
 {
-	Enemy_MoveTo(0);
+	Enemy_MoveTo(0, 3);
 	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
 
 	// For testing only
@@ -108,8 +108,11 @@ void _updateEnemy()
 		}
 }
 
-void Enemy_MoveTo(int seed)
+void Enemy_MoveTo(int seed, int speed)
 {
+	if (speed == 0)
+		speed = 1;
+
 	if (seed == 0)
 		seed = Random_Range(1, 9);
 
@@ -117,11 +120,27 @@ void Enemy_MoveTo(int seed)
 		_decideEnemyMove(seed);
 	else
 	{
-		if (skullEnemy.position.x != skullEnemy.newPosition.x)
-			skullEnemy.position.x += (skullEnemy.position.x > skullEnemy.newPosition.x) ? -1 : +1;
+		if (skullEnemy.position.x < skullEnemy.newPosition.x)
+			if ((skullEnemy.position.x + speed) > skullEnemy.newPosition.x)
+				skullEnemy.position.x = skullEnemy.newPosition.x;
+			else
+				skullEnemy.position.x += speed;
+		else if (skullEnemy.position.x > skullEnemy.newPosition.x)
+			if ((skullEnemy.position.x - speed) < skullEnemy.newPosition.x)
+				skullEnemy.position.x = skullEnemy.newPosition.x;
+			else
+				skullEnemy.position.x -= speed;
 
-		if (skullEnemy.position.y != skullEnemy.newPosition.y)
-			skullEnemy.position.y += (skullEnemy.position.y > skullEnemy.newPosition.y) ? -1 : +1;
+		if (skullEnemy.position.y < skullEnemy.newPosition.y)
+			if ((skullEnemy.position.y + speed) > skullEnemy.newPosition.y)
+				skullEnemy.position.y = skullEnemy.newPosition.y;
+			else
+				skullEnemy.position.y += speed;
+		else if (skullEnemy.position.y > skullEnemy.newPosition.y)
+			if ((skullEnemy.position.y - speed) < skullEnemy.newPosition.y)
+				skullEnemy.position.y = skullEnemy.newPosition.y;
+			else
+				skullEnemy.position.y -= speed;
 	}
 }
 
