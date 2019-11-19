@@ -22,7 +22,7 @@ typedef struct Player {
 	Vector2d position;
 	int direction;
 	int health;
-	sprite PlayerSprite;
+	sprite playerSprite;
 	PLAYERSTATE state;
 }Player;
 
@@ -51,7 +51,7 @@ extern double Player_GetEaseFactor();
 extern int Player_GetDirection();
 
 // Returns sprite of player
-extern sprite *Player_GetSprite();
+extern Player *Player_GetPlayer();
 
 // Returns the attack state of player
 extern PLAYERSTATE Player_GetState();

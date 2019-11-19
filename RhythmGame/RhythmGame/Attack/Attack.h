@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 #define NUMBER_OF_PROJECTILE 100
-#define LENGTH_OF_LASER 100
+#define LENGTH_OF_LASER 200
 
 //Projectile Structure
 typedef struct Projectile {

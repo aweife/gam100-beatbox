@@ -27,8 +27,8 @@ typedef enum CONSOLECOLOR {
 } CONSOLECOLOR;
 
 typedef struct Vector2d {
-	unsigned int x;
-	unsigned int y;
+	int x;
+	int y;
 	double eulerX;
 	double eulerY;
 } Vector2d;

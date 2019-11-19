@@ -6,7 +6,7 @@
 #include "../States/StateMachine.h"
 #include "../Clock/Clock.h"
 
-Player player;
+static Player player;
 CONSOLECOLOR color;
 static double factor;
 static double velocity;
@@ -39,12 +39,12 @@ void Player_Init()
 		.position.x = 100, .position.y = 100,
 		.position.eulerX = 100.0, .position.eulerY = 100.0,
 		.health = 10,
-		.PlayerSprite = Text_CreateSprite(),
-		.PlayerSprite.printColor = bRED,
+		.playerSprite = Text_CreateSprite(),
+		.playerSprite.printColor = bRED,
 		.state = Normal,
 	};
 
-	Text_Init(&player.PlayerSprite, "..//RhythmGame//$Resources//skull.txt");
+	Text_Init(&player.playerSprite, "..//RhythmGame//$Resources//skull.txt");
 
 	factor = 0.0;
 	EaseBool = false;
@@ -61,17 +61,15 @@ void Player_Init()
 }
 
 void Player_Update()
-{
+{	
 	_MovePlayer();
-	_CheckBorder();
 	_UpdateState();
+	// Check against the border
+	_CheckBorder();
 }
 
 void Player_Render()
 {
-	// Debug origin
-	Console_SetRenderBuffer_CharColor(player.position.x, player.position.y, '+', BLUE);
-
 	switch (player.state)
 	{
 	case Normal:
@@ -86,9 +84,11 @@ void Player_Render()
 	}
 
 	for (int i = 0; i < SPRITE_SIZE; i++)
-		player.PlayerSprite.printColor[i] = color;
+		player.playerSprite.printColor[i] = color;
 
-	Text_Render(&player.PlayerSprite, Map_GetShakeFactor(RIGHT)/2, 0);
+	Text_Render(&player.playerSprite, Map_GetShakeFactor(RIGHT)/2, 0);
+	// Debug origin
+	Console_SetRenderBuffer_CharColor(player.position.x, player.position.y, '+', CYAN);
 }
 
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
@@ -146,9 +146,9 @@ void Player_Damage()
 	Map_Shake(RIGHT, 100.0, 5);
 }
 
-sprite *Player_GetSprite()
+Player *Player_GetPlayer()
 {
-	return &player.PlayerSprite;
+	return &player;
 }
 
 PLAYERSTATE Player_GetState()
@@ -205,10 +205,14 @@ void _UpdateState()
 
 void _CheckBorder()
 {
-	if (player.position.eulerX < (MAP_OFFSET + 1)) player.position.eulerX = MAP_OFFSET + 1;
-	if (player.position.eulerY < (MAP_OFFSET + 1)) player.position.eulerY = MAP_OFFSET + 1;
-	if (player.position.eulerX > (GAME_WIDTH - MAP_OFFSET - BOXSIZE)) player.position.eulerX = GAME_WIDTH - MAP_OFFSET - BOXSIZE;
-	if (player.position.eulerY > (GAME_HEIGHT - MAP_OFFSET - BOXSIZE)) player.position.eulerY = GAME_HEIGHT - MAP_OFFSET - BOXSIZE;
+	if (player.position.x < (MAP_OFFSET + 1)) 
+		player.position.eulerX = MAP_OFFSET + 1;
+	else if (player.position.y < (MAP_OFFSET + 1))
+		player.position.eulerY = MAP_OFFSET + 1;
+	else if (player.position.x > (GAME_WIDTH - MAP_OFFSET))
+		player.position.eulerX = GAME_WIDTH - MAP_OFFSET;
+	else if (player.position.y > (GAME_HEIGHT - MAP_OFFSET))
+		player.position.eulerY = GAME_HEIGHT - MAP_OFFSET;
 }
 
 void _MovePlayer()
@@ -216,10 +220,10 @@ void _MovePlayer()
 	switch (player.state)
 	{
 	case ExDash:
-		velocity = 0.15;
+		velocity = 0.35;
 		break;
 	case Dash:
-		velocity = 0.3;
+		velocity = 0.15;
 		break;
 	default:
 		velocity = 0.02;
@@ -228,30 +232,30 @@ void _MovePlayer()
 	switch (player.direction)
 	{
 	case TOPLEFT:
-		player.position.eulerX += -1 * dt * velocity * factor;
-		player.position.eulerY += -1 * dt * velocity * factor;
+		player.position.eulerX += -1.0 * dt * velocity * factor;
+		player.position.eulerY += -1.0 * dt * velocity * factor;
 		break;
 	case TOPRIGHT:
-		player.position.eulerX += 1 * dt * velocity * factor;
-		player.position.eulerY += -1 * dt * velocity * factor;
+		player.position.eulerX += 1.0 * dt * velocity * factor;
+		player.position.eulerY += -1.0 * dt * velocity * factor;
 		break;
 	case BOTTOMRIGHT:
-		player.position.eulerX += 1 * dt * velocity * factor;
-		player.position.eulerY += 1 * dt * velocity * factor;
+		player.position.eulerX += 1.0 * dt * velocity * factor;
+		player.position.eulerY += 1.0 * dt * velocity * factor;
 		break;
 	case BOTTOMLEFT:
-		player.position.eulerX += -1 * dt * velocity * factor;
-		player.position.eulerY += 1 * dt * velocity * factor;
+		player.position.eulerX += -1.0 * dt * velocity * factor;
+		player.position.eulerY += 1.0 * dt * velocity * factor;
 		break;
-	case UP: player.position.eulerY += -1 * dt * velocity * factor; break;
-	case RIGHT: player.position.eulerX += 1 * dt * velocity * factor; break;
-	case DOWN: player.position.eulerY += 1 * dt * velocity * factor; break;
-	case LEFT: player.position.eulerX += -1 * dt * velocity * factor; break;
+	case UP: player.position.eulerY += -1.0 * dt * velocity * factor; break;
+	case RIGHT: player.position.eulerX += 1.0 * dt * velocity * factor; break;
+	case DOWN: player.position.eulerY += 1.0 * dt * velocity * factor; break;
+	case LEFT: player.position.eulerX += -1.0 * dt * velocity * factor; break;
 	default: break;
 	}
 
-	player.position.x = player.position.eulerX;
-	player.position.y = player.position.eulerY;
+	player.position.x = (int)player.position.eulerX;
+	player.position.y = (int)player.position.eulerY;
 
-	Text_Move(&player.PlayerSprite, player.position.x, player.position.y);
+	Text_Move(&player.playerSprite, player.position.x, player.position.y);
 }

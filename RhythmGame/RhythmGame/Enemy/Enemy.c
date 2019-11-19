@@ -69,9 +69,9 @@ void Enemy_Render()
 	//Console_SetRenderBuffer_Char(EnX, EnY, 'E');
 }
 
-sprite *Enemy_GetEnemy()
+Enemy *Enemy_GetEnemy()
 {
-	return &skullEnemy.enemySprite;
+	return &skullEnemy;
 }
 
 void _spawnProjectile()
@@ -80,7 +80,7 @@ void _spawnProjectile()
 	if (BPMProjSpawnTime <= 3) return;
 	BPMProjSpawnTime = 0;
 	
-	//Attack_SpawnProjectile(skullEnemy.position, DOWN, 5, 2000);
+	Attack_SpawnProjectile(skullEnemy.position, LEFT, 5, 2000);
 	Attack_SpawnLaser(skullEnemy.position, DOWN, 100);
 }
 

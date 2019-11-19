@@ -18,8 +18,8 @@ Projectile lArray[LENGTH_OF_LASER] = { 0 };
 int lCount = 0;
 int laserSpeed = 10;
 
-sprite *self;
-sprite *player;
+Enemy *enemy;
+Player *player;
 
 
 /*Projectile* Enemy_GetProjectile()
@@ -74,8 +74,8 @@ void Attack_Init()
 void Attack_Update()
 {
 	// Get info about player
-	self = Enemy_GetEnemy();
-	player = Player_GetSprite();
+	enemy = Enemy_GetEnemy();
+	player = Player_GetPlayer();
 	_CheckPlayerCollisionWithEnemy();
 }
 
@@ -141,9 +141,11 @@ void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int length)
 
 void _MoveProjectile()
 {
+	if (!enemy) return;
+
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 		if (!pArray[i].visible)
-			pArray[i].position = self->origin;
+			pArray[i].position = enemy->enemySprite.origin;
 
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
@@ -176,7 +178,7 @@ void _MoveLaser()
 {
 	for (int i = 0; i < LENGTH_OF_LASER; i++)
 		if (!lArray[i].visible)
-			lArray[i].position = *self->position;
+			lArray[i].position = *enemy->enemySprite.position;
 
 	if (lCount == 0)
 		return;
@@ -248,12 +250,12 @@ void _CheckPlayerCollisionWithEnemy()
 	// Player collision 
 	if (Player_GetState() == Dash)
 	{
-		for (int j = 0; j < player->charCount; j++)
+		for (int j = 0; j < player->playerSprite.charCount; j++)
 		{
-			for (int i = 0; i < self->charCount; i++)
+			for (int i = 0; i < enemy->enemySprite.charCount; i++)
 			{
-				if (self->origin.x + self->position[i].x == player->position[j].x + player->origin.x &&
-					self->origin.y + self->position[i].y == player->position[j].y + player->origin.y)
+				if (enemy->enemySprite.origin.x + enemy->enemySprite.position[i].x == player->playerSprite.position[j].x + player->playerSprite.origin.x &&
+					enemy->enemySprite.origin.y + enemy->enemySprite.position[i].y == player->playerSprite.position[j].y + player->playerSprite.origin.y)
 				{
 					Player_ExtendDash();
 					// Add score
@@ -265,12 +267,12 @@ void _CheckPlayerCollisionWithEnemy()
 	else if(Player_GetState() == Normal)
 	{
 		// Enemy itself
-		for (int j = 0; j < player->charCount; j++)
+		for (int j = 0; j < player->playerSprite.charCount; j++)
 		{
-			for (int i = 0; i < self->charCount; i++)
+			for (int i = 0; i < enemy->enemySprite.charCount; i++)
 			{
-				if (self->origin.x + self->position[i].x == player->position[j].x + player->origin.x &&
-					self->origin.y + self->position[i].y == player->position[j].y + player->origin.y)
+				if (enemy->enemySprite.origin.x + enemy->enemySprite.position[i].x == player->playerSprite.position[j].x + player->playerSprite.origin.x &&
+					enemy->enemySprite.origin.y + enemy->enemySprite.position[i].y == player->playerSprite.position[j].y + player->playerSprite.origin.y)
 				{
 					Player_Damage();
 					break;
@@ -279,13 +281,13 @@ void _CheckPlayerCollisionWithEnemy()
 		}
 
 		//Projectile
-		for (int j = 0; j < player->charCount; j++)
+		for (int j = 0; j < player->playerSprite.charCount; j++)
 		{
 			// Projectile
 			for (int i = 1; i < NUMBER_OF_PROJECTILE; i++)
 			{
-				if (pArray[i - 1].position.x == player->position[j].x + player->origin.x &&
-					pArray[i - 1].position.y == player->position[j].y + player->origin.y)
+				if (pArray[i - 1].position.x == player->playerSprite.position[j].x + player->playerSprite.origin.x &&
+					pArray[i - 1].position.y == player->playerSprite.position[j].y + player->playerSprite.origin.y)
 				{
 					//Hide away projectiles
 					pArray[i - 1].visible = false;
@@ -296,12 +298,12 @@ void _CheckPlayerCollisionWithEnemy()
 		}
 
 		// Laser
-		for (int j = 0; j < player->charCount; j++)
+		for (int j = 0; j < player->playerSprite.charCount; j++)
 		{
 			for (int i = 0; i < lCount; i++)
 			{
-				if (lArray[i].position.x == player->position[j].x + player->origin.x &&
-					lArray[i].position.y == player->position[j].y + player->origin.y)
+				if (lArray[i].position.x == player->playerSprite.position[j].x + player->playerSprite.origin.x &&
+					lArray[i].position.y == player->playerSprite.position[j].y + player->playerSprite.origin.y)
 				{
 					_ClearLaser();
 					Player_Damage();
