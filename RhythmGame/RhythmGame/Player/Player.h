@@ -5,19 +5,6 @@
 
 #define BOXSIZE 3
 
-typedef enum DIRECTION
-{
-	TOPLEFT = 1,
-	TOPRIGHT = 2,
-	BOTTOMRIGHT = 3,
-	BOTTOMLEFT = 4,
-	UP = 5,
-	RIGHT = 6,
-	DOWN = 7,
-	LEFT = 8,
-	STAY = 0,
-}DIRECTION;
-
 typedef enum EASEMOVEMENT {
 	SpeedUp = 0,
 	SlowDown = 1,

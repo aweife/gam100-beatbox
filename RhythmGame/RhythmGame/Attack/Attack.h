@@ -3,7 +3,6 @@
 #include "../Global.h"
 #include "../Text/TextReader.h"
 #include <stdbool.h>
-#include "../Player/Player.h"
 
 #define NUMBER_OF_PROJECTILE 100
 #define LENGTH_OF_LASER 100

@@ -13,4 +13,5 @@ extern void Map_Render();
 extern void Map_Update();
 
 // Call to shake map
-extern void Map_Shake(double duration);
+extern void Map_Shake(double duration, int intensity);
+extern int Map_GetShakeFactor();

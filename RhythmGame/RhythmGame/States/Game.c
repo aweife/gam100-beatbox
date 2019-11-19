@@ -66,7 +66,6 @@ void Game_ProcessInput()
 	{
 		spaceDown = true;
 		Player_Dash();
-		Map_Shake(500.0);
 	}
 	else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
 }

@@ -199,7 +199,7 @@ void _MovePlayer()
 	default: break;
 	}
 
-	player.position.x = player.position.eulerX;
+	player.position.x = player.position.eulerX + Map_GetShakeFactor();
 	player.position.y = player.position.eulerY;
 
 	Text_Move(&player.PlayerSprite, player.position.x, player.position.y);

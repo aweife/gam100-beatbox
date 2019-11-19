@@ -32,3 +32,16 @@ typedef struct Vector2d {
 	double eulerX;
 	double eulerY;
 } Vector2d;
+
+typedef enum DIRECTION
+{
+	TOPLEFT = 1,
+	TOPRIGHT = 2,
+	BOTTOMRIGHT = 3,
+	BOTTOMLEFT = 4,
+	UP = 5,
+	RIGHT = 6,
+	DOWN = 7,
+	LEFT = 8,
+	STAY = 0,
+}DIRECTION;

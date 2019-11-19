@@ -235,6 +235,7 @@ void _CheckProjectileCollision()
 				//Hide away projectiles
 				pArray[i - 1].visible = false;
 				Player_Damage();
+				Map_Shake(500.0, 5);
 				break;
 			}
 		}
@@ -262,6 +263,7 @@ void _CheckLaserCollision()
 			{
 				_ClearLaser();
 				Player_Damage();
+				Map_Shake(500.0, 5);
 				break;
 			}
 		}

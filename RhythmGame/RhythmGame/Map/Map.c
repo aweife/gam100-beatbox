@@ -50,10 +50,16 @@ void Map_Render()
 		_CreateVisualiser(4, RED);
 }
 
-void Map_Shake(double duration)
+void Map_Shake(double duration, int intensity)
 {
 	shakeDuration = duration;
-	shakeCount = 10;
+	shakeCount = intensity;
+	shakeFactor = shakeCount;
+}
+
+int Map_GetShakeFactor()
+{
+	return shakeFactor % 2;
 }
 
 void _CreateStatic()
@@ -61,15 +67,15 @@ void _CreateStatic()
 	// Horizontal
 	for (int i = 0; i < MapEnd.x - MapOrigin.x; i++)
 	{
-		Console_SetRenderBuffer_CharColor(MapOrigin.x + i+1, MapOrigin.y - shakeFactor, 'X', DARKCYAN);
-		Console_SetRenderBuffer_CharColor(MapOrigin.x + i, MapEnd.y + shakeFactor, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(MapOrigin.x + i + 1, MapOrigin.y, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(MapOrigin.x + i, MapEnd.y, 'X', DARKCYAN);
 	}
 
 	// Vertical
 	for (int i = 0; i < MapEnd.y - MapOrigin.y; i++)
 	{
-		Console_SetRenderBuffer_CharColor(MapOrigin.x - shakeFactor, MapOrigin.y + i, 'X', DARKCYAN);
-		Console_SetRenderBuffer_CharColor(MapEnd.x + shakeFactor, MapOrigin.y + i + 1, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(MapOrigin.x, MapOrigin.y + i, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(MapEnd.x, MapOrigin.y + i + 1, 'X', DARKCYAN);
 	}
 }
 
@@ -78,15 +84,15 @@ void _CreateVisualiser(int offset, CONSOLECOLOR color)
 	// Horizontal
 	for (int i = 0; i < (MapEnd.x + offset) - (MapOrigin.x - offset); i++)
 	{
-		Console_SetRenderBuffer_CharColor((MapOrigin.x - offset) + i+1, (MapOrigin.y - offset) - shakeFactor, 'X', color);
-		Console_SetRenderBuffer_CharColor((MapOrigin.x - offset) + i, (MapEnd.y + offset) + shakeFactor, 'X', color);
+		Console_SetRenderBuffer_CharColor((MapOrigin.x - offset) + i + 1, (MapOrigin.y - offset), 'X', color);
+		Console_SetRenderBuffer_CharColor((MapOrigin.x - offset) + i, (MapEnd.y + offset), 'X', color);
 	}
 
 	// Vertical
 	for (int i = 0; i < (MapEnd.y + offset) - (MapOrigin.y - offset); i++)
 	{
-		Console_SetRenderBuffer_CharColor((MapOrigin.x - offset)- shakeFactor, (MapOrigin.y - offset) + i, 'X', color);
-		Console_SetRenderBuffer_CharColor((MapEnd.x + offset)+shakeFactor, (MapOrigin.y - offset) + i + 1, 'X', color);
+		Console_SetRenderBuffer_CharColor((MapOrigin.x - offset), (MapOrigin.y - offset) + i, 'X', color);
+		Console_SetRenderBuffer_CharColor((MapEnd.x + offset), (MapOrigin.y - offset) + i + 1, 'X', color);
 	}
 }
 
@@ -94,15 +100,21 @@ void _ShakeMap()
 {
 	shakeTimer += Clock_GetDeltaTime();
 
-	if (shakeTimer > shakeDuration / 10.0)
+	if (shakeTimer > (double)(shakeDuration/10))
 	{
 		shakeTimer = 0.0;
-		shakeFactor = Random_Range(-2, 8);
+		shakeFactor *= -1;
 		shakeCount--;
+
+		// Shake map
+		MapOrigin.x += shakeFactor;
+		MapEnd.x += shakeFactor;
 	}
 
 	if (!shakeCount)
 	{
 		shakeFactor = 0;
+		MapOrigin.x = MapOffset;
+		MapEnd.x = GAME_WIDTH - MapOffset;
 	}
 }
