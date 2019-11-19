@@ -3,28 +3,44 @@
 #include "../Console/Console.h"
 #include "../Global.h"
 #include "../Beat/Beat.h"
+#include "../Clock/Clock.h"
+#include "../Random/Random.h"
 
 // Static boundary
-static Vector2d sMapOrigin;
-static Vector2d sMapEnd;
-static int sMapOffset = MAP_OFFSET;
+static Vector2d MapOrigin;
+static Vector2d MapEnd;
+static int MapOffset = MAP_OFFSET;
+
+// For map shake
+static double shakeDuration = 0;
+static double shakeTimer = 0;
+static int shakeCount = 0;
+static int shakeFactorX = 0;
+static int shakeFactorY = 0;
 
 // Private functions
 void _CreateStatic();
 void _CreateVisualiser(int offset, CONSOLECOLOR color);
+void _ShakeMap();
 
 void Map_Init()
 {
 	// Initialise static boundary
-	sMapOrigin.x = sMapOffset;
-	sMapOrigin.y = sMapOffset;
-	sMapEnd.x = GAME_WIDTH - sMapOffset;
-	sMapEnd.y = GAME_HEIGHT - sMapOffset;
+	MapOrigin.x = MapOffset;
+	MapOrigin.y = MapOffset;
+	MapEnd.x = GAME_WIDTH - MapOffset;
+	MapEnd.y = GAME_HEIGHT - MapOffset;
+
+	// Map shake
+	shakeDuration = 0;
+	shakeFactorX = 0;
+	shakeFactorY = 0;
 }
 
 void Map_Update()
 {
-
+	if (shakeCount > 0)
+		_ShakeMap();
 }
 
 void Map_Render()
@@ -36,36 +52,84 @@ void Map_Render()
 		_CreateVisualiser(4, RED);
 }
 
+void Map_Shake(DIRECTION dir, double duration, int intensity)
+{
+	shakeDuration = duration;
+	shakeCount = intensity;
+	if(dir == UP)
+		shakeFactorY = shakeCount;
+	else
+		shakeFactorX = shakeCount;
+}
+
+int Map_GetShakeFactor(DIRECTION dir)
+{
+	if(dir == UP)
+		return shakeFactorY;
+	else
+		return shakeFactorX;
+}
+
 void _CreateStatic()
 {
 	// Horizontal
-	for (int i = 0; i < sMapEnd.x - sMapOrigin.x; i++)
+	for (int i = 0; i < MapEnd.x - MapOrigin.x; i++)
 	{
-		Console_SetRenderBuffer_CharColor(sMapOrigin.x + i+1, sMapOrigin.y, 'X', DARKCYAN);
-		Console_SetRenderBuffer_CharColor(sMapOrigin.x + i, sMapEnd.y, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(MapOrigin.x + i + 1, MapOrigin.y, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(MapOrigin.x + i, MapEnd.y, 'X', DARKCYAN);
 	}
 
 	// Vertical
-	for (int i = 0; i < sMapEnd.y - sMapOrigin.y; i++)
+	for (int i = 0; i < MapEnd.y - MapOrigin.y; i++)
 	{
-		Console_SetRenderBuffer_CharColor(sMapOrigin.x, sMapOrigin.y + i, 'X', DARKCYAN);
-		Console_SetRenderBuffer_CharColor(sMapEnd.x, sMapOrigin.y + i + 1, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(MapOrigin.x, MapOrigin.y + i, 'X', DARKCYAN);
+		Console_SetRenderBuffer_CharColor(MapEnd.x, MapOrigin.y + i + 1, 'X', DARKCYAN);
 	}
 }
 
 void _CreateVisualiser(int offset, CONSOLECOLOR color)
 {
 	// Horizontal
-	for (int i = 0; i < (sMapEnd.x + offset) - (sMapOrigin.x - offset); i++)
+	for (int i = 0; i < (MapEnd.x + offset) - (MapOrigin.x - offset); i++)
 	{
-		Console_SetRenderBuffer_CharColor((sMapOrigin.x - offset) + i+1, (sMapOrigin.y - offset), 'X', color);
-		Console_SetRenderBuffer_CharColor((sMapOrigin.x - offset) + i, (sMapEnd.y + offset), 'X', color);
+		Console_SetRenderBuffer_CharColor((MapOrigin.x - offset) + i + 1, (MapOrigin.y - offset), 'X', color);
+		Console_SetRenderBuffer_CharColor((MapOrigin.x - offset) + i, (MapEnd.y + offset), 'X', color);
 	}
 
 	// Vertical
-	for (int i = 0; i < (sMapEnd.y + offset) - (sMapOrigin.y - offset); i++)
+	for (int i = 0; i < (MapEnd.y + offset) - (MapOrigin.y - offset); i++)
 	{
-		Console_SetRenderBuffer_CharColor((sMapOrigin.x - offset), (sMapOrigin.y - offset) + i, 'X', color);
-		Console_SetRenderBuffer_CharColor((sMapEnd.x + offset), (sMapOrigin.y - offset) + i + 1, 'X', color);
+		Console_SetRenderBuffer_CharColor((MapOrigin.x - offset), (MapOrigin.y - offset) + i, 'X', color);
+		Console_SetRenderBuffer_CharColor((MapEnd.x + offset), (MapOrigin.y - offset) + i + 1, 'X', color);
+	}
+}
+
+void _ShakeMap()
+{
+	shakeTimer += Clock_GetDeltaTime();
+
+	if (shakeTimer > shakeDuration)
+	{
+		shakeTimer = 0.0;
+		shakeFactorX *= -1;
+		shakeFactorY *= -1;
+		shakeCount--;
+
+		// Shake map
+		MapOrigin.x += shakeFactorX;
+		MapEnd.x += shakeFactorX;
+
+		MapOrigin.y += shakeFactorY;
+		MapEnd.y += shakeFactorY;
+	}
+
+	if (shakeCount < 1)
+	{
+		shakeFactorX = 0;
+		shakeFactorY = 0;
+		MapOrigin.x = MapOffset;
+		MapEnd.x = GAME_WIDTH - MapOffset;
+		MapOrigin.y = MapOffset;
+		MapEnd.y = GAME_HEIGHT - MapOffset;
 	}
 }

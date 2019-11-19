@@ -5,7 +5,7 @@
 #include "../Console/Console.h"
 #include "../Global.h"
 
-FILE* pFile;
+FILE *pFile;
 sprite skullenemy = { 0 };
 char Charline[150] = { 0 };
 int length = 0;
@@ -16,8 +16,8 @@ int currentyposition = 0;
 int iteration = 0;
 int Xoffset = 0;
 
-void Text_Init(sprite *s, char* path)
-{   
+void Text_Init(sprite *s, char *path)
+{
 	_Readandstoretext(s, path);
 }
 
@@ -26,21 +26,24 @@ sprite Text_CreateSprite()
 
 	return skullenemy;
 }
-void Text_Render(sprite *s)
+void Text_Render(sprite *s, int offsetX, int offsetY)
 {
 	for (int i = 0; i < SPRITE_SIZE; i++)
 	{
-		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y), s->printchar[i], s->printColor[i]);
+		Console_SetRenderBuffer_CharColor(
+			(s->position[i].x) + s->origin.x + offsetX,
+			(s->position[i].y + s->origin.y) + offsetY,
+			s->printchar[i], s->printColor[i]);
 	}
 }
 
-void Text_Move(sprite *s,int x, int y)
+void Text_Move(sprite *s, int x, int y)
 {
 	s->origin.x = x;
 	s->origin.y = y;
 }
 
-void _Readandstoretext(sprite* s, const char* path)
+void _Readandstoretext(sprite *s, const char *path)
 {
 	iteration = 0;
 	newcharcount = 0;

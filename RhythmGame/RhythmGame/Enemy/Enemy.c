@@ -3,6 +3,7 @@
 #include "../Clock/Clock.h"
 #include "../Global.h"
 #include "../Map/Map.h"
+#include "../Console/Console.h"
 
 //Game Input
 int randEnMove = 0;
@@ -35,6 +36,7 @@ void Enemy_Init()
 	skullEnemy = (Enemy) {.position.x = 45, .position.y = 45, .enemySprite = Text_CreateSprite(),};
 	_decideEnemyMove(1);
 	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
+	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
 }
 
 void Enemy_FixedUpdate()
@@ -49,7 +51,10 @@ void Enemy_FixedUpdate()
 void Enemy_Render()
 {
 	//ASCI ENEMY
-	Text_Render(&skullEnemy.enemySprite);
+	Text_Render(&skullEnemy.enemySprite, 0, Map_GetShakeFactor(UP)/2);
+
+	// Debug origin point
+	Console_SetRenderBuffer_CharColor(skullEnemy.position.x, skullEnemy.position.y, '+', CYAN);
 
 	//for (int i = 0; i < pCount; i++)
 	//{
@@ -75,7 +80,8 @@ void _spawnProjectile()
 	if (BPMProjSpawnTime <= 3) return;
 	BPMProjSpawnTime = 0;
 	
-	Attack_SpawnProjectile(skullEnemy.position, DOWN, 5, 100);
+	//Attack_SpawnProjectile(skullEnemy.position, DOWN, 5, 2000);
+	Attack_SpawnLaser(skullEnemy.position, DOWN, 100);
 }
 
 void _updateEnemy()

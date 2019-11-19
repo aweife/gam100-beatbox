@@ -19,7 +19,7 @@ void Text_Init(sprite* s, char* path);
 sprite Text_CreateSprite();
 
 //Renders enemy
-void Text_Render(sprite *s);
+void Text_Render(sprite *s, int offsetX, int offsetY);
 
 // Set enemy position
 void Text_Move(sprite *s, int x, int y);

@@ -29,7 +29,7 @@ void UI_Render()
 {   
 	for (int i = 0; i < 10; i++)
 	{
-		Text_Render(&hearts[i]);
+		Text_Render(&hearts[i],0,0);
 	}
 }
 

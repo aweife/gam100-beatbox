@@ -5,18 +5,12 @@
 
 #define BOXSIZE 3
 
-typedef enum DIRECTION
-{
-	TOPLEFT = 1,
-	TOPRIGHT = 2,
-	BOTTOMRIGHT = 3,
-	BOTTOMLEFT = 4,
-	UP = 5,
-	RIGHT = 6,
-	DOWN = 7,
-	LEFT = 8,
-	STAY = 0,
-}DIRECTION;
+typedef enum PLAYERSTATE {
+	Normal,
+	ExDash,
+	Dash,
+	Invul,
+}PLAYERSTATE;
 
 typedef enum EASEMOVEMENT {
 	SpeedUp = 0,
@@ -26,10 +20,10 @@ typedef enum EASEMOVEMENT {
 
 typedef struct Player {
 	Vector2d position;
-	Vector2d body[BOXSIZE * BOXSIZE];
 	int direction;
 	int health;
 	sprite PlayerSprite;
+	PLAYERSTATE state;
 }Player;
 
 // Initialise player variables
@@ -58,3 +52,9 @@ extern int Player_GetDirection();
 
 // Returns sprite of player
 extern sprite *Player_GetSprite();
+
+// Returns the attack state of player
+extern PLAYERSTATE Player_GetState();
+
+// If player hits the boss, extend his dash
+extern void Player_ExtendDash();

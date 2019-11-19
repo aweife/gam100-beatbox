@@ -18,6 +18,7 @@
 #define CONSOLE_H
 
 #include <stdbool.h>
+#include <Windows.h>
 
 //*********************************************************************************
 //						CONSOLE INITIALIZATION
@@ -193,6 +194,7 @@ void Console_CleanUp();
  * \note	The character will be displayed on your screen only after a Console_SwapRenderBuffer() call
  */
 void Console_SetRenderBuffer_Char(int x, int y, char c);
+void Console_SetRenderBuffer_CharColor(int x, int y, char c, WORD attributes);
 
 
 /**
