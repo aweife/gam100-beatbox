@@ -138,7 +138,7 @@
     <Text Include="$Resources\skull.txt">
       <Filter>Resources</Filter>
     </Text>
-    <Text Include="Score\Score.txt">
+    <Text Include="%24Resources\Score.txt">
       <Filter>Resources</Filter>
     </Text>
   </ItemGroup>

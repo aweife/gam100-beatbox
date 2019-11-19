@@ -60,7 +60,7 @@
     <Text Include="$Resources\Logo.txt" />
     <Text Include="$Resources\Logo2.txt.txt" />
     <Text Include="$Resources\skull.txt" />
-    <Text Include="Score\Score.txt" />
+    <Text Include="%24Resources\Score.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$Resources\Kick.wav" />
