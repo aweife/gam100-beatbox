@@ -5,6 +5,7 @@
 #include "../Map/Map.h"
 #include "../Enemy/Enemy.h"
 #include "../Player/Player.h"
+#include "../Attack/Attack.h"
 
 #define BEAT_THRESHOLD 0.00015
 
@@ -56,6 +57,7 @@ void _CheckBeats()
 		{
 			kick.updated = !kick.updated;
 			kick.timer = bpm;
+			Attack_FixedUpdate();
 		}
 	}
 
@@ -66,7 +68,6 @@ void _CheckBeats()
 			snare.updated = !snare.updated;
 			snare.timer = bpm;
 			Enemy_FixedUpdate();
-			Attack_FixedUpdate();
 		}
 	}
 }
