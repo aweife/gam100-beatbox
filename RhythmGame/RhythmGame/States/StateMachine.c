@@ -3,6 +3,7 @@
 #include "MainMenu.h"
 #include "GameOver.h"
 #include "../Console/Console.h"
+#include "../Tutorial/Tutorial.h"
 
 static GameState currentState = State_Default;
 static GameState reqState = State_Default;
@@ -16,6 +17,7 @@ void StateMachine_Start()
 		case State_MainMenu: MainMenu_ExitState(); break;
 		case State_Game: Game_ExitState(); break;
 		case State_GameOver: GameOver_ExitState(); break;
+		case State_Tutorial: Tutorial_ExitState(); break;
 		}
 
 		currentState = reqState;
@@ -25,6 +27,7 @@ void StateMachine_Start()
 		case State_MainMenu: MainMenu_EnterState(); break;
 		case State_Game: Game_EnterState(); break;
 		case State_GameOver: GameOver_EnterState(); break;
+		case State_Tutorial: Tutorial_EnterState(); break;
 		}
 	}
 }
@@ -41,6 +44,7 @@ void StateMachine_ProcessInput()
 	case State_MainMenu: MainMenu_ProcessInput(); break;
 	case State_Game: Game_ProcessInput(); break;
 	case State_GameOver: GameOver_ProcessInput(); break;
+	case State_Tutorial: Tutorial_ProcessInput(); break;
 	}
 }
 
@@ -51,6 +55,7 @@ void StateMachine_Update()
 	case State_MainMenu: MainMenu_Update(); break;
 	case State_Game: Game_Update(); break;
 	case State_GameOver: GameOver_Update(); break;
+	case State_Tutorial: Tutorial_Update(); break;
 	}
 }
 
@@ -63,6 +68,7 @@ void StateMachine_Render()
 	case State_MainMenu: MainMenu_Render(); break;
 	case State_Game: Game_Render(); break;
 	case State_GameOver: GameOver_Render(); break;
+	case State_Tutorial: Tutorial_Render(); break;
 	}
 
 	Console_SwapRenderBuffer();

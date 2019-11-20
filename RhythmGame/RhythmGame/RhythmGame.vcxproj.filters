@@ -71,6 +71,9 @@
     <ClCompile Include="Attack\Attack.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Tutorial\Tutorial.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console\Console.h">
@@ -119,6 +122,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Attack\Attack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tutorial\Tutorial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

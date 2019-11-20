@@ -21,6 +21,8 @@ void MainMenu_ProcessInput()
 		Game_Exit();
 	if (GetAsyncKeyState(VK_SPACE))
 		StateMachine_ChangeState(State_Game);
+	if (GetAsyncKeyState(VK_RETURN))
+		StateMachine_ChangeState(State_Tutorial);
 }
 
 //*********************************************************************************
