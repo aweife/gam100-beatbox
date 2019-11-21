@@ -7,7 +7,7 @@
 #include "../Global.h"
 
 
-FILE* pFile;
+FILE *pFile;
 sprite skullenemy = { 0 };
 char Charline[150] = { 0 };
 int length = 0;
@@ -19,12 +19,12 @@ int iteration = 0;
 int Xoffset = 0;
 
 
-void Text_Init(sprite *s, char* path)
-{   
+void Text_Init(sprite *s, char *path)
+{
 	_Readandstoretext(s, path);
 }
 
-void Text_InitArray(sprite *s, char* path)
+void Text_InitArray(sprite *s, char *path)
 {
 	_ReadandstoretextArray(s, path);
 
@@ -38,18 +38,7 @@ void Text_Render(sprite *s, int offsetX, int offsetY)
 {
 	for (int i = 0; i < SPRITE_SIZE; i++)
 	{
-		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y), s->printchar[i], (WORD)s->printColor[i]);
-		if (s->printchar[i] == '\0')
-			break;
-	}
-	Console_SetRenderBuffer_CharColor((s->position[0].x) + s->origin.x, (s->position[0].y + s->origin.y), s->printchar[0], (WORD)s->printColor[0]);
-}
-
-void Text_RenderSprite(sprite *s)
-{
-	for (int i = 0; i < SPRITE_SIZE; i++)
-	{
-		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y),' ', (WORD)s->printColor[i]);
+		Console_SetRenderBuffer_CharColor((s->position[i].x + s->origin.x) + offsetX, (s->position[i].y + s->origin.y) + offsetY, ' ', (WORD)s->printColor[i]);
 		if (s->printchar[i] == '\0')
 			break;
 	}
@@ -58,7 +47,7 @@ void Text_RenderSprite(sprite *s)
 
 
 
-void Text_RenderRainbow(sprite* s)
+void Text_RenderRainbow(sprite *s)
 {
 	int rainbowinterator = 1;
 	int oldyvalue = 0;
@@ -92,7 +81,7 @@ void Text_RenderRainbow(sprite* s)
 		case 6: rainbow = MAGENTA;
 			break;
 		}
-		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y),' ',rainbow);
+		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y), ' ', rainbow);
 
 		if (s->printchar[i] == '\0')
 			break;
@@ -130,7 +119,7 @@ void _Readandstoretext(sprite *s, const char *path)
 
 			fgets(Charline, 150, pFile);
 
-			
+
 
 
 			for (int i = 0; i < 150; i++)
@@ -158,7 +147,7 @@ void _Readandstoretext(sprite *s, const char *path)
 					s->position[newcharcount + iteration].y = currentyposition;
 					s->printchar[newcharcount + iteration] = Charline[i];
 					if (Charline[i] == 'g')
-				        s->printColor[newcharcount + iteration] = GREEN;
+						s->printColor[newcharcount + iteration] = GREEN;
 					else if (Charline[i] == 'G')
 						s->printColor[newcharcount + iteration] = DARKGREEN;
 					else if (Charline[i] == 'b')
@@ -186,9 +175,9 @@ void _Readandstoretext(sprite *s, const char *path)
 					else if (Charline[i] == 'W')
 						s->printColor[newcharcount + iteration] = BLACK;
 					else if (Charline[i] == 'd')
-						s->printColor[newcharcount + iteration] = GRAY;
-					else if (Charline[i] == 'D')
 						s->printColor[newcharcount + iteration] = DARKGRAY;
+					else if (Charline[i] == 'D')
+						s->printColor[newcharcount + iteration] = GRAY;
 					else if (Charline[i] == 'B')
 						s->printColor[newcharcount + iteration] = DARKBLUE;
 					else
@@ -210,7 +199,7 @@ void _Readandstoretext(sprite *s, const char *path)
 }
 
 
-void _ReadandstoretextArray(sprite* s, const char* path)
+void _ReadandstoretextArray(sprite *s, const char *path)
 {
 	int state = 0;
 	iteration = 0;
@@ -268,9 +257,9 @@ void _ReadandstoretextArray(sprite* s, const char* path)
 			{
 				if (Charline[i] != ' ' && Charline[i] != '\0')
 				{
-					(s+state)->position[newcharcount + iteration].x = Xoffset;
-					(s+state)->position[newcharcount + iteration].y = currentyposition;
-					(s+state)->printchar[newcharcount + iteration] = Charline[i];
+					(s + state)->position[newcharcount + iteration].x = Xoffset;
+					(s + state)->position[newcharcount + iteration].y = currentyposition;
+					(s + state)->printchar[newcharcount + iteration] = Charline[i];
 					if (Charline[i] == 'g')
 						(s + state)->printColor[newcharcount + iteration] = GREEN;
 					else if (Charline[i] == 'G')
@@ -306,7 +295,7 @@ void _ReadandstoretextArray(sprite* s, const char* path)
 					else if (Charline[i] == 'B')
 						(s + state)->printColor[newcharcount + iteration] = DARKBLUE;
 					else
-						(s+state)->printColor[newcharcount + iteration] = WHITE;
+						(s + state)->printColor[newcharcount + iteration] = WHITE;
 
 					iteration++;
 				}
