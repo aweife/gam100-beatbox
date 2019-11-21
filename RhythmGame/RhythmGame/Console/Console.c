@@ -106,7 +106,7 @@ void Console_SetRenderBuffer_CharColor(int x, int y, char c, WORD attributes)
 	if ((index >= sRenderBufferSize) || (index < 0))
 		return;
 
-	sRenderBuffer[index].Char.AsciiChar = c;
+  	sRenderBuffer[index].Char.AsciiChar = c;
 	sRenderBuffer[index].Attributes = attributes;
 	// FOREGROUND_RED | FOREGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_INTENSITY;
 }

@@ -5,6 +5,7 @@ typedef enum GameState
 	State_Default,
 	State_Logo,
 	State_MainMenu,
+	State_Tutorial,
 	State_Game,
 	State_GameOver,
 	State_Pause,
