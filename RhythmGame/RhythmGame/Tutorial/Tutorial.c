@@ -9,10 +9,12 @@
 #include "../Enemy/Enemy.h"
 #include "../Attack/Attack.h"
 #include "../Clock/Clock.h"
+#include "../Audio/AudioEngine.h"
+#include "../Beat/Beat.h"
 #include <Windows.h>
 #include <stdbool.h>
 
-#define TUTORIAL_MAP_OFFSET 60
+#define TUTORIAL_SCREEN_OFFSET 60
 #define TUTORIAL_DIALOGUE_OFFSET 70
 
 
@@ -20,22 +22,28 @@
 //								LOCAL VARIABLES
 //*********************************************************************************
 
-// Intro0: Brief Description of Game
-// Intro1: Main controls of the Game
-// Intro2: Move Player Demo
-// Intro3: Dash Attack Player Demo
-// Intro4: Dodge Enemy Demo
-// Intro5: Attack Enemy Demo
-// Move on to real game after all this!
+// Intro1: Brief Description of Game
+// Intro2: Main controls of the Game
+// Dialogue1: Move Player Demo
+// Dialogue2: Dash Attack Player Demo
+// Dialogue3: Dodge Enemy Demo
+// Dialogue4: Attack Enemy Demo (Not done)
+// Dialogue5: End Tutorial
+// Dialogue6: Move on to real game after all this!
 
 sprite Intro1;
 sprite Intro2;
-sprite Dialogue1;
+sprite Dialogue1; 
 sprite Dialogue2;
+sprite Dialogue3;
+sprite Dialogue5;
+sprite Dialogue6;
 
 static int currentIntro = 0;
 static int spaceDown = false;
 static bool RETURN_DOWN = true;
+static bool startTutorial = false;
+static bool startGame = false;
 static double tutorialDuration = 0.0;
 
 //*********************************************************************************
@@ -53,6 +61,8 @@ void Tutorial_ProcessInput()
 		RETURN_DOWN = true;
 		// Everything from here onwards will execute once
 		currentIntro = 2;
+	} else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
+		StateMachine_ChangeState(State_Game);
 	}
 	else if (!GetAsyncKeyState(VK_RETURN)) {
 		RETURN_DOWN = false;
@@ -99,6 +109,8 @@ void Tutorial_ProcessInput()
 void Tutorial_Update()
 {
 	Clock_GameLoopStart();
+	//Audio_Update();
+	//Beat_Update();
 	Player_Update();
 	Enemy_FixedUpdate();
 	Attack_FixedUpdate();
@@ -132,6 +144,7 @@ void Tutorial_Render()
 		// For 20 seconds
 		if (tutorialDuration >= 0.0 && tutorialDuration <= 20000.0)
 		{
+			startTutorial = true;
 			Text_Render(&Dialogue1);
 		}
 		// For 15 seconds
@@ -139,8 +152,13 @@ void Tutorial_Render()
 			Text_Render(&Dialogue2);
 		}
 		else if (tutorialDuration > 35000.0) {
+			Text_Render(&Dialogue3);
 			Enemy_Render();
 			Attack_Render();
+		}
+		else if (tutorialDuration > 50000.0) {
+			startGame = true;
+			Text_Render(&Dialogue5);
 		}
 	}
 }
@@ -153,15 +171,17 @@ void Tutorial_EnterState()
 	// Brief Description Of Game
    	Intro1 = Text_CreateSprite();
 	Text_Init(&Intro1, "..//RhythmGame//$Resources//Intro1.txt");
-	Text_Move(&Intro1, (GAME_WIDTH / 2) - TUTORIAL_MAP_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_MAP_OFFSET / 2));
+	Text_Move(&Intro1, (GAME_WIDTH / 2) - TUTORIAL_SCREEN_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2));
 
 	// Main Controls of Game
 	Intro2 = Text_CreateSprite();
 	Text_Init(&Intro2, "..//RhythmGame//$Resources//Intro2.txt");
-	Text_Move(&Intro2, (GAME_WIDTH / 2) - TUTORIAL_MAP_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_MAP_OFFSET / 2));
+	Text_Move(&Intro2, (GAME_WIDTH / 2) - TUTORIAL_SCREEN_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2));
 
 	// Demo to Move Player
+	//Audio_Init();
 	Map_Init();
+	//Beat_Init();
 	Player_Init();
 
 	// Tutorial on moving player
@@ -177,7 +197,19 @@ void Tutorial_EnterState()
 	// Tutorial on Dodging Enemy
 	Enemy_Init();
 	Attack_Init();
+	Dialogue3 = Text_CreateSprite();
+	Text_Init(&Dialogue3, "..//RhythmGame//$Resources//DialogueDodgeEnemy.txt");
+	Text_Move(&Dialogue3, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
 
+	// End Tutorial
+	Dialogue5 = Text_CreateSprite();
+	Text_Init(&Dialogue5, "..//RhythmGame//$Resources//DialogueEndTutorial.txt");
+	Text_Move(&Dialogue5, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
+
+	//// Move to Actual Game
+	//Dialogue6 = Text_CreateSprite();
+	//Text_Init(&Dialogue6, "..//RhythmGame//$Resources//DialogueMoveToGame.txt");
+	//Text_Move(&Dialogue6, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
 }
 
 void Tutorial_ExitState()
