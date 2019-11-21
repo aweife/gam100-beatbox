@@ -42,6 +42,7 @@ void Text_Render(sprite *s, int offsetX, int offsetY)
 		if (s->printchar[i] == '\0')
 			break;
 	}
+	Console_SetRenderBuffer_CharColor((s->position[0].x) + s->origin.x, (s->position[0].y + s->origin.y), s->printchar[0], (WORD)s->printColor[0]);
 }
 
 void Text_RenderSprite(sprite *s)
@@ -52,7 +53,7 @@ void Text_RenderSprite(sprite *s)
 		if (s->printchar[i] == '\0')
 			break;
 	}
-
+	Console_SetRenderBuffer_CharColor((s->position[0].x) + s->origin.x, (s->position[0].y + s->origin.y), ' ', (WORD)s->printColor[0]);
 }
 
 
@@ -91,7 +92,7 @@ void Text_RenderRainbow(sprite* s)
 		case 6: rainbow = MAGENTA;
 			break;
 		}
-		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y), (WORD)s->printchar[i],rainbow);
+		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y),' ',rainbow);
 
 		if (s->printchar[i] == '\0')
 			break;

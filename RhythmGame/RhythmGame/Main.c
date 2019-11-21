@@ -11,7 +11,7 @@ int main(void)
 	Console_SetSquareFont();
 	Console_SetWindowedMode(GAME_WIDTH, GAME_HEIGHT, true);
 	//Console_SetFullScreen();
-	StateMachine_ChangeState(State_MainMenu);
+	StateMachine_ChangeState(State_Logo);
 
 	while (Game_IsRunning())
 	{
