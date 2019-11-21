@@ -1,0 +1,11 @@
+R      mmmmmm R     R mmmmmm R      
+R      m      R     R m      R      
+R      m      R     R m      R      
+R      m      R     R m      R      
+R      m      R     R m      R      
+R      mmmmmm R     R mmmmmm R      
+R      m       R   R  m      R      
+R      m       R   R  m      R      
+R      m       R   R  m      R      
+R      m        R R   m      R      
+RRRRRR mmmmmm    R    mmmmmm RRRRRRR

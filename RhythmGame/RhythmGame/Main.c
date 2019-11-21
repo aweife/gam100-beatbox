@@ -14,7 +14,8 @@ int main(void)
 	Console_SetCursorVisibility(0);
 	Console_SetSquareFont();
 	Console_SetWindowedMode(GAME_WIDTH, GAME_HEIGHT, true);
-	StateMachine_ChangeState(State_MainMenu);
+	//Console_SetFullScreen();
+	StateMachine_ChangeState(State_Logo);
 
 	// Play the music for stage one
 	/*Audio_Init();
