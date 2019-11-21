@@ -138,6 +138,8 @@
     <Text Include="$Resources\skull.txt">
       <Filter>Resources</Filter>
     </Text>
+    <Text Include="$Resources\DialogueMovePlayer.txt" />
+    <Text Include="$Resources\DialogueDashAttack.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$Resources\Kick.wav">
