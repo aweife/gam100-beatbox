@@ -1,6 +1,6 @@
 #pragma once
-#include "Global.h"
-#include "Text/TextReader.h"
+#include "../Global.h"
+#include "../Text/TextReader.h"
 
 typedef struct LogoStruct {
 	Vector2d position;

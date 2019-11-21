@@ -1,7 +1,7 @@
 #include <Windows.h>
 #include "Logo.h"
-#include "States/StateMachine.h"
-#include "Clock/Clock.h"
+#include "StateMachine.h"
+#include "../Clock/Clock.h"
 
 
 

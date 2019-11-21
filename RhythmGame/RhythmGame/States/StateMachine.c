@@ -2,7 +2,7 @@
 #include "Game.h"
 #include "MainMenu.h"
 #include "GameOver.h"
-#include "../Logo.h"
+#include "Logo.h"
 #include "../Console/Console.h"
 
 static GameState currentState = State_Default;
