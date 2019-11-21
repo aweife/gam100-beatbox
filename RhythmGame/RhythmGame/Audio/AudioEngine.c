@@ -3,7 +3,6 @@
 #include "fmod_errors.h"
 #include <stdbool.h>
 
-#define NUMBER_OF_BGM_TRACKS 1
 #define NUMBER_OF_SFX_TRACKS 1
 #define NUMBER_OF_CHANNELS 20
 
@@ -24,17 +23,33 @@ static bool bHasError;
 static FMOD_RESULT result;
 static FMOD_SYSTEM *fmodSystem;
 
-// BGM
+// For menu and tutorial
 static track kick = { 0 };
-static track snare = { 0 };
-static track bgmList[NUMBER_OF_BGM_TRACKS];
+
+// Projectile
+static track projectileList[1] = { 0 };
+static int projectileCount = 0;
+
+// Laser
+static track warningList[1] = { 0 };
+static int warningCount = 0;
+static track laserList[1] = { 0 };
+static int laserCount = 0;
+
+// Enemy movement
+static track snareList[2] = { 0 };
+static int snareCount = 0;
+
+// BGM
+static track bgmList[2];
 static int bgmCount = 0;
-static double bgmDelay;
-static int currentId = 0;
+
+// For starting music
+static double startDelay;
 static bool startFadeOut = false;
 static double fadeTimer = 0;
 static double initialFadeValue = 0;
-
+int currentId = 0; // Select music
 
 // SFX
 static int sfxCount;
@@ -56,16 +71,25 @@ void Audio_Init()
 	// Setup the sound system
 	result = FMOD_System_Create(&fmodSystem);
 	_CheckResult("create");
-
 	// Initialise sound system
-	if (!bHasError) result = FMOD_System_Init(fmodSystem, NUMBER_OF_CHANNELS, FMOD_INIT_NORMAL, 0);
-	_CheckResult("initialising");
+	result = FMOD_System_Init(fmodSystem, NUMBER_OF_CHANNELS, FMOD_INIT_NORMAL, 0);
+	_CheckResult("init");
 
 	// LOAD TRACKS
+	// Kick
 	Audio_Load("../RhythmGame//$Resources//Kick.wav", KICK);
+	// Snare
+	Audio_Load("..//RhythmGame//$Resources//Snare1.wav", SNARE);
 	Audio_Load("..//RhythmGame//$Resources//Snare.wav", SNARE);
+	// Melody
+	Audio_Load("..//RhythmGame//$Resources//Melody1.wav", BGM);
 	Audio_Load("..//RhythmGame//$Resources//Melody.wav", BGM);
-	Audio_PlayBGMWithDelay(0, .000001);
+	// Projectile
+	Audio_Load("..//RhythmGame//$Resources//Normal1.wav", PROJECTILE);
+	// Warning
+	Audio_Load("..//RhythmGame//$Resources//Warning1.wav", WARNING);
+	// Laser
+	Audio_Load("..//RhythmGame//$Resources//Laser1.wav", LASER);
 }
 
 void Audio_Load(const char *path, TRACKTYPE type)
@@ -76,7 +100,8 @@ void Audio_Load(const char *path, TRACKTYPE type)
 		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &kick.sound);
 		break;
 	case SNARE:
-		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &snare.sound);
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &snareList[snareCount].sound);
+		snareCount++;
 		break;
 	case BGM:
 		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &bgmList[bgmCount].sound);
@@ -85,6 +110,18 @@ void Audio_Load(const char *path, TRACKTYPE type)
 	case SFX:
 		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_LOOP_NORMAL, 0, &sfxList[sfxCount]);
 		sfxCount++;
+		break;
+	case PROJECTILE:
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &projectileList[projectileCount].sound);
+		projectileCount++;
+		break;
+	case WARNING:
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &warningList[warningCount].sound);
+		warningCount++;
+		break;
+	case LASER:
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &laserList[laserCount].sound);
+		laserCount++;
 		break;
 	}
 	_CheckResult("loading sound");
@@ -107,27 +144,58 @@ void Audio_PlayOneShot(int id, float volume)
 	_CheckResult("playing");
 }
 
-void Audio_PlayBGMWithDelay(int id, double delay)
+void Audio_PlayBGMWithDelay(double delay, STAGE stage)
 {
-	bgmDelay = delay * 1000.0;
+	startDelay = delay * 1000.0;
+
+	switch (stage)
+	{
+	case MAINMENU:
+		currentId = 0;
+		break;
+	case TUTORIAL:
+		currentId = 0;
+		break;
+	case STAGEONE:
+		currentId = 0;
+		break;
+	}
 
 	// Kick
-	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &kick.dsp);
-	FMOD_System_PlaySound(fmodSystem, kick.sound, 0, true, &kick.channel);
-	FMOD_Channel_AddDSP(kick.channel, 0, kick.dsp);
-	FMOD_DSP_SetActive(kick.dsp, true);
+	//FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &kick.dsp);
+	//FMOD_System_PlaySound(fmodSystem, kick.sound, 0, true, &kick.channel);
+	//FMOD_Channel_AddDSP(kick.channel, 0, kick.dsp);
+	//FMOD_DSP_SetActive(kick.dsp, true);
 
 	// Snare
-	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &snare.dsp);
-	FMOD_System_PlaySound(fmodSystem, snare.sound, 0, true, &snare.channel);
-	FMOD_Channel_AddDSP(snare.channel, 0, snare.dsp);
-	FMOD_DSP_SetActive(snare.dsp, true);
+	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &snareList[currentId].dsp);
+	FMOD_System_PlaySound(fmodSystem, snareList[currentId].sound, 0, true, &snareList[currentId].channel);
+	FMOD_Channel_AddDSP(snareList[currentId].channel, 0, snareList[currentId].dsp);
+	FMOD_DSP_SetActive(snareList[currentId].dsp, true);
 
 	// Bgm
-	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &bgmList[id].dsp);
-	FMOD_System_PlaySound(fmodSystem, bgmList[id].sound, 0, true, &bgmList[id].channel);
-	FMOD_Channel_AddDSP(bgmList[id].channel, 0, bgmList[id].dsp);
-	FMOD_DSP_SetActive(bgmList[id].dsp, true);
+	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &bgmList[currentId].dsp);
+	FMOD_System_PlaySound(fmodSystem, bgmList[currentId].sound, 0, true, &bgmList[currentId].channel);
+	FMOD_Channel_AddDSP(bgmList[currentId].channel, 0, bgmList[currentId].dsp);
+	FMOD_DSP_SetActive(bgmList[currentId].dsp, true);
+
+	// Projectile
+	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &projectileList[currentId].dsp);
+	FMOD_System_PlaySound(fmodSystem, projectileList[currentId].sound, 0, true, &projectileList[currentId].channel);
+	FMOD_Channel_AddDSP(projectileList[currentId].channel, 0, projectileList[currentId].dsp);
+	FMOD_DSP_SetActive(projectileList[currentId].dsp, true);
+
+	// Warning
+	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &warningList[currentId].dsp);
+	FMOD_System_PlaySound(fmodSystem, warningList[currentId].sound, 0, true, &warningList[currentId].channel);
+	FMOD_Channel_AddDSP(warningList[currentId].channel, 0, warningList[currentId].dsp);
+	FMOD_DSP_SetActive(warningList[currentId].dsp, true);
+
+	// Laser
+	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &laserList[currentId].dsp);
+	FMOD_System_PlaySound(fmodSystem, laserList[currentId].sound, 0, true, &laserList[currentId].channel);
+	FMOD_Channel_AddDSP(laserList[currentId].channel, 0, laserList[currentId].dsp);
+	FMOD_DSP_SetActive(laserList[currentId].dsp, true);
 }
 
 void Audio_FadeOutBGM(double time)
@@ -144,27 +212,46 @@ double Audio_GetFrequency(TRACKTYPE type)
 	case KICK:
 		return kick.spectrum;
 	case SNARE:
-		return snare.spectrum;
+		return snareList[currentId].spectrum;
+	case PROJECTILE:
+		return projectileList[currentId].spectrum;
+	case WARNING:
+		return warningList[currentId].spectrum;
+	case LASER:
+		return laserList[currentId].spectrum;
+	case BGM:
+		return bgmList[currentId].spectrum;
 	}
 }
 
 void Audio_Update()
 {
-	result = FMOD_System_Update(fmodSystem);
-	_CheckResult("updating");
+	FMOD_System_Update(fmodSystem);
 
-	FMOD_DSP_GetParameterData(kick.dsp, FMOD_DSP_FFT_SPECTRUMDATA, &kick.dspFFT, 0, 0, 0);
-	if (kick.dspFFT->spectrum[0])
-		kick.spectrum = (double)((*(kick.dspFFT->spectrum[0]) + *(kick.dspFFT->spectrum[1])) / 2);
-	FMOD_DSP_GetParameterData(snare.dsp, FMOD_DSP_FFT_SPECTRUMDATA, &snare.dspFFT, 0, 0, 0);
-	if (snare.dspFFT->spectrum[0])
-		snare.spectrum = (double)((*(snare.dspFFT->spectrum[0]) + *(snare.dspFFT->spectrum[1])) / 2);
+	//FMOD_DSP_GetParameterData(kick.dsp, FMOD_DSP_FFT_SPECTRUMDATA, &kick.dspFFT, 0, 0, 0);
+	//if (kick.dspFFT->spectrum[0])
+	//	kick.spectrum = (double)((*(kick.dspFFT->spectrum[0]) + *(kick.dspFFT->spectrum[1])) / 2);
+	FMOD_DSP_GetParameterData(snareList[currentId].dsp, FMOD_DSP_FFT_SPECTRUMDATA, &snareList[currentId].dspFFT, 0, 0, 0);
+	if (snareList[currentId].dspFFT->spectrum[0])
+		snareList[currentId].spectrum = (double)((*(snareList[currentId].dspFFT->spectrum[0]) + *(snareList[currentId].dspFFT->spectrum[1])) / 2);
+	FMOD_DSP_GetParameterData(projectileList[currentId].dsp, FMOD_DSP_FFT_SPECTRUMDATA, &projectileList[currentId].dspFFT, 0, 0, 0);
+	if (projectileList[currentId].dspFFT->spectrum[0])
+		projectileList[currentId].spectrum = (double)((*(projectileList[currentId].dspFFT->spectrum[0]) + *(projectileList[currentId].dspFFT->spectrum[1])) / 2);
+	FMOD_DSP_GetParameterData(warningList[currentId].dsp, FMOD_DSP_FFT_SPECTRUMDATA, &warningList[currentId].dspFFT, 0, 0, 0);
+	if (warningList[currentId].dspFFT->spectrum[0])
+		warningList[currentId].spectrum = (double)((*(warningList[currentId].dspFFT->spectrum[0]) + *(warningList[currentId].dspFFT->spectrum[1])) / 2);
+	FMOD_DSP_GetParameterData(laserList[currentId].dsp, FMOD_DSP_FFT_SPECTRUMDATA, &laserList[currentId].dspFFT, 0, 0, 0);
+	if (laserList[currentId].dspFFT->spectrum[0])
+		laserList[currentId].spectrum = (double)((*(laserList[currentId].dspFFT->spectrum[0]) + *(laserList[currentId].dspFFT->spectrum[1])) / 2);
+	FMOD_DSP_GetParameterData(bgmList[currentId].dsp, FMOD_DSP_FFT_SPECTRUMDATA, &bgmList[currentId].dspFFT, 0, 0, 0);
+	if (bgmList[currentId].dspFFT->spectrum[0])
+		bgmList[currentId].spectrum = (double)((*(bgmList[currentId].dspFFT->spectrum[0]) + *(bgmList[currentId].dspFFT->spectrum[1])) / 2);
 	//_UpdateSpectrum(kick.dsp, kick.dspFFT, &kick.spectrum);
 	//_UpdateSpectrum(snare.dsp, snare.dspFFT, &snare.spectrum);
 
 
 	// If StartBGMWithDelay has been called
-	if (bgmDelay > 0.0)
+	if (startDelay > 0.0)
 		_CountDownBGM();
 
 	// If FadeOutBGM has been called
@@ -180,7 +267,8 @@ void Audio_Shutdown()
 
 	// Free sounds in memory
 	FMOD_Sound_Release(kick.sound);
-	FMOD_Sound_Release(snare.sound);
+	for (int i = 0; i < snareCount; i++)
+		FMOD_Sound_Release(snareList[i].sound);
 	for (int i = 0; i < bgmCount; i++)
 		FMOD_Sound_Release(bgmList[i].sound);
 	_CheckResult("system shutdown");
@@ -195,16 +283,26 @@ void Audio_SetBGMVolume(float volume, TRACKTYPE type)
 	{
 	case KICK:
 		FMOD_Channel_SetVolume(kick.channel, volume);
+		break;
 	case SNARE:
-		FMOD_Channel_SetVolume(snare.channel, volume);
+		FMOD_Channel_SetVolume(snareList[currentId].channel, volume);
+		break;
 	case BGM:
 		FMOD_Channel_SetVolume(bgmList[currentId].channel, volume);
+		break;
+	case PROJECTILE:
+		FMOD_Channel_SetVolume(projectileList[currentId].channel, volume);
+		break;
+	case WARNING:
+		FMOD_Channel_SetVolume(warningList[currentId].channel, volume);
+		break;
+	case LASER:
+		FMOD_Channel_SetVolume(laserList[currentId].channel, volume);
 		break;
 	case SFX:
 		//result = FMOD_ChannelGroup_SetVolume(sfxGroup, volume);
 		break;
 	}
-	_CheckResult("setting volume");
 }
 
 void _CheckResult(const char *debug)
@@ -217,16 +315,19 @@ void _CheckResult(const char *debug)
 
 void _CountDownBGM()
 {
-	bgmDelay -= Clock_GetDeltaTime();
+	startDelay -= Clock_GetDeltaTime();
 
 	// Time the delay
-	if (bgmDelay <= 0.0)
+	if (startDelay <= 0.0)
 	{
-		bgmDelay = 0.0;
+		startDelay = 0.0;
 
 		FMOD_Channel_SetPaused(kick.channel, false);
-		FMOD_Channel_SetPaused(snare.channel, false);
-		FMOD_Channel_SetPaused(bgmList[0].channel, false);
+		FMOD_Channel_SetPaused(snareList[currentId].channel, false);
+		FMOD_Channel_SetPaused(bgmList[currentId].channel, false);
+		FMOD_Channel_SetPaused(projectileList[currentId].channel, false);
+		FMOD_Channel_SetPaused(warningList[currentId].channel, false);
+		FMOD_Channel_SetPaused(laserList[currentId].channel, false);
 	}
 }
 
@@ -235,9 +336,9 @@ void _FadeOutBGM()
 	fadeTimer -= Clock_GetDeltaTime();
 	double volume = fadeTimer / initialFadeValue;
 
-	FMOD_Channel_SetVolume(snare.channel, volume);
 	FMOD_Channel_SetVolume(kick.channel, volume);
-	FMOD_Channel_SetVolume(bgmList[0].channel, volume);
+	FMOD_Channel_SetVolume(snareList[currentId].channel, volume);
+	FMOD_Channel_SetVolume(bgmList[currentId].channel, volume);
 
 	if (volume < 0.0)
 	{
@@ -246,7 +347,7 @@ void _FadeOutBGM()
 		initialFadeValue = 0.0;
 
 		FMOD_Channel_SetPaused(kick.channel, true);
-		FMOD_Channel_SetPaused(snare.channel, true);
-		FMOD_Channel_SetPaused(bgmList[0].channel, true);
+		FMOD_Channel_SetPaused(snareList[currentId].channel, true);
+		FMOD_Channel_SetPaused(bgmList[currentId].channel, true);
 	}
 }

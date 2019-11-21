@@ -71,6 +71,9 @@
     <ClCompile Include="Attack\Attack.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UI\GameUI.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console\Console.h">
@@ -121,6 +124,9 @@
     <ClInclude Include="Attack\Attack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UI\GameUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="$Resources\Logo.txt">
@@ -132,6 +138,12 @@
     <Text Include="$Resources\skull.txt">
       <Filter>Resources</Filter>
     </Text>
+    <Text Include="$Resources\Health2.txt" />
+    <Text Include="$Resources\Beatbar.txt" />
+    <Text Include="$Resources\Health.txt" />
+    <Text Include="$Resources\Logo2.txt" />
+    <Text Include="$Resources\MainMenu.txt" />
+    <Text Include="$Resources\TestLogo.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$Resources\Kick.wav">

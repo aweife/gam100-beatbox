@@ -2,8 +2,10 @@
 
 #include "../Global.h"
 
-#define MAP_OFFSET 20
-
+#define MAP_OFFSET 5
+#define MAP_SHAKE_X 5
+#define MAP_SHAKE_Y 3
+#define GAME_UI_OFFSET 20
 // Initialise the static boundary
 extern void Map_Init();
 

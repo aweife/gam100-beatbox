@@ -9,7 +9,6 @@
 // Static boundary
 static Vector2d MapOrigin;
 static Vector2d MapEnd;
-static int MapOffset = MAP_OFFSET;
 
 // For map shake
 static double shakeDuration = 0;
@@ -22,14 +21,12 @@ static int shakeFactorY = 0;
 void _CreateStatic();
 void _CreateVisualiser(int offset, CONSOLECOLOR color);
 void _ShakeMap();
+void _ResetMap();
 
 void Map_Init()
 {
-	// Initialise static boundary
-	MapOrigin.x = MapOffset;
-	MapOrigin.y = MapOffset;
-	MapEnd.x = GAME_WIDTH - MapOffset;
-	MapEnd.y = GAME_HEIGHT - MapOffset;
+	// Init Map
+	_ResetMap();
 
 	// Map shake
 	shakeDuration = 0;
@@ -46,9 +43,9 @@ void Map_Update()
 void Map_Render()
 {
 	_CreateStatic();
-	if (Beat_GetKick())
+	if (Beat_GetBeat(PROJECTILE))
 		_CreateVisualiser(2, GREEN);
-	if (Beat_GetSnare())
+	if (Beat_GetBeat(SNARE))
 		_CreateVisualiser(4, RED);
 }
 
@@ -127,9 +124,15 @@ void _ShakeMap()
 	{
 		shakeFactorX = 0;
 		shakeFactorY = 0;
-		MapOrigin.x = MapOffset;
-		MapEnd.x = GAME_WIDTH - MapOffset;
-		MapOrigin.y = MapOffset;
-		MapEnd.y = GAME_HEIGHT - MapOffset;
+		_ResetMap();
 	}
+}
+
+void _ResetMap()
+{
+	// Initialise static boundary
+	MapOrigin.x = MAP_OFFSET + MAP_SHAKE_X;
+	MapOrigin.y = MAP_OFFSET + GAME_UI_OFFSET + MAP_SHAKE_Y;
+	MapEnd.x = GAME_WIDTH - MAP_OFFSET - MAP_SHAKE_X;
+	MapEnd.y = GAME_HEIGHT - MAP_OFFSET - MAP_SHAKE_Y;
 }

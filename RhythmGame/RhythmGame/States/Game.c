@@ -9,6 +9,7 @@
 #include "../UI/UI.h"
 #include "../Attack/Attack.h"
 #include "../Random/Random.h"
+#include "../UI/GameUI.h"
 
 static int reqExit = 0;
 
@@ -23,8 +24,16 @@ void Game_EnterState()
 	Audio_Init();
 	Enemy_Init();
 	Beat_Init();
-	//UI_Init();
 	Attack_Init();
+	GameUI_Init();
+
+	// Play the music for stage one
+	Audio_PlayBGMWithDelay(0.001, STAGEONE);
+	Audio_SetBGMVolume(SILENCE_FACTOR, SNARE);
+	Audio_SetBGMVolume(SILENCE_FACTOR, PROJECTILE);
+	Audio_SetBGMVolume(SILENCE_FACTOR, WARNING);
+	Audio_SetBGMVolume(SILENCE_FACTOR, LASER);
+	Audio_SetBGMVolume(1.0, BGM);
 }
 
 void Game_ExitState()
@@ -79,6 +88,7 @@ void Game_Update()
 	Map_Update();
 	Attack_Update();
 	Beat_Update();
+	GameUI_Update();
 }
 
 void Game_Render()
@@ -86,8 +96,8 @@ void Game_Render()
 	Enemy_Render();
 	Player_Render();
 	Map_Render();
-	//UI_Render();
 	Attack_Render();
+	GameUI_Render();
 }
 
 void Game_Exit()
