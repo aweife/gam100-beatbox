@@ -88,7 +88,7 @@ void _Readandstoretext(sprite *s, const char *path)
 
 			for (int i = 0; i < charcount; i++)
 			{
-				if (Charline[i] != ' ')
+				if (Charline[i] != ' ' && Charline[i] != '0')
 				{
 					s->position[newcharcount + iteration].x = Xoffset;
 					s->position[newcharcount + iteration].y = currentyposition;

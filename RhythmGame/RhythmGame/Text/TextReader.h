@@ -1,6 +1,6 @@
 #pragma once
 
-#define SPRITE_SIZE 1000
+#define SPRITE_SIZE 4500
 #include "../Global.h"
 
 typedef struct sprite

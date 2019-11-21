@@ -6,6 +6,7 @@
 #include"../UI/UI.h"
 
 sprite logo;
+sprite robot;
 
 //*********************************************************************************
 //								LOCAL VARIABLES
@@ -36,9 +37,12 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
-	Text_Move(&logo,70, 20);
-	Text_Render(&logo,0,0);
-	UI_Render();
+	//Text_Move(&logo,70, 20);
+	//Text_Render(&logo,0,0);
+
+	Text_Move(&robot, 25, 50);
+	Text_Render(&robot, 0, 0);
+	//UI_Render();
 
 }
 
@@ -51,9 +55,10 @@ void MainMenu_Render()
 //*********************************************************************************
 void MainMenu_EnterState()
 {
-	logo = Text_CreateSprite();
-	Text_Init(&logo, "..//RhythmGame//$Resources//logo2.txt");
-
+	/*logo = Text_CreateSprite();
+	Text_Init(&logo, "..//RhythmGame//$Resources//logo2.txt");*/
+	robot = Text_CreateSprite();
+	Text_Init(&robot, "..//RhythmGame//$Resources//Robot.txt");
 	UI_Init();
 	
 }
