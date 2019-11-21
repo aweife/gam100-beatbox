@@ -34,5 +34,3 @@ void Text_RenderRainbow(sprite* s);
 
 //stores text in arrays
 void _ReadandstoretextArray(sprite* s, const char* path);
-
-void Text_RenderSprite(sprite* s);

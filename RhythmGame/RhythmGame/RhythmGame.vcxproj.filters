@@ -55,5 +55,6 @@
     <Text Include="$Resources\MainMenu.txt" />
     <Text Include="$Resources\skull.txt" />
     <Text Include="$Resources\TestLogo.txt" />
+    <Text Include="$Resources\player.txt" />
   </ItemGroup>
 </Project>

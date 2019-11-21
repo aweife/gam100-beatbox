@@ -17,3 +17,6 @@ extern void Map_Update();
 // Call to shake map
 extern void Map_Shake(DIRECTION dir, double duration, int intensity);
 extern int Map_GetShakeFactor(DIRECTION dir);
+
+extern Vector2d Map_GetOrigin();
+extern Vector2d Map_GetEnd();

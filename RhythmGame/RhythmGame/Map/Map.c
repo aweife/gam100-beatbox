@@ -67,6 +67,16 @@ int Map_GetShakeFactor(DIRECTION dir)
 		return shakeFactorX;
 }
 
+Vector2d Map_GetOrigin()
+{
+	return MapOrigin;
+}
+
+Vector2d Map_GetEnd()
+{
+	return MapEnd;
+}
+
 void _CreateStatic()
 {
 	// Horizontal

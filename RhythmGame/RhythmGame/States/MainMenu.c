@@ -67,7 +67,7 @@ void MainMenu_Render()
 	_renderChoice(choice);
 
 	Text_Move(&robot, 25, 50);
-	Text_RenderSprite(&robot);
+	Text_Render(&robot,0,0);
 	
 	
 	
@@ -117,21 +117,21 @@ void _renderChoice(int choice)
 	{
 	case 1:
 		Text_Move(&Eye_Play, 51, 71);
-		Text_RenderSprite(&Eye_Play);
+		Text_Render(&Eye_Play,0,0);
 		Text_Move(&eyeball, 110, 78);
-		Text_RenderSprite(&eyeball);
+		Text_Render(&eyeball,0,0);
 		break;
 	case 2:
 		Text_Move(&Eye_Level, 52, 72);
-		Text_RenderSprite(&Eye_Level);
+		Text_Render(&Eye_Level,0,0);
 		Text_Move(&eyeball, 110, 73);
-		Text_RenderSprite(&eyeball);
+		Text_Render(&eyeball,0,0);
 		break;
 	case 3:
 		Text_Move(&Eye_Quit, 50, 70);
-		Text_RenderSprite(&Eye_Quit);
+		Text_Render(&Eye_Quit,0,0);
 		Text_Move(&eyeball, 125, 75);
-		Text_RenderSprite(&eyeball);
+		Text_Render(&eyeball,0,0);
 		break;
 	}
 }
