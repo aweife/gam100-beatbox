@@ -34,14 +34,12 @@ void _UpdateState();
 
 void Player_Init()
 {
-	player = (Player){
-		.direction = STAY,
-		.startPosition.x = 100, .startPosition.y = 100,
-		.startPosition.eulerX = 100.0, .startPosition.eulerY = 100.0,
-		.health = 10,
-		.playerSprite = Text_CreateSprite(),
-		.state = Normal,
-	};
+	player.direction = STAY;
+	player.startPosition.eulerX = player.startPosition.x = 95;
+	player.startPosition.eulerY = player.startPosition.y = 80;
+	player.health = 10;
+	player.playerSprite = Text_CreateSprite();
+	player.state = Normal;
 
 	Text_Init(&player.playerSprite, "..//RhythmGame//$Resources//player.txt");
 
@@ -82,9 +80,9 @@ void Player_Render()
 		break;
 	}
 	for (int i = 0; i < SPRITE_SIZE; i++)
-		if(player.playerSprite.printchar[i] == 'b')
+		if (player.playerSprite.printchar[i] == 'b')
 			player.playerSprite.printColor[i] = c;
-		else if(player.playerSprite.printchar[i] == 'B')
+		else if (player.playerSprite.printchar[i] == 'B')
 			player.playerSprite.printColor[i] = d;
 
 	Text_Render(&player.playerSprite, Map_GetShakeFactor(RIGHT) / 2, 0);
@@ -214,7 +212,7 @@ void _CheckBorder()
 	if (player.startPosition.y < Map_GetOrigin().y + 2)
 		player.startPosition.eulerY = Map_GetOrigin().y + 2;
 	if (player.endPosition.x > Map_GetEnd().x - 2)
-		player.startPosition.eulerX = Map_GetEnd().x - 1 - player.playerSprite.position[player.playerSprite.charCount - 1].x-1;
+		player.startPosition.eulerX = Map_GetEnd().x - 1 - player.playerSprite.position[player.playerSprite.charCount - 1].x - 1;
 	if (player.endPosition.y > Map_GetEnd().y - 2)
 		player.startPosition.eulerY = Map_GetEnd().y - 1 - player.playerSprite.position[player.playerSprite.charCount - 1].y;
 }
@@ -265,7 +263,7 @@ void _MovePlayer()
 
 	player.startPosition.x = (int)player.startPosition.eulerX;
 	player.startPosition.y = (int)player.startPosition.eulerY;
-	player.endPosition.x = (int)(player.startPosition.eulerX + player.playerSprite.position[player.playerSprite.charCount - 1].x+1);
+	player.endPosition.x = (int)(player.startPosition.eulerX + player.playerSprite.position[player.playerSprite.charCount - 1].x + 1);
 	player.endPosition.y = (int)(player.startPosition.eulerY + player.playerSprite.position[player.playerSprite.charCount - 1].y);
 
 	Text_Move(&player.playerSprite, player.startPosition.x, player.startPosition.y);

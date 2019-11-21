@@ -19,6 +19,7 @@ static double bpm;
 static BeatTimer kickTimer;
 static BeatTimer snareTimer;
 static BeatTimer projectileTimer;
+static int projectileDirection = 0;
 static BeatTimer warningTimer;
 static BeatTimer laserTimer;
 static BeatTimer bgmTimer;
@@ -73,7 +74,6 @@ void _CheckBeats()
 		{
 			kickTimer.updated = !kickTimer.updated;
 			kickTimer.timer = bpm;
-			Attack_FixedUpdate();
 		}
 	}
 
@@ -93,6 +93,28 @@ void _CheckBeats()
 		{
 			projectileTimer.updated = !projectileTimer.updated;
 			projectileTimer.timer = bpm;
+
+			// Choose direction to shoot
+			DIRECTION dir;
+			projectileDirection++;
+			if (projectileDirection >= 4) projectileDirection = 0;
+
+			switch (projectileDirection)
+			{
+			case 0:
+				dir = UP;
+				break;
+			case 1:
+				dir = RIGHT;
+				break;
+			case 2:
+				dir = DOWN;
+				break;
+			default:
+				dir = LEFT;
+				break;
+			}
+			Attack_SpawnProjectile(Enemy_GetEnemy()->position, dir, 5, 2000);
 		}
 	}
 
@@ -102,6 +124,7 @@ void _CheckBeats()
 		{
 			warningTimer.updated = !warningTimer.updated;
 			warningTimer.timer = bpm;
+			Attack_SpawnLaser(Enemy_GetEnemy()->position, DOWN, 150);
 		}
 	}
 
@@ -111,6 +134,7 @@ void _CheckBeats()
 		{
 			laserTimer.updated = !laserTimer.updated;
 			laserTimer.timer = bpm;
+			Attack_SpawnLaser(Enemy_GetEnemy()->position, DOWN, 150);
 		}
 	}
 

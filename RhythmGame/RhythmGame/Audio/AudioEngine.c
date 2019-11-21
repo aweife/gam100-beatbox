@@ -1,7 +1,6 @@
 #include "AudioEngine.h"
 #include "fmod.h"
 #include "fmod_errors.h"
-#include <stdbool.h>
 
 #define NUMBER_OF_SFX_TRACKS 1
 #define NUMBER_OF_CHANNELS 20
@@ -104,7 +103,7 @@ void Audio_Load(const char *path, TRACKTYPE type)
 		snareCount++;
 		break;
 	case BGM:
-		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &bgmList[bgmCount].sound);
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_LOOP_NORMAL, 0, &bgmList[bgmCount].sound);
 		bgmCount++;
 		break;
 	case SFX:
@@ -151,21 +150,24 @@ void Audio_PlayBGMWithDelay(double delay, STAGE stage)
 	switch (stage)
 	{
 	case MAINMENU:
-		currentId = 0;
+		currentId = 1;
 		break;
 	case TUTORIAL:
-		currentId = 0;
+		currentId = 1;
 		break;
 	case STAGEONE:
 		currentId = 0;
 		break;
 	}
 
-	// Kick
-	//FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &kick.dsp);
-	//FMOD_System_PlaySound(fmodSystem, kick.sound, 0, true, &kick.channel);
-	//FMOD_Channel_AddDSP(kick.channel, 0, kick.dsp);
-	//FMOD_DSP_SetActive(kick.dsp, true);
+	if (currentId == 1)
+	{
+		// Kick
+		FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &kick.dsp);
+		FMOD_System_PlaySound(fmodSystem, kick.sound, 0, true, &kick.channel);
+		FMOD_Channel_AddDSP(kick.channel, 0, kick.dsp);
+		FMOD_DSP_SetActive(kick.dsp, true);
+	}
 
 	// Snare
 	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &snareList[currentId].dsp);
@@ -178,6 +180,8 @@ void Audio_PlayBGMWithDelay(double delay, STAGE stage)
 	FMOD_System_PlaySound(fmodSystem, bgmList[currentId].sound, 0, true, &bgmList[currentId].channel);
 	FMOD_Channel_AddDSP(bgmList[currentId].channel, 0, bgmList[currentId].dsp);
 	FMOD_DSP_SetActive(bgmList[currentId].dsp, true);
+
+	if (currentId == 1) return;
 
 	// Projectile
 	FMOD_System_CreateDSPByType(fmodSystem, FMOD_DSP_TYPE_FFT, &projectileList[currentId].dsp);
@@ -232,20 +236,25 @@ void Audio_Update()
 	//if (kick.dspFFT->spectrum[0])
 	//	kick.spectrum = (double)((*(kick.dspFFT->spectrum[0]) + *(kick.dspFFT->spectrum[1])) / 2);
 	FMOD_DSP_GetParameterData(snareList[currentId].dsp, FMOD_DSP_FFT_SPECTRUMDATA, &snareList[currentId].dspFFT, 0, 0, 0);
-	if (snareList[currentId].dspFFT->spectrum[0])
-		snareList[currentId].spectrum = (double)((*(snareList[currentId].dspFFT->spectrum[0]) + *(snareList[currentId].dspFFT->spectrum[1])) / 2);
+	if (snareList[currentId].dspFFT)
+		if (snareList[currentId].dspFFT->spectrum[0])
+			snareList[currentId].spectrum = (double)((*(snareList[currentId].dspFFT->spectrum[0]) + *(snareList[currentId].dspFFT->spectrum[1])) / 2);
 	FMOD_DSP_GetParameterData(projectileList[currentId].dsp, FMOD_DSP_FFT_SPECTRUMDATA, &projectileList[currentId].dspFFT, 0, 0, 0);
-	if (projectileList[currentId].dspFFT->spectrum[0])
-		projectileList[currentId].spectrum = (double)((*(projectileList[currentId].dspFFT->spectrum[0]) + *(projectileList[currentId].dspFFT->spectrum[1])) / 2);
+	if (projectileList[currentId].dspFFT)
+		if (projectileList[currentId].dspFFT->spectrum[0])
+			projectileList[currentId].spectrum = (double)((*(projectileList[currentId].dspFFT->spectrum[0]) + *(projectileList[currentId].dspFFT->spectrum[1])) / 2);
 	FMOD_DSP_GetParameterData(warningList[currentId].dsp, FMOD_DSP_FFT_SPECTRUMDATA, &warningList[currentId].dspFFT, 0, 0, 0);
-	if (warningList[currentId].dspFFT->spectrum[0])
-		warningList[currentId].spectrum = (double)((*(warningList[currentId].dspFFT->spectrum[0]) + *(warningList[currentId].dspFFT->spectrum[1])) / 2);
+	if (warningList[currentId].dspFFT)
+		if (warningList[currentId].dspFFT->spectrum[0])
+			warningList[currentId].spectrum = (double)((*(warningList[currentId].dspFFT->spectrum[0]) + *(warningList[currentId].dspFFT->spectrum[1])) / 2);
 	FMOD_DSP_GetParameterData(laserList[currentId].dsp, FMOD_DSP_FFT_SPECTRUMDATA, &laserList[currentId].dspFFT, 0, 0, 0);
-	if (laserList[currentId].dspFFT->spectrum[0])
-		laserList[currentId].spectrum = (double)((*(laserList[currentId].dspFFT->spectrum[0]) + *(laserList[currentId].dspFFT->spectrum[1])) / 2);
+	if (laserList[currentId].dspFFT)
+		if (laserList[currentId].dspFFT->spectrum[0])
+			laserList[currentId].spectrum = (double)((*(laserList[currentId].dspFFT->spectrum[0]) + *(laserList[currentId].dspFFT->spectrum[1])) / 2);
 	FMOD_DSP_GetParameterData(bgmList[currentId].dsp, FMOD_DSP_FFT_SPECTRUMDATA, &bgmList[currentId].dspFFT, 0, 0, 0);
-	if (bgmList[currentId].dspFFT->spectrum[0])
-		bgmList[currentId].spectrum = (double)((*(bgmList[currentId].dspFFT->spectrum[0]) + *(bgmList[currentId].dspFFT->spectrum[1])) / 2);
+	if (bgmList[currentId].dspFFT)
+		if (bgmList[currentId].dspFFT->spectrum[0])
+			bgmList[currentId].spectrum = (double)((*(bgmList[currentId].dspFFT->spectrum[0]) + *(bgmList[currentId].dspFFT->spectrum[1])) / 2);
 	//_UpdateSpectrum(kick.dsp, kick.dspFFT, &kick.spectrum);
 	//_UpdateSpectrum(snare.dsp, snare.dspFFT, &snare.spectrum);
 
@@ -261,19 +270,29 @@ void Audio_Update()
 
 void Audio_Shutdown()
 {
-	// All channels stop playing and released, main system too
-	result = FMOD_System_Release(fmodSystem);
-	_CheckResult("system shutdown");
-
 	// Free sounds in memory
 	FMOD_Sound_Release(kick.sound);
 	for (int i = 0; i < snareCount; i++)
-		FMOD_Sound_Release(snareList[i].sound);
+		if (snareList[i].sound)
+			FMOD_Sound_Release(snareList[i].sound);
 	for (int i = 0; i < bgmCount; i++)
-		FMOD_Sound_Release(bgmList[i].sound);
-	_CheckResult("system shutdown");
+		if (bgmList[i].sound)
+			FMOD_Sound_Release(bgmList[i].sound);
+	for (int i = 0; i < projectileCount; i++)
+		if (projectileList[i].sound)
+			FMOD_Sound_Release(projectileList[i].sound);
+	for (int i = 0; i < warningCount; i++)
+		if (warningList[i].sound)
+			FMOD_Sound_Release(warningList[i].sound);
+	for (int i = 0; i < laserCount; i++)
+		if (laserList[i].sound)
+			FMOD_Sound_Release(laserList[i].sound);
 	for (int i = 0; i < sfxCount; i++)
-		FMOD_Sound_Release(sfxList[i]);
+		if (sfxList[i])
+			FMOD_Sound_Release(sfxList[i]);
+
+	// All channels stop playing and released, main system too
+	result = FMOD_System_Release(fmodSystem);
 	_CheckResult("system shutdown");
 }
 

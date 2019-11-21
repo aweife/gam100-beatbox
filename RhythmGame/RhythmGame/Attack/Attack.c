@@ -81,8 +81,7 @@ void Attack_Update()
 
 void Attack_FixedUpdate() // put in game.c
 {
-	_MoveLaser();
-	_MoveProjectile();
+	
 
 	// Check collision
 	_CheckProjectileBoundary();
@@ -111,6 +110,7 @@ void Attack_Render() // put in game.c
 
 void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int speed, int distance)
 {
+	_MoveProjectile();
 	// Number of projectiles in game currently
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
@@ -129,6 +129,7 @@ void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int spe
 
 void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int length)
 {
+	_MoveLaser();
 	if (lArray[0].visible) return;
 
 	lArray[0].position.x = spawnPosition.x;

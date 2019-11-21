@@ -43,6 +43,8 @@ void Map_Update()
 void Map_Render()
 {
 	_CreateStatic();
+	if (Beat_GetBeat(KICK))
+		_CreateVisualiser(2, GREEN);
 	if (Beat_GetBeat(PROJECTILE))
 		_CreateVisualiser(2, GREEN);
 	if (Beat_GetBeat(SNARE))

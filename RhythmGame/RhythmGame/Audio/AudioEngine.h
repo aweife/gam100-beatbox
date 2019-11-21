@@ -1,6 +1,7 @@
 #pragma once
 
-#define SILENCE_FACTOR 0.8
+#include <stdbool.h>
+#define SILENCE_FACTOR 0.5
 
 typedef enum TRACKTYPE
 {

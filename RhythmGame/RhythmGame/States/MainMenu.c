@@ -31,7 +31,7 @@ void MainMenu_ProcessInput()
 		StateMachine_ChangeState(State_Game);
 	if (GetAsyncKeyState(VK_RETURN))
 		StateMachine_ChangeState(State_Tutorial);
-}
+
 
 	if (GetAsyncKeyState(VK_LEFT) && keyDown == 0)
 		choice--;
@@ -81,8 +81,6 @@ void MainMenu_Render()
 //*********************************************************************************
 void MainMenu_EnterState()
 {
-	/*logo = Text_CreateSprite();
-	Text_Init(&logo, "..//RhythmGame//$Resources//logo2.txt");*/
 	robot = Text_CreateSprite();
 	Text_Init(&robot, "..//RhythmGame//$Resources//Robot.txt");
 	Eye_Play = Text_CreateSprite();
@@ -93,8 +91,6 @@ void MainMenu_EnterState()
 	Text_Init(&Eye_Level, "..//RhythmGame//$Resources//Eye_Level.txt");
 	Eye_Quit = Text_CreateSprite();
 	Text_Init(&Eye_Quit, "..//RhythmGame//$Resources//Eye_Quit.txt");
-	//UI_Init();
-	
 }
 
 void MainMenu_ExitState()

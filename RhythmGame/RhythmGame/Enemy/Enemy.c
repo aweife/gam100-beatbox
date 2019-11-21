@@ -33,7 +33,10 @@ void _decideEnemyMove(int seed);
 void Enemy_Init()
 {
 	// Initialise skull enemy
-	skullEnemy = (Enemy) {.position.x = 45, .position.y = 45, .enemySprite = Text_CreateSprite(),};
+	skullEnemy.position.x = 90;
+	skullEnemy.position.y = 40;
+	skullEnemy.enemySprite = Text_CreateSprite(),
+
 	_decideEnemyMove(1);
 	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
 	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
@@ -79,9 +82,6 @@ void _spawnProjectile()
 	BPMProjSpawnTime++;
 	if (BPMProjSpawnTime <= 3) return;
 	BPMProjSpawnTime = 0;
-	
-	Attack_SpawnProjectile(skullEnemy.position, LEFT, 5, 2000);
-	Attack_SpawnLaser(skullEnemy.position, DOWN, 100);
 }
 
 void _updateEnemy()
