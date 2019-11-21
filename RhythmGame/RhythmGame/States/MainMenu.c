@@ -28,9 +28,10 @@ void MainMenu_ProcessInput()
 		Game_Exit();
 
 	if (GetAsyncKeyState(VK_SPACE))
-	{
-		_confirmChoice(choice);
-	}
+		StateMachine_ChangeState(State_Game);
+	if (GetAsyncKeyState(VK_RETURN))
+		StateMachine_ChangeState(State_Tutorial);
+}
 
 	if (GetAsyncKeyState(VK_LEFT) && keyDown == 0)
 		choice--;
