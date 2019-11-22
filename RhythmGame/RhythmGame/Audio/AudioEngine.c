@@ -78,8 +78,8 @@ void Audio_Init()
 	// Kick
 	Audio_Load("../RhythmGame//$Resources//Kick.wav", KICK);
 	// Snare
-	Audio_Load("..//RhythmGame//$Resources//Snare.wav", SNARE);
 	Audio_Load("..//RhythmGame//$Resources//Snare1.wav", SNARE);
+	Audio_Load("..//RhythmGame//$Resources//Snare.wav", SNARE);
 	// Melody
 	Audio_Load("..//RhythmGame//$Resources//Melody1.wav", BGM);
 	Audio_Load("..//RhythmGame//$Resources//Melody.wav", BGM);
