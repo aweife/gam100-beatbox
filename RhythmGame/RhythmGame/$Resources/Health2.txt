@@ -1,6 +1,6 @@
    R   R  
-  RRR RWR 
-  RRRRWRR
+  RRR RwR 
+  RRRRwRR
   RRRRRRR 
    RRRRR  
     RRR   

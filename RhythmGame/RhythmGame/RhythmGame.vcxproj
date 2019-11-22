@@ -64,11 +64,13 @@
     <Text Include="$Resources\Beatbar.txt" />
     <Text Include="$Resources\Health.txt" />
     <Text Include="$Resources\Health2.txt" />
+    <Text Include="$Resources\laser.txt" />
     <Text Include="$Resources\Logo.txt" />
     <Text Include="$Resources\Logo2.txt" />
     <Text Include="$Resources\Logo2.txt.txt" />
     <Text Include="$Resources\MainMenu.txt" />
     <Text Include="$Resources\player.txt" />
+    <Text Include="$Resources\projectile.txt" />
     <Text Include="$Resources\skull.txt" />
     <Text Include="$Resources\TestLogo.txt" />
   </ItemGroup>

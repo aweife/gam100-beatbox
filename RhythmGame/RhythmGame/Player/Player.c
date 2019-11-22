@@ -74,6 +74,11 @@ void Player_Render()
 		c = RED;
 		d = DARKRED;
 		break;
+	case Dash:
+	case ExDash:
+		c = CYAN;
+		d = DARKCYAN;
+		break;
 	default:
 		c = BLUE;
 		d = DARKBLUE;

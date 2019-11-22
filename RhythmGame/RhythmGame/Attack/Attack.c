@@ -61,13 +61,15 @@ void Attack_Init()
 	// Make all projectiles available for use
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
-		pArray[i].debugChar = 'P';
+		pArray[i].projectileSprite = Text_CreateSprite();
+		Text_Init(&pArray[i].projectileSprite, "..//RhythmGame//$Resources//projectile.txt");
 	}
 
 	// Make all projectiles available for lArray[0].available = true;
 	for (int i = 0; i < LENGTH_OF_LASER; i++)
 	{
-		lArray[i].debugChar = 'L';
+		lArray[i].projectileSprite = Text_CreateSprite();
+		Text_Init(&lArray[i].projectileSprite, "..//RhythmGame//$Resources//laser.txt");
 	}
 }
 
@@ -81,7 +83,7 @@ void Attack_Update()
 
 void Attack_FixedUpdate() // put in game.c
 {
-	
+
 
 	// Check collision
 	_CheckProjectileBoundary();
@@ -94,7 +96,7 @@ void Attack_Render() // put in game.c
 	{
 		//Print out projectile
 		if (pArray[i].visible)
-			Console_SetRenderBuffer_Char(pArray[i].position.x, pArray[i].position.y, pArray[i].debugChar);
+			Text_Render(&pArray[i].projectileSprite, 0, 0);
 	}
 
 	if (lCount > 0)
@@ -103,7 +105,7 @@ void Attack_Render() // put in game.c
 		{
 			if (!lArray[i].visible) return;
 			//Print out projectile
-			Console_SetRenderBuffer_Char(lArray[i].position.x, lArray[i].position.y, lArray[i].debugChar);
+			Text_Render(&lArray[i].projectileSprite, 0, 0);
 		}
 	}
 }
@@ -172,6 +174,7 @@ void _MoveProjectile()
 				pArray[i].position.y += pArray[i].speed;
 			}
 		}
+		Text_Move(&pArray[i].projectileSprite, pArray[i].position.x, pArray[i].position.y);
 	}
 }
 
@@ -205,6 +208,7 @@ void _MoveLaser()
 			lArray[i].position.x = lArray[i - 1].position.x + 1;
 			break;
 		}
+		Text_Move(&lArray[i].projectileSprite, lArray[i].position.x, lArray[i].position.y);
 	}
 
 	lCount += laserSpeed;
@@ -243,7 +247,7 @@ void _CheckLaserBoundary()
 		lArray[lCount - 1].distanceToTravel < 0)
 	{
 		_ClearLaser();
-	}	
+	}
 }
 
 void _CheckPlayerCollisionWithEnemy()
@@ -265,7 +269,7 @@ void _CheckPlayerCollisionWithEnemy()
 			}
 		}
 	}
-	else if(Player_GetState() == Normal)
+	else if (Player_GetState() == Normal)
 	{
 		// Enemy itself
 		for (int j = 0; j < player->playerSprite.charCount; j++)
