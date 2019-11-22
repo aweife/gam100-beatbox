@@ -140,6 +140,9 @@
     </Text>
     <Text Include="$Resources\DialogueMovePlayer.txt" />
     <Text Include="$Resources\DialogueDashAttack.txt" />
+    <Text Include="$Resources\DialogueDodgeEnemy.txt" />
+    <Text Include="$Resources\DialogueEndTutorial.txt" />
+    <Text Include="$Resources\DialogueMoveToGame.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$Resources\Kick.wav">

@@ -58,7 +58,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="$Resources\DialogueDashAttack.txt" />
+    <Text Include="$Resources\DialogueDodgeEnemy.txt" />
+    <Text Include="$Resources\DialogueEndTutorial.txt" />
     <Text Include="$Resources\DialogueMovePlayer.txt" />
+    <Text Include="$Resources\DialogueMoveToGame.txt" />
     <Text Include="$Resources\Logo.txt" />
     <Text Include="$Resources\Logo2.txt.txt" />
     <Text Include="$Resources\skull.txt" />
