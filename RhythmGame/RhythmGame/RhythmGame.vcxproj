@@ -189,6 +189,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>fmodL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)RhythmGame\Audio\Fmod\core\lib\x64</AdditionalLibraryDirectories>
+      <StackReserveSize>4194304 </StackReserveSize>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(SolutionDir)RhythmGame\Audio\Fmod\core\lib\x64\fmodL.dll" "$(OutDir)"</Command>

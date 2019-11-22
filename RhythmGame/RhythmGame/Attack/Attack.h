@@ -25,6 +25,7 @@ extern void Attack_FixedUpdate();
 extern void Attack_Render();
 extern void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int speed, int distance);
 extern void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int length);
+extern void Attack_Cleanup();
 //void Attack_spawnClusterBomb();
 //void Attack_updateClusterBomb();
 

@@ -28,7 +28,7 @@ void Game_EnterState()
 	GameUI_Init();
 
 	// Play the music for stage one
-	Audio_PlayBGMWithDelay(0.01, STAGEONE);
+	Audio_PlayBGMWithDelay(0.0, STAGEONE);
 	Audio_SetBGMVolume(SILENCE_FACTOR, SNARE);
 	Audio_SetBGMVolume(SILENCE_FACTOR, PROJECTILE);
 	Audio_SetBGMVolume(SILENCE_FACTOR, WARNING);
@@ -38,7 +38,7 @@ void Game_EnterState()
 
 void Game_ExitState()
 {
-
+	Attack_Cleanup();
 }
 
 int spaceDown = false;

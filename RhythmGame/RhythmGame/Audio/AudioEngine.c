@@ -3,7 +3,7 @@
 #include "fmod_errors.h"
 
 #define NUMBER_OF_SFX_TRACKS 1
-#define NUMBER_OF_CHANNELS 20
+#define NUMBER_OF_CHANNELS 1024
 
 typedef struct track
 {
@@ -78,8 +78,8 @@ void Audio_Init()
 	// Kick
 	Audio_Load("../RhythmGame//$Resources//Kick.wav", KICK);
 	// Snare
-	Audio_Load("..//RhythmGame//$Resources//Snare1.wav", SNARE);
 	Audio_Load("..//RhythmGame//$Resources//Snare.wav", SNARE);
+	Audio_Load("..//RhythmGame//$Resources//Snare1.wav", SNARE);
 	// Melody
 	Audio_Load("..//RhythmGame//$Resources//Melody1.wav", BGM);
 	Audio_Load("..//RhythmGame//$Resources//Melody.wav", BGM);
@@ -103,11 +103,11 @@ void Audio_Load(const char *path, TRACKTYPE type)
 		snareCount++;
 		break;
 	case BGM:
-		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_LOOP_NORMAL, 0, &bgmList[bgmCount].sound);
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &bgmList[bgmCount].sound);
 		bgmCount++;
 		break;
 	case SFX:
-		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_LOOP_NORMAL, 0, &sfxList[sfxCount]);
+		result = FMOD_System_CreateSound(fmodSystem, path, FMOD_DEFAULT, 0, &sfxList[sfxCount]);
 		sfxCount++;
 		break;
 	case PROJECTILE:

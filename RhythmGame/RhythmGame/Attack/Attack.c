@@ -5,16 +5,17 @@
 #include "../Player/Player.h"
 #include "../Console/Console.h"
 #include "../Enemy/Enemy.h"
+#include <stdlib.h>
 
 //Game Input
 //Game Time
 //int BPMProjSpawnTime;
 
 //Only stores 100 values
-Projectile pArray[NUMBER_OF_PROJECTILE] = { 0 };
+Projectile *pArray;
 // Keep tracks of how many projectiles are currently in use
 // then we update all in-use projectiles
-Projectile lArray[LENGTH_OF_LASER] = { 0 };
+Projectile *lArray;
 int lCount = 0;
 int laserSpeed = 10;
 
@@ -58,6 +59,9 @@ void _chooseAttack() //to be in enemy.c
 
 void Attack_Init()
 {
+	pArray = (Projectile*)malloc(sizeof(Projectile) * NUMBER_OF_PROJECTILE);
+	lArray = (Projectile *)malloc(sizeof(Projectile) * LENGTH_OF_LASER);
+
 	// Make all projectiles available for use
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
@@ -140,6 +144,12 @@ void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int length)
 	lArray[0].visible = true;
 	lArray[0].distanceToTravel = length;
 	lCount = 1;
+}
+
+void Attack_Cleanup()
+{
+	free(pArray);
+	free(lArray);
 }
 
 void _MoveProjectile()
