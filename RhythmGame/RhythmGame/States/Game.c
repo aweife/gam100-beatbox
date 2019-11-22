@@ -29,7 +29,7 @@ void Game_EnterState()
 	GameUI_Init();
 
 	// Play the music for stage one
-	Audio_PlayBGMWithDelay(0.00001, STAGEONE);
+	Audio_PlayBGMWithDelay(0.000001, STAGEONE);
 	Audio_SetBGMVolume(SILENCE_FACTOR, SNARE);
 	Audio_SetBGMVolume(SILENCE_FACTOR, PROJECTILE);
 	Audio_SetBGMVolume(SILENCE_FACTOR, WARNING);
@@ -96,10 +96,10 @@ void Game_Update()
 
 void Game_Render()
 {
-	Enemy_Render();
 	Player_Render();
 	Map_Render();
 	Attack_Render();
+	Enemy_Render();
 	GameUI_Render();
 }
 

@@ -103,7 +103,7 @@ void Player_CheckGameOver()
 	if (player.health == 0)
 	{
 		StateMachine_ChangeState(State_GameOver);
-		Audio_Shutdown();
+		Audio_FadeOutBGM(1000.0);
 	}
 }
 

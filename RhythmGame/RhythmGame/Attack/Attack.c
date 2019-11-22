@@ -75,6 +75,7 @@ void Attack_Init()
 		lArray[i].projectileSprite = Text_CreateSprite();
 		Text_Init(&lArray[i].projectileSprite, "..//RhythmGame//$Resources//laser.txt");
 	}
+	lArray[0].visible = false;
 }
 
 void Attack_Update()
@@ -122,8 +123,8 @@ void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int spe
 	{
 		if (!pArray[i].visible)
 		{
-			pArray[i].position.x = spawnPosition.x;
-			pArray[i].position.y = spawnPosition.y;
+			pArray[i].position.x = spawnPosition.x+9;
+			pArray[i].position.y = spawnPosition.y+5;
 			pArray[i].visible = true;
 			pArray[i].direction = direction;
 			pArray[i].speed = speed;
@@ -138,8 +139,8 @@ void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int length)
 	_MoveLaser();
 	if (lArray[0].visible) return;
 
-	lArray[0].position.x = spawnPosition.x;
-	lArray[0].position.y = spawnPosition.y;
+	lArray[0].position.x = spawnPosition.x + 9;
+	lArray[0].position.y = spawnPosition.y + 8;
 	lArray[0].direction = direction;
 	lArray[0].visible = true;
 	lArray[0].distanceToTravel = length;
@@ -156,9 +157,9 @@ void _MoveProjectile()
 {
 	if (!enemy) return;
 
-	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
-		if (!pArray[i].visible)
-			pArray[i].position = enemy->enemySprite.origin;
+	//for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
+	//	if (!pArray[i].visible)
+	//		pArray[i].position = enemy->enemySprite.origin;
 
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
@@ -199,7 +200,7 @@ void _MoveLaser()
 
 	for (int i = lCount; i < lCount + laserSpeed; i++)
 	{
-		if (lArray[i].distanceToTravel < 0) return;
+		if (lArray[i-1].distanceToTravel < 0) return;
 		lArray[i] = lArray[i - 1];
 		lArray[i].distanceToTravel = lArray[i - 1].distanceToTravel - 1;
 
@@ -208,8 +209,8 @@ void _MoveLaser()
 		case UP:
 			lArray[i].position.y = lArray[i - 1].position.y - 1;
 			break;
-		case DOWN:
-			lArray[i].position.y = lArray[i - 1].position.y + 1;
+		default:
+			lArray[i].position.y = lArray[i-1].position.y + 1;
 			break;
 		case LEFT:
 			lArray[i].position.x = lArray[i - 1].position.x - 1;
@@ -218,6 +219,7 @@ void _MoveLaser()
 			lArray[i].position.x = lArray[i - 1].position.x + 1;
 			break;
 		}
+
 		Text_Move(&lArray[i].projectileSprite, lArray[i].position.x, lArray[i].position.y);
 	}
 

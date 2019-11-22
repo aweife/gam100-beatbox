@@ -143,7 +143,7 @@ void Tutorial_Render()
 		Player_Render();
 
 		// For 20 seconds
-		if (tutorialDuration >= 0.0 && tutorialDuration <= 2000.0)
+		if (tutorialDuration >= 0.0 && tutorialDuration <= 20000.0)
 		{
 			if (!startTutorial)
 				Audio_PlayBGMWithDelay(0.001, TUTORIAL);
@@ -151,10 +151,10 @@ void Tutorial_Render()
 			Text_RenderWords(&Dialogue1, 0, 0);
 		}
 		// For 15 seconds
-		else if (tutorialDuration > 2000.0 && tutorialDuration <= 3500.0) {
+		else if (tutorialDuration > 20000.0 && tutorialDuration <= 35000.0) {
 			Text_RenderWords(&Dialogue2, 0, 0);
 		}
-		else if (tutorialDuration > 3500.0 && tutorialDuration <= 5000.0) {
+		else if (tutorialDuration > 35000.0 && tutorialDuration <= 50000.0) {
 			Text_RenderWords(&Dialogue3, 0, 0);
 			if (!spawnEnemy)
 				Enemy_Init();
@@ -162,7 +162,7 @@ void Tutorial_Render()
 			Enemy_Render();
 			Attack_Render();
 		}
-		else if (tutorialDuration > 5000.0) {
+		else if (tutorialDuration > 50000.0) {
 			if (!startGame)
 				
 			startGame = true;

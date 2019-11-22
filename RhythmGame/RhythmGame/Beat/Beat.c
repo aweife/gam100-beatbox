@@ -124,7 +124,7 @@ void _CheckBeats()
 		{
 			warningTimer.updated = !warningTimer.updated;
 			warningTimer.timer = bpm;
-			Attack_SpawnLaser(Enemy_GetEnemy()->position, DOWN, 150);
+			Attack_SpawnLaser(Enemy_GetEnemy()->position, DOWN, 200);
 		}
 	}
 
@@ -134,7 +134,7 @@ void _CheckBeats()
 		{
 			laserTimer.updated = !laserTimer.updated;
 			laserTimer.timer = bpm;
-			Attack_SpawnLaser(Enemy_GetEnemy()->position, DOWN, 150);
+			Attack_SpawnLaser(Enemy_GetEnemy()->position, DOWN, 200);
 		}
 	}
 
