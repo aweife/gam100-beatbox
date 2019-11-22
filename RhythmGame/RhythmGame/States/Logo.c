@@ -48,5 +48,5 @@ extern void Logo_Update()
 
 extern void Logo_Render()
 {
-	Text_Render(&Logo.LogoSprite, 0, 0);
+	Text_RenderWords(&Logo.LogoSprite);
 }

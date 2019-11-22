@@ -198,6 +198,16 @@ void _Readandstoretext(sprite *s, const char *path)
 	}
 }
 
+void Text_RenderWords(sprite* s)
+{
+	for (int i = 0; i < SPRITE_SIZE; i++)
+	{
+		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y), s->printchar[i], fWHITE);
+		if (s->printchar[i] == '\0')
+			break;
+	}
+	Console_SetRenderBuffer_CharColor((s->position[0].x) + s->origin.x, (s->position[0].y + s->origin.y), s->printchar[0], WHITE);
+}
 
 void _ReadandstoretextArray(sprite *s, const char *path)
 {

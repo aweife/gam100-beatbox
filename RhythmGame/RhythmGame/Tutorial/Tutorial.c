@@ -129,12 +129,12 @@ void Tutorial_Render()
 {
 	if (currentIntro == 0)
 	{
-		Text_Render(&Intro1, 0, 0);
+		Text_RenderWords(&Intro1, 0, 0);
 	}
 
 	if (currentIntro == 1)
 	{
-		Text_Render(&Intro2, 0, 0);
+		Text_RenderWords(&Intro2, 0, 0);
 	}
 
 	if (currentIntro == 2)
@@ -148,14 +148,14 @@ void Tutorial_Render()
 			if (!startTutorial)
 				Audio_PlayBGMWithDelay(0.001, TUTORIAL);
 			startTutorial = true;
-			Text_Render(&Dialogue1, 0, 0);
+			Text_RenderWords(&Dialogue1, 0, 0);
 		}
 		// For 15 seconds
 		else if (tutorialDuration > 2000.0 && tutorialDuration <= 3500.0) {
-			Text_Render(&Dialogue2, 0, 0);
+			Text_RenderWords(&Dialogue2, 0, 0);
 		}
 		else if (tutorialDuration > 3500.0 && tutorialDuration <= 5000.0) {
-			Text_Render(&Dialogue3, 0, 0);
+			Text_RenderWords(&Dialogue3, 0, 0);
 			if (!spawnEnemy)
 				Enemy_Init();
 			spawnEnemy = true;
@@ -166,7 +166,7 @@ void Tutorial_Render()
 			if (!startGame)
 				
 			startGame = true;
-			Text_Render(&Dialogue5, 0, 0);
+			Text_RenderWords(&Dialogue5, 0, 0);
 		}
 	}
 }
