@@ -6,6 +6,7 @@
 #include "../States/StateMachine.h"
 #include "../Clock/Clock.h"
 #include "../UI/GameUI.h"
+#include "../Audio/AudioEngine.h"
 
 static Player player;
 static double factor;
@@ -95,6 +96,15 @@ void Player_Render()
 	Console_SetRenderBuffer_CharColor(player.startPosition.x, player.startPosition.y, '+', CYAN);
 	// Debug endposition
 	Console_SetRenderBuffer_CharColor(player.endPosition.x, player.endPosition.y, '+', CYAN);
+}
+
+void Player_CheckGameOver()
+{
+	if (player.health == 0)
+	{
+		StateMachine_ChangeState(State_GameOver);
+		Audio_Shutdown();
+	}
 }
 
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)

@@ -36,6 +36,9 @@ extern void Player_Update();
 // Renders the player location
 extern void Player_Render();
 
+// Checks if player's life is 0
+extern void Player_CheckGameOver();
+
 // Allows player to dash
 extern void Player_Dash();
 
@@ -50,6 +53,9 @@ extern double Player_GetEaseFactor();
 
 // Returns direction of player
 extern int Player_GetDirection();
+
+// Returns health of player
+extern int Player_GetHealth();
 
 // Returns sprite of player
 extern Player *Player_GetPlayer();
