@@ -10,6 +10,7 @@
 #include "../Attack/Attack.h"
 #include "../Random/Random.h"
 #include "../UI/GameUI.h"
+#include "../States/StateMachine.h"
 
 static int reqExit = 0;
 
@@ -90,6 +91,7 @@ void Game_Update()
 	Beat_Update();
 	GameUI_Update();
 	Attack_FixedUpdate();
+	Player_CheckGameOver();
 }
 
 void Game_Render()
