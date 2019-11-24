@@ -59,14 +59,16 @@ void _chooseAttack() //to be in enemy.c
 
 void Attack_Init()
 {
-	pArray = (Projectile*)malloc(sizeof(Projectile) * NUMBER_OF_PROJECTILE);
+	pArray = (Projectile *)malloc(sizeof(Projectile) * NUMBER_OF_PROJECTILE);
 	lArray = (Projectile *)malloc(sizeof(Projectile) * LENGTH_OF_LASER);
 
 	// Make all projectiles available for use
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
+		pArray[i].visible = false;
 		pArray[i].projectileSprite = Text_CreateSprite();
 		Text_Init(&pArray[i].projectileSprite, "..//RhythmGame//$Resources//projectile.txt");
+		
 	}
 
 	// Make all projectiles available for lArray[0].available = true;
@@ -84,15 +86,16 @@ void Attack_Update()
 	enemy = Enemy_GetEnemy();
 	player = Player_GetPlayer();
 	_CheckPlayerCollisionWithEnemy();
+	// Check collision
+	_CheckProjectileBoundary();
+	_CheckLaserBoundary();
 }
 
 void Attack_FixedUpdate() // put in game.c
 {
 
 
-	// Check collision
-	_CheckProjectileBoundary();
-	_CheckLaserBoundary();
+
 }
 
 void Attack_Render() // put in game.c
@@ -123,13 +126,13 @@ void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int spe
 	{
 		if (!pArray[i].visible)
 		{
-			pArray[i].position.x = spawnPosition.x+9;
-			pArray[i].position.y = spawnPosition.y+5;
+			pArray[i].position.x = spawnPosition.x + 9;
+			pArray[i].position.y = spawnPosition.y + 5;
 			pArray[i].visible = true;
 			pArray[i].direction = direction;
 			pArray[i].speed = speed;
 			pArray[i].distanceToTravel = distance;
-			break;
+			return;
 		}
 	}
 }
@@ -163,7 +166,7 @@ void _MoveProjectile()
 
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
-		if (pArray[i].distanceToTravel > 0)
+		if (pArray[i].distanceToTravel > 0 && pArray[i].visible)
 		{
 			pArray[i].distanceToTravel -= pArray[i].speed;
 
@@ -178,11 +181,9 @@ void _MoveProjectile()
 			case RIGHT:
 				pArray[i].position.x += pArray[i].speed;
 				break;
-			case LEFT:
-				pArray[i].position.x -= pArray[i].speed;
+		      	case LEFT:
+  				pArray[i].position.x -= pArray[i].speed;
 				break;
-			default:
-				pArray[i].position.y += pArray[i].speed;
 			}
 		}
 		Text_Move(&pArray[i].projectileSprite, pArray[i].position.x, pArray[i].position.y);
@@ -200,7 +201,7 @@ void _MoveLaser()
 
 	for (int i = lCount; i < lCount + laserSpeed; i++)
 	{
-		if (lArray[i-1].distanceToTravel < 0) return;
+		if (lArray[i - 1].distanceToTravel < 0) return;
 		lArray[i] = lArray[i - 1];
 		lArray[i].distanceToTravel = lArray[i - 1].distanceToTravel - 1;
 
@@ -210,7 +211,7 @@ void _MoveLaser()
 			lArray[i].position.y = lArray[i - 1].position.y - 1;
 			break;
 		default:
-			lArray[i].position.y = lArray[i-1].position.y + 1;
+			lArray[i].position.y = lArray[i - 1].position.y + 1;
 			break;
 		case LEFT:
 			lArray[i].position.x = lArray[i - 1].position.x - 1;
@@ -239,8 +240,10 @@ void _CheckProjectileBoundary()
 	//Collision of Projectile to Boundary
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
-		if (pArray[i].position.x > GAME_WIDTH - MAP_OFFSET || pArray[i].position.y > GAME_HEIGHT - MAP_OFFSET ||
-			pArray[i].position.x < MAP_OFFSET || pArray[i].position.y < MAP_OFFSET)
+		if (pArray[i].position.x < Map_GetOrigin().x ||
+			pArray[i].position.y < Map_GetOrigin().y ||
+			pArray[i].position.x > Map_GetEnd().x ||
+			pArray[i].position.y > Map_GetEnd().y)
 		{
 			//Hide away projectiles
 			pArray[i].visible = false;

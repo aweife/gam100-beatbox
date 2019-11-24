@@ -99,22 +99,31 @@ void _CheckBeats()
 			projectileDirection++;
 			if (projectileDirection >= 4) projectileDirection = 0;
 
+			// Calculate distance to travel
+			Vector2d currentPosition = Enemy_GetEnemy()->position;
+			int distanceToTravel = 0;
+
 			switch (projectileDirection)
 			{
 			case 0:
 				dir = UP;
+				//distanceToTravel = currentPosition.y - Map_GetOrigin().y;
 				break;
 			case 1:
 				dir = RIGHT;
+				//distanceToTravel = Map_GetEnd().x - currentPosition.x;
 				break;
-			case 2:
-				dir = DOWN;
-				break;
+			//case 2:
+				//dir = DOWN;
+				//distanceToTravel = Map_GetEnd().y - currentPosition.y;
+				//	break;
 			default:
 				dir = LEFT;
+				//distanceToTravel = currentPosition.x - Map_GetOrigin().x;
 				break;
 			}
-			Attack_SpawnProjectile(Enemy_GetEnemy()->position, dir, 5, 2000);
+			
+			Attack_SpawnProjectile(currentPosition, dir, 5, 300);
 		}
 	}
 

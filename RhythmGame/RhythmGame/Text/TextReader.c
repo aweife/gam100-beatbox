@@ -137,8 +137,6 @@ void _Readandstoretext(sprite *s, const char *path)
 
 			}
 
-			printf("%d\n", charcount);
-
 			for (int i = 0; i < charcount; i++)
 			{
 				if (Charline[i] != ' ' && Charline[i] != '0')
