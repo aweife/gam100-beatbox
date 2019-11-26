@@ -1,12 +1,25 @@
 #pragma once
 
+#include <stdbool.h>
+#define SILENCE_FACTOR 0.5
+
 typedef enum TRACKTYPE
 {
 	KICK,
 	SNARE,
 	BGM,
 	SFX,
+	PROJECTILE,
+	LASER,
+	WARNING,
+	CLUSTER,
 } TRACKTYPE;
+
+typedef enum STAGE {
+	MAINMENU,
+	TUTORIAL,
+	STAGEONE
+} STAGE;
 
 /* Call these functions only *************************************************/
 
@@ -20,7 +33,7 @@ extern void Audio_Load(const char *path, TRACKTYPE type);
 extern void Audio_PlayOneShot(int id, float volume);
 
 // Play a BGM (provide its magic number/delay)
-extern void Audio_PlayBGMWithDelay(int id, double delay);
+extern void Audio_PlayBGMWithDelay(double delay, STAGE stage);
 
 // Fade out the BGM
 extern void Audio_FadeOutBGM(double time);

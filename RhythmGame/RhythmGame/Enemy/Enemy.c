@@ -3,6 +3,7 @@
 #include "../Clock/Clock.h"
 #include "../Global.h"
 #include "../Map/Map.h"
+#include "../Console/Console.h"
 
 //Game Input
 int randEnMove = 0;
@@ -32,9 +33,13 @@ void _decideEnemyMove(int seed);
 void Enemy_Init()
 {
 	// Initialise skull enemy
-	skullEnemy = (Enemy) {.position.x = 45, .position.y = 45, .enemySprite = Text_CreateSprite(),};
+	skullEnemy.position.x = 90;
+	skullEnemy.position.y = 40;
+	skullEnemy.enemySprite = Text_CreateSprite(),
+
 	_decideEnemyMove(1);
 	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
+	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
 }
 
 void Enemy_FixedUpdate()
@@ -49,7 +54,10 @@ void Enemy_FixedUpdate()
 void Enemy_Render()
 {
 	//ASCI ENEMY
-	Text_Render(&skullEnemy.enemySprite);
+	Text_Render(&skullEnemy.enemySprite, 0, Map_GetShakeFactor(UP)/2);
+
+	// Debug origin point
+	Console_SetRenderBuffer_CharColor(skullEnemy.position.x, skullEnemy.position.y, '+', CYAN);
 
 	//for (int i = 0; i < pCount; i++)
 	//{
@@ -64,9 +72,9 @@ void Enemy_Render()
 	//Console_SetRenderBuffer_Char(EnX, EnY, 'E');
 }
 
-sprite *Enemy_GetEnemy()
+Enemy *Enemy_GetEnemy()
 {
-	return &skullEnemy.enemySprite;
+	return &skullEnemy;
 }
 
 void _spawnProjectile()
@@ -74,8 +82,6 @@ void _spawnProjectile()
 	BPMProjSpawnTime++;
 	if (BPMProjSpawnTime <= 3) return;
 	BPMProjSpawnTime = 0;
-	
-	Attack_SpawnProjectile(skullEnemy.position, DOWN, 5, 100);
 }
 
 void _updateEnemy()
@@ -150,40 +156,40 @@ void _decideEnemyMove(int seed)
 	switch (seed)
 	{
 	case 1: 
-		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6);
-		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6);
+		skullEnemy.newPosition.x = Map_GetOrigin().x + ((Map_GetEnd().x - Map_GetOrigin().x) / 6);
+		skullEnemy.newPosition.y = Map_GetOrigin().y + ((Map_GetEnd().y - Map_GetOrigin().y)/ 6);
 		break;
 	case 2:
-		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 3;
-		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6);
+		skullEnemy.newPosition.x = Map_GetOrigin().x + ((Map_GetEnd().x - Map_GetOrigin().x) / 6) * 3;
+		skullEnemy.newPosition.y = Map_GetOrigin().y + ((Map_GetEnd().y - Map_GetOrigin().y) / 6);
 		break;
 	case 3:
-		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 5;
-		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6);
+		skullEnemy.newPosition.x = Map_GetOrigin().x + ((Map_GetEnd().x - Map_GetOrigin().x) / 6) * 5;
+		skullEnemy.newPosition.y = Map_GetOrigin().y + ((Map_GetEnd().y - Map_GetOrigin().y) / 6);
 		break;
 	case 4:
-		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6);
-		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 3;
+		skullEnemy.newPosition.x = Map_GetOrigin().x + ((Map_GetEnd().x - Map_GetOrigin().x) / 6) / 6;
+		skullEnemy.newPosition.y = Map_GetOrigin().y + ((Map_GetEnd().y - Map_GetOrigin().y) / 6) * 3;
 		break;
 	case 5:
-		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 3;
-		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 3;
+		skullEnemy.newPosition.x = Map_GetOrigin().x + ((Map_GetEnd().x - Map_GetOrigin().x) / 6) * 3;
+		skullEnemy.newPosition.y = Map_GetOrigin().y + ((Map_GetEnd().y - Map_GetOrigin().y) / 6) * 3;
 		break;
 	case 6:
-		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 5;
-		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 3;
+		skullEnemy.newPosition.x = Map_GetOrigin().x + ((Map_GetEnd().x - Map_GetOrigin().x) / 6) * 5;
+		skullEnemy.newPosition.y = Map_GetOrigin().y + ((Map_GetEnd().y - Map_GetOrigin().y) / 6) * 3;
 		break;
 	case 7:
-		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6);
-		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 5;
+		skullEnemy.newPosition.x = Map_GetOrigin().x + ((Map_GetEnd().x - Map_GetOrigin().x) / 6) / 6;
+		skullEnemy.newPosition.y = Map_GetOrigin().y + ((Map_GetEnd().y - Map_GetOrigin().y) / 6) * 5;
 		break;
 	case 8:
-		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 3;
-		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 5;
+		skullEnemy.newPosition.x = Map_GetOrigin().x + ((Map_GetEnd().x - Map_GetOrigin().x) / 6) * 3;
+		skullEnemy.newPosition.y = Map_GetOrigin().y + ((Map_GetEnd().y - Map_GetOrigin().y) / 6) * 5;
 		break;
 	case 9:
-		skullEnemy.newPosition.x = MAP_OFFSET + ((GAME_WIDTH - 2 * MAP_OFFSET) / 6) * 5;
-		skullEnemy.newPosition.y = MAP_OFFSET + ((GAME_HEIGHT - 2 * MAP_OFFSET) / 6) * 5;
+		skullEnemy.newPosition.x = Map_GetOrigin().x + ((Map_GetEnd().x - Map_GetOrigin().x) / 6) * 5;
+		skullEnemy.newPosition.y = Map_GetOrigin().y + ((Map_GetEnd().y - Map_GetOrigin().y) / 6) * 5;
 		break;
 	}
 }

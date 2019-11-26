@@ -1,6 +1,6 @@
 #pragma once
 
-#define SPRITE_SIZE 4000
+#define SPRITE_SIZE 4600
 #include "../Global.h"
 
 typedef struct sprite
@@ -12,14 +12,16 @@ typedef struct sprite
 	int charCount;
 }sprite;
 
-//initialise for skullenemy
+//initialise sprite
 void Text_Init(sprite* s, char* path);
+//Initialise sprite with array
+void Text_InitArray(sprite* s, char* path);
 
 //creates a skullenemy
 sprite Text_CreateSprite();
 
 //Renders enemy
-void Text_Render(sprite *s);
+void Text_Render(sprite *s, int offsetX, int offsetY);
 
 // Set enemy position
 void Text_Move(sprite *s, int x, int y);
@@ -27,3 +29,11 @@ void Text_Move(sprite *s, int x, int y);
 //Read from text file and store in array
 void _Readandstoretext(sprite *s, const char *path);
 
+//Render each line according to rainbow colour
+void Text_RenderRainbow(sprite* s);
+
+//stores text in arrays
+void _ReadandstoretextArray(sprite* s, const char* path);
+
+//Render words
+void Text_RenderWords(sprite* s);

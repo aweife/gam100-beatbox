@@ -33,7 +33,7 @@
 
 sprite Intro1;
 sprite Intro2;
-sprite Dialogue1; 
+sprite Dialogue1;
 sprite Dialogue2;
 sprite Dialogue3;
 sprite Dialogue5;
@@ -44,6 +44,7 @@ static int spaceDown = false;
 static bool RETURN_DOWN = true;
 static bool startTutorial = false;
 static bool startGame = false;
+static bool spawnEnemy = false;
 static double tutorialDuration = 0.0;
 
 //*********************************************************************************
@@ -61,7 +62,8 @@ void Tutorial_ProcessInput()
 		RETURN_DOWN = true;
 		// Everything from here onwards will execute once
 		currentIntro = 2;
-	} else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
+	}
+	else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
 		StateMachine_ChangeState(State_Game);
 	}
 	else if (!GetAsyncKeyState(VK_RETURN)) {
@@ -109,11 +111,10 @@ void Tutorial_ProcessInput()
 void Tutorial_Update()
 {
 	Clock_GameLoopStart();
-	//Audio_Update();
-	//Beat_Update();
+	Audio_Update();
+	Beat_Update();
 	Player_Update();
-	Enemy_FixedUpdate();
-	Attack_FixedUpdate();
+
 
 	if (currentIntro == 2)
 	{
@@ -128,12 +129,12 @@ void Tutorial_Render()
 {
 	if (currentIntro == 0)
 	{
-		Text_Render(&Intro1);
+		Text_RenderWords(&Intro1, 0, 0);
 	}
 
 	if (currentIntro == 1)
 	{
-		Text_Render(&Intro2);
+		Text_RenderWords(&Intro2, 0, 0);
 	}
 
 	if (currentIntro == 2)
@@ -144,21 +145,28 @@ void Tutorial_Render()
 		// For 20 seconds
 		if (tutorialDuration >= 0.0 && tutorialDuration <= 20000.0)
 		{
+			if (!startTutorial)
+				Audio_PlayBGMWithDelay(0.001, TUTORIAL);
 			startTutorial = true;
-			Text_Render(&Dialogue1);
+			Text_RenderWords(&Dialogue1, 0, 0);
 		}
 		// For 15 seconds
 		else if (tutorialDuration > 20000.0 && tutorialDuration <= 35000.0) {
-			Text_Render(&Dialogue2);
+			Text_RenderWords(&Dialogue2, 0, 0);
 		}
-		else if (tutorialDuration > 35000.0) {
-			Text_Render(&Dialogue3);
+		else if (tutorialDuration > 35000.0 && tutorialDuration <= 50000.0) {
+			Text_RenderWords(&Dialogue3, 0, 0);
+			if (!spawnEnemy)
+				Enemy_Init();
+			spawnEnemy = true;
 			Enemy_Render();
 			Attack_Render();
 		}
 		else if (tutorialDuration > 50000.0) {
+			if (!startGame)
+				
 			startGame = true;
-			Text_Render(&Dialogue5);
+			Text_RenderWords(&Dialogue5, 0, 0);
 		}
 	}
 }
@@ -168,8 +176,10 @@ void Tutorial_Render()
 //*********************************************************************************
 void Tutorial_EnterState()
 {
+	// Use heap
+
 	// Brief Description Of Game
-   	Intro1 = Text_CreateSprite();
+	Intro1 = Text_CreateSprite();
 	Text_Init(&Intro1, "..//RhythmGame//$Resources//Intro1.txt");
 	Text_Move(&Intro1, (GAME_WIDTH / 2) - TUTORIAL_SCREEN_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2));
 
@@ -179,24 +189,23 @@ void Tutorial_EnterState()
 	Text_Move(&Intro2, (GAME_WIDTH / 2) - TUTORIAL_SCREEN_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2));
 
 	// Demo to Move Player
-	//Audio_Init();
+	Audio_Init();
 	Map_Init();
-	//Beat_Init();
+	Beat_Init();
 	Player_Init();
+	Attack_Init();
 
 	// Tutorial on moving player
 	Dialogue1 = Text_CreateSprite();
 	Text_Init(&Dialogue1, "..//RhythmGame//$Resources//DialogueMovePlayer.txt");
-	Text_Move(&Dialogue1, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET,  (GAME_HEIGHT) - TUTORIAL_DIALOGUE_OFFSET / 1.5);
+	Text_Move(&Dialogue1, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
 
 	// Tutorial on dashing attack
 	Dialogue2 = Text_CreateSprite();
 	Text_Init(&Dialogue2, "..//RhythmGame//$Resources//DialogueDashAttack.txt");
-	Text_Move(&Dialogue2, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT) - TUTORIAL_DIALOGUE_OFFSET / 1.5);
+	Text_Move(&Dialogue2, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
 
 	// Tutorial on Dodging Enemy
-	Enemy_Init();
-	Attack_Init();
 	Dialogue3 = Text_CreateSprite();
 	Text_Init(&Dialogue3, "..//RhythmGame//$Resources//DialogueDodgeEnemy.txt");
 	Text_Move(&Dialogue3, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);

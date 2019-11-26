@@ -3,42 +3,29 @@
 #include "../Global.h"
 #include "../Text/TextReader.h"
 #include <stdbool.h>
-#include "../Player/Player.h"
 
 #define NUMBER_OF_PROJECTILE 100
+#define LENGTH_OF_LASER 200
 
 //Projectile Structure
-typedef struct Projectile
-{
+typedef struct Projectile {
 	Vector2d position;
 	bool visible;
-	bool available;
 	DIRECTION direction;
 	int speed;
 	int distanceToTravel;
+	char debugChar;
 	sprite projectileSprite;
 } Projectile;
 
-// To spawn a projectile
-// Attack_Spawn(myown.position);
-
-//ClusterBomb Structure
-typedef struct ClusterBomb
-{
-	Vector2d position;
-	bool visible;
-	bool available;
-	int speed;
-	int distance;
-} ClusterBomb;
-
 //void _chooseAttack();
 extern void Attack_Init();
+extern void Attack_Update();
 extern void Attack_FixedUpdate();
 extern void Attack_Render();
 extern void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int speed, int distance);
-//void Attack_spawnLaser();
-//void Attack_updateLaser();
+extern void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int length);
+extern void Attack_Cleanup();
 //void Attack_spawnClusterBomb();
 //void Attack_updateClusterBomb();
 

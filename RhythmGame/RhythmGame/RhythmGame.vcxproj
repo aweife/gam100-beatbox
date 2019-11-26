@@ -25,6 +25,7 @@
     <ClCompile Include="Clock\Clock.cpp" />
     <ClCompile Include="Console\Console.c" />
     <ClCompile Include="Enemy\Enemy.c" />
+    <ClCompile Include="States\Logo.c" />
     <ClCompile Include="Main.c" />
     <ClCompile Include="Map\Map.c" />
     <ClCompile Include="Player\Player.c" />
@@ -35,6 +36,7 @@
     <ClCompile Include="States\StateMachine.c" />
     <ClCompile Include="Text\TextReader.c" />
     <ClCompile Include="Tutorial\Tutorial.c" />
+    <ClCompile Include="UI\GameUI.c" />
     <ClCompile Include="UI\UI.c" />
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +47,7 @@
     <ClInclude Include="Console\Console.h" />
     <ClInclude Include="Enemy\Enemy.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="States\Logo.h" />
     <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="Random\Random.h" />
@@ -54,17 +57,22 @@
     <ClInclude Include="States\StateMachine.h" />
     <ClInclude Include="Text\TextReader.h" />
     <ClInclude Include="Tutorial\Tutorial.h" />
+    <ClInclude Include="UI\GameUI.h" />
     <ClInclude Include="UI\UI.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="$Resources\DialogueDashAttack.txt" />
-    <Text Include="$Resources\DialogueDodgeEnemy.txt" />
-    <Text Include="$Resources\DialogueEndTutorial.txt" />
-    <Text Include="$Resources\DialogueMovePlayer.txt" />
-    <Text Include="$Resources\DialogueMoveToGame.txt" />
+    <Text Include="$Resources\Beatbar.txt" />
+    <Text Include="$Resources\Health.txt" />
+    <Text Include="$Resources\Health2.txt" />
+    <Text Include="$Resources\laser.txt" />
     <Text Include="$Resources\Logo.txt" />
+    <Text Include="$Resources\Logo2.txt" />
     <Text Include="$Resources\Logo2.txt.txt" />
+    <Text Include="$Resources\MainMenu.txt" />
+    <Text Include="$Resources\player.txt" />
+    <Text Include="$Resources\projectile.txt" />
     <Text Include="$Resources\skull.txt" />
+    <Text Include="$Resources\TestLogo.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$Resources\Kick.wav" />
@@ -181,6 +189,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>fmodL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)RhythmGame\Audio\Fmod\core\lib\x64</AdditionalLibraryDirectories>
+      <StackReserveSize>4194304 </StackReserveSize>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(SolutionDir)RhythmGame\Audio\Fmod\core\lib\x64\fmodL.dll" "$(OutDir)"</Command>

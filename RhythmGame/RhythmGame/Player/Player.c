@@ -5,90 +5,106 @@
 #include "../Enemy/Enemy.h"
 #include "../States/StateMachine.h"
 #include "../Clock/Clock.h"
+#include "../UI/GameUI.h"
+#include "../Audio/AudioEngine.h"
 
-Player player;
-CONSOLECOLOR color;
+static Player player;
 static double factor;
 static double velocity;
 
 // CHECKS
 static int EaseCheck;
 static int EaseBool;
-static int invulCheck; // Check invulnerable state (1 = invul / 0 = not invul)
+static bool canAttack;
 
 // TIMERS
 static double dt; // Euler Movement
 static double EaseTimer; // Ease
-static double cdTimer; // Cooldown of Dash
-static double dashTimer; // Duration of Dash
+static double dashCooldownTimer; // Cooldown of Dash
+static double speedUpTimer; // Duration of Dash
 static double invulTimer; // Invulnerable timer
 
 /* Internal functions */
 
 void _MovePlayer();
-void _CheckCollision();
 // Checks if player is out of border
 void _CheckBorder();
-// Prints BOXSIZE of player
-void _UpdateShape();
 // Updates Timer
-void _UpdateTimer();
+void _UpdateState();
 
 
 void Player_Init()
 {
-	player = (Player){
-		.direction = STAY,
-		.position.x = 50, .position.y = 50,
-		.position.eulerX = 50.0, .position.eulerY = 50.0,
-		.health = 10,
-		.PlayerSprite = Text_CreateSprite(),
-		.PlayerSprite.printColor = bRED, };
+	player.direction = STAY;
+	player.startPosition.eulerX = player.startPosition.x = 95;
+	player.startPosition.eulerY = player.startPosition.y = 80;
+	player.health = 10;
+	player.playerSprite = Text_CreateSprite();
+	player.state = Normal;
 
-	Text_Init(&player.PlayerSprite, "..//RhythmGame//$Resources//skull.txt");
-	
+	Text_Init(&player.playerSprite, "..//RhythmGame//$Resources//player.txt");
+
 	factor = 0.0;
 	EaseBool = false;
 	EaseCheck = SlowDown;
 	EaseCheck = true;
+	canAttack = true;
 	velocity = 0.04;
 
 	// Timers
 	EaseTimer = 0.0; // Ease
-	cdTimer = 0.0;
-	dashTimer = 0.0;
+	dashCooldownTimer = 0.0;
+	speedUpTimer = 0.0;
 	invulTimer = 0.0;
-
-	// Timer Check
-	invulCheck = 0;
 }
 
 void Player_Update()
 {
 	_MovePlayer();
+	_UpdateState();
+	// Check against the border
 	_CheckBorder();
-	_UpdateShape();
-
-	// Check collision after player's position update first
-	_CheckCollision();
-	_UpdateTimer();
 }
 
 void Player_Render()
 {
-	if (invulCheck == 1)
-		color = bBLUE;
-	else
-		color = bRED;
-
+	CONSOLECOLOR c, d;
+	switch (player.state)
+	{
+	case Invul:
+		c = RED;
+		d = DARKRED;
+		break;
+	case Dash:
+	case ExDash:
+		c = CYAN;
+		d = DARKCYAN;
+		break;
+	default:
+		c = BLUE;
+		d = DARKBLUE;
+		break;
+	}
 	for (int i = 0; i < SPRITE_SIZE; i++)
-		player.PlayerSprite.printColor[i] = color;
+		if (player.playerSprite.printchar[i] == 'b')
+			player.playerSprite.printColor[i] = c;
+		else if (player.playerSprite.printchar[i] == 'B')
+			player.playerSprite.printColor[i] = d;
 
-	Text_Render(&player.PlayerSprite);
-	
+	Text_Render(&player.playerSprite, Map_GetShakeFactor(RIGHT) / 2, 0);
+	// Debug origin
+	Console_SetRenderBuffer_CharColor(player.startPosition.x, player.startPosition.y, '+', CYAN);
+	// Debug endposition
+	Console_SetRenderBuffer_CharColor(player.endPosition.x, player.endPosition.y, '+', CYAN);
+}
 
-	/*for (int i = 0; i < BOXSIZE * BOXSIZE; i++)
-		Console_SetRenderBuffer_CharColor(player.body[i].x, player.body[i].y, ' ', color);*/
+void Player_CheckGameOver()
+{
+	if (player.health == 0)
+	{
+		StateMachine_ChangeState(State_GameOver);
+		Audio_FadeOutBGM(1000.0);
+	}
 }
 
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
@@ -114,74 +130,80 @@ int Player_GetDirection()
 
 void Player_Dash()
 {
-	if (cdTimer > 0) return;
-	velocity = 0.15;
+	// If cdTimer is running
+	if (dashCooldownTimer > 0.0)
+		return;
+
 	factor = 1;
-	dashTimer = 100.0f;
-	cdTimer = 1000.0f;
+	speedUpTimer = 100.0;
+	invulTimer = 200.0;
+	player.state = Dash;
+	dashCooldownTimer = 1000.0;
+}
+
+void Player_ExtendDash()
+{
+	if (!canAttack) return;
+	canAttack = false;
+	factor = 1;
+	speedUpTimer += 20.0;
+	player.state = ExDash;
+	invulTimer += 100.0;
+	Map_Shake(UP, 40.0, MAP_SHAKE_Y);
 }
 
 void Player_Damage()
 {
-	if (invulCheck == 0)
-	{
-		player.health--;
-		invulCheck = 1;
-		invulTimer = 2000.0;
-	}
+	if (invulTimer > 0.0) return;
+
+	player.health--;
+	player.state = Invul;
+	invulTimer = 2000.0;
+	Map_Shake(RIGHT, 100.0, MAP_SHAKE_X);
+	GameUI_DecreaseHealth(1);
 }
 
-sprite* Player_GetSprite()
+Player *Player_GetPlayer()
 {
-	return &player.PlayerSprite;
+	return &player;
 }
 
-void _UpdateTimer()
+PLAYERSTATE Player_GetState()
 {
-	if (invulCheck == 1)
-	{
-		invulTimer -= Clock_GetDeltaTime();
-		
-		if (invulTimer < 0)
-			invulCheck = 0;
-	}
-		
+	return player.state;
 }
 
-void _UpdateShape()
-{
-	int localx = 0;
-	int localy = 0;
-
-	localx = player.position.x--;
-	localy = player.position.y--;
-
-	for (int i = 0; i < BOXSIZE; i++)
-	{
-		for (int j = 0; j < BOXSIZE; j++)
-		{
-			player.body[i * 3 + j].x = localx + j;
-			player.body[i * 3 + j].y = localy + i;
-		}
-	}
-}
-
-void _CheckBorder()
-{
-	if (player.position.eulerX < (MAP_OFFSET + 1)) player.position.eulerX = MAP_OFFSET + 1;
-	if (player.position.eulerY< (MAP_OFFSET + 1)) player.position.eulerY = MAP_OFFSET + 1;
-	if (player.position.eulerX > (GAME_WIDTH - MAP_OFFSET - BOXSIZE)) player.position.eulerX = GAME_WIDTH - MAP_OFFSET - BOXSIZE;
-	if (player.position.eulerY > (GAME_HEIGHT - MAP_OFFSET - BOXSIZE)) player.position.eulerY = GAME_HEIGHT - MAP_OFFSET - BOXSIZE;
-}
-
-void _MovePlayer()
+void _UpdateState()
 {
 	dt = Clock_GetDeltaTime();
 	EaseTimer += Clock_GetDeltaTime();
 
-	if (cdTimer > 0) cdTimer -= Clock_GetDeltaTime();
-	if (dashTimer > 0) dashTimer -= Clock_GetDeltaTime();
-	else velocity = 0.02;
+	if (invulTimer > 0.0)
+		invulTimer -= Clock_GetDeltaTime();
+	if (speedUpTimer > 0.0)
+		speedUpTimer -= Clock_GetDeltaTime();
+	if (dashCooldownTimer > 0.0)
+		dashCooldownTimer -= Clock_GetDeltaTime();
+
+	switch (player.state)
+	{
+	case Invul:
+		if (invulTimer < 0.0)
+			player.state = Normal;
+		break;
+	case Dash:
+		if (speedUpTimer < 0.0)
+			player.state = Normal;
+		break;
+	case ExDash:
+		if (speedUpTimer < 0.0)
+			player.state = Normal;
+		break;
+	default:
+		if (dashCooldownTimer < 0.0)
+			canAttack = true;
+		break;
+	}
 
 	if (EaseTimer >= 25.0)
 	{
@@ -196,34 +218,68 @@ void _MovePlayer()
 			factor = 1.0;
 		EaseTimer -= EaseTimer;
 	}
+}
 
+void _CheckBorder()
+{
+	if (player.startPosition.x < Map_GetOrigin().x + 2)
+		player.startPosition.eulerX = Map_GetOrigin().x + 2;
+	if (player.startPosition.y < Map_GetOrigin().y + 2)
+		player.startPosition.eulerY = Map_GetOrigin().y + 2;
+	if (player.endPosition.x > Map_GetEnd().x - 2)
+		player.startPosition.eulerX = Map_GetEnd().x - 1 - player.playerSprite.position[player.playerSprite.charCount - 1].x - 1;
+	if (player.endPosition.y > Map_GetEnd().y - 2)
+		player.startPosition.eulerY = Map_GetEnd().y - 1 - player.playerSprite.position[player.playerSprite.charCount - 1].y;
+}
+
+void _MovePlayer()
+{
+	switch (player.state)
+	{
+	case ExDash:
+		velocity = 0.35;
+		break;
+	case Dash:
+		velocity = 0.15;
+		break;
+	default:
+		velocity = 0.02;
+		break;
+	}
+	double speed = 1.0 * dt * velocity * factor;
 	switch (player.direction)
 	{
 	case TOPLEFT:
-		player.position.eulerX += -1 * dt * velocity * factor;
-		player.position.eulerY += -1 * dt * velocity * factor;
+		player.startPosition.eulerX -= speed / 1.4;
+		player.startPosition.eulerY -= speed / 1.4;
 		break;
 	case TOPRIGHT:
-		player.position.eulerX += 1 * dt * velocity * factor;
-		player.position.eulerY += -1 * dt * velocity * factor;
+		player.startPosition.eulerX += speed / 1.4;
+		player.startPosition.eulerY -= speed / 1.4;
 		break;
 	case BOTTOMRIGHT:
-		player.position.eulerX += 1 * dt * velocity * factor;
-		player.position.eulerY += 1 * dt * velocity * factor;
+		player.startPosition.eulerX += speed / 1.4;
+		player.startPosition.eulerY += speed / 1.4;
 		break;
 	case BOTTOMLEFT:
-		player.position.eulerX += -1 * dt * velocity * factor;
-		player.position.eulerY += 1 * dt * velocity * factor;
+		player.startPosition.eulerX -= speed / 1.4;
+		player.startPosition.eulerY += speed / 1.4;
 		break;
-	case UP: player.position.eulerY += -1 * dt * velocity * factor; break;
-	case RIGHT: player.position.eulerX += 1 * dt * velocity * factor; break;
-	case DOWN: player.position.eulerY += 1 * dt * velocity * factor; break;
-	case LEFT: player.position.eulerX += -1 * dt * velocity * factor; break;
+	case UP:
+		player.startPosition.eulerY -= speed; break;
+	case RIGHT:
+		player.startPosition.eulerX += speed; break;
+	case DOWN:
+		player.startPosition.eulerY += speed; break;
+	case LEFT:
+		player.startPosition.eulerX -= speed; break;
 	default: break;
 	}
 
-	player.position.x = player.position.eulerX;
-	player.position.y = player.position.eulerY;
+	player.startPosition.x = (int)player.startPosition.eulerX;
+	player.startPosition.y = (int)player.startPosition.eulerY;
+	player.endPosition.x = (int)(player.startPosition.eulerX + player.playerSprite.position[player.playerSprite.charCount - 1].x + 1);
+	player.endPosition.y = (int)(player.startPosition.eulerY + player.playerSprite.position[player.playerSprite.charCount - 1].y);
 
-	Text_Move(&player.PlayerSprite, player.position.x, player.position.y);
+	Text_Move(&player.playerSprite, player.startPosition.x, player.startPosition.y);
 }
