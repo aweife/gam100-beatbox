@@ -36,9 +36,6 @@ extern void Player_Update();
 // Renders the player location
 extern void Player_Render();
 
-// Checks if player's life is 0
-extern void Player_CheckGameOver();
-
 // Allows player to dash
 extern void Player_Dash();
 

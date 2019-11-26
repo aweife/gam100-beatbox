@@ -27,10 +27,9 @@ static double invulTimer; // Invulnerable timer
 /* Internal functions */
 
 void _MovePlayer();
-// Checks if player is out of border
-void _CheckBorder();
-// Updates Timer
-void _UpdateState();
+void _CheckBorder(); // Checks if player collision with border
+void _UpdateState();// Updates timers
+void _CheckGameOver();// Checks if player's life is 0
 
 
 void Player_Init()
@@ -64,6 +63,7 @@ void Player_Update()
 	_UpdateState();
 	// Check against the border
 	_CheckBorder();
+	_CheckGameOver();
 }
 
 void Player_Render()
@@ -98,12 +98,11 @@ void Player_Render()
 	Console_SetRenderBuffer_CharColor(player.endPosition.x, player.endPosition.y, '+', CYAN);
 }
 
-void Player_CheckGameOver()
+void _CheckGameOver()
 {
 	if (player.health == 0)
 	{
 		StateMachine_ChangeState(State_GameOver);
-		Audio_FadeOutBGM(1000.0);
 	}
 }
 

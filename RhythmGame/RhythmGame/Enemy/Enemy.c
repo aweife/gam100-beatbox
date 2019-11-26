@@ -42,7 +42,7 @@ void Enemy_Init()
 	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
 }
 
-void Enemy_FixedUpdate()
+void Enemy_Update()
 {
 	Enemy_MoveTo(0, 3);
 	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
@@ -80,7 +80,7 @@ Enemy *Enemy_GetEnemy()
 void _spawnProjectile()
 {
 	BPMProjSpawnTime++;
-	if (BPMProjSpawnTime <= 3) return;
+	if (BPMProjSpawnTime <= 1000) return;
 	BPMProjSpawnTime = 0;
 }
 

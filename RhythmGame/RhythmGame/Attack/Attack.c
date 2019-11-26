@@ -91,13 +91,6 @@ void Attack_Update()
 	_CheckLaserBoundary();
 }
 
-void Attack_FixedUpdate() // put in game.c
-{
-
-
-
-}
-
 void Attack_Render() // put in game.c
 {
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)

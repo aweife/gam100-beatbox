@@ -2,7 +2,6 @@
 #include "../Audio/AudioEngine.h"
 #include "../Console/Console.h"
 #include "../Global.h"
-#include "../Beat/Beat.h"
 #include "../Clock/Clock.h"
 #include "../Random/Random.h"
 
@@ -43,12 +42,12 @@ void Map_Update()
 void Map_Render()
 {
 	_CreateStatic();
-	if (Beat_GetBeat(KICK))
+	if (Audio_GetSpectrum(0))
 		_CreateVisualiser(2, GREEN);
-	if (Beat_GetBeat(PROJECTILE))
-		_CreateVisualiser(2, GREEN);
-	if (Beat_GetBeat(SNARE))
-		_CreateVisualiser(4, RED);
+	if (Audio_GetSpectrum(1))
+		_CreateVisualiser(4, YELLOW);
+	if (Audio_GetSpectrum(2))
+		_CreateVisualiser(6, RED);
 }
 
 void Map_Shake(DIRECTION dir, double duration, int intensity)
