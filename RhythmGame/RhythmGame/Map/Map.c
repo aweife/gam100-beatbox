@@ -19,6 +19,7 @@ static int shakeFactorY = 0;
 // Private functions
 void _CreateStatic();
 void _CreateVisualiser(int offset, CONSOLECOLOR color);
+void _CreateBackground(int offset, CONSOLECOLOR color);
 void _ShakeMap();
 void _ResetMap();
 
@@ -41,13 +42,23 @@ void Map_Update()
 
 void Map_Render()
 {
-	_CreateStatic();
-	if (Audio_GetSpectrum(0))
-		_CreateVisualiser(2, GREEN);
-	if (Audio_GetSpectrum(1))
-		_CreateVisualiser(4, YELLOW);
 	if (Audio_GetSpectrum(2))
+	{
+		_CreateVisualiser(2, GREEN);
+		_CreateBackground(2, fDARKGREEN);
+	}
+	if (Audio_GetSpectrum(1))
+	{
+		_CreateVisualiser(4, YELLOW);
+		_CreateBackground(4, fDARKYELLOW);
+	}
+	if (Audio_GetSpectrum(0))
+	{
 		_CreateVisualiser(6, RED);
+		_CreateBackground(6, fDARKRED);
+	}
+	// Render blue last
+	_CreateStatic();
 }
 
 void Map_Shake(DIRECTION dir, double duration, int intensity)
@@ -110,6 +121,13 @@ void _CreateVisualiser(int offset, CONSOLECOLOR color)
 		Console_SetRenderBuffer_CharColor((MapOrigin.x - offset), (MapOrigin.y - offset) + i, 'X', color);
 		Console_SetRenderBuffer_CharColor((MapEnd.x + offset), (MapOrigin.y - offset) + i + 1, 'X', color);
 	}
+}
+
+void _CreateBackground(int offset, CONSOLECOLOR color)
+{
+	for (int i = 1; i < (MapEnd.x + offset) - (MapOrigin.x - offset); i+=4)
+		for (int j = 1; j < (MapEnd.y + offset) - (MapOrigin.y - offset); j+=4)
+			Console_SetRenderBuffer_CharColor(((MapOrigin.x - offset) + i), ((MapOrigin.y - offset) + j), '.', color);
 }
 
 void _ShakeMap()

@@ -163,7 +163,7 @@ void _Readandstoretext(sprite *s, const char *path)
 					else if (Charline[i] == 'r')
 						s->printColor[newcharcount + iteration] = RED;
 					else if (Charline[i] == 'R')
-						s->printColor[newcharcount + iteration] = bRED;
+						s->printColor[newcharcount + iteration] = DARKRED;
 					else if (Charline[i] == 'm')
 						s->printColor[newcharcount + iteration] = MAGENTA;
 					else if (Charline[i] == 'M')
@@ -287,7 +287,7 @@ void _ReadandstoretextArray(sprite *s, const char *path)
 					else if (Charline[i] == 'r')
 						(s + state)->printColor[newcharcount + iteration] = RED;
 					else if (Charline[i] == 'R')
-						(s + state)->printColor[newcharcount + iteration] = bRED;
+						(s + state)->printColor[newcharcount + iteration] = DARKRED;
 					else if (Charline[i] == 'm')
 						(s + state)->printColor[newcharcount + iteration] = MAGENTA;
 					else if (Charline[i] == 'M')

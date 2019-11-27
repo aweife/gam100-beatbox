@@ -66,12 +66,13 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
+	// Render map first!
+	Map_Render();
+
+
 	_renderChoice(choice);
 	Text_Move(&robot, 25, 50);
 	Text_Render(&robot, 0, 0);
-
-	// Render map
-	Map_Render();
 }
 
 //*********************************************************************************

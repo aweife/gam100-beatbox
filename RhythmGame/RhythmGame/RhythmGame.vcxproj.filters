@@ -55,6 +55,6 @@
     <Text Include="$Resources\TestLogo.txt" />
     <Text Include="$Resources\player.txt" />
     <Text Include="$Resources\projectile.txt" />
-    <Text Include="$Resources\laser.txt" />
+    <Text Include="%24Resources\laser.txt" />
   </ItemGroup>
 </Project>

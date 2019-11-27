@@ -8,6 +8,9 @@
 #include "../UI/GameUI.h"
 #include "../Audio/AudioEngine.h"
 
+#define PLAYER_BASE_MOVESPEED 0.03
+#define PLAYER_FAST_MOVESPEED 0.075
+
 static Player player;
 static double factor;
 static double velocity;
@@ -242,7 +245,7 @@ void _MovePlayer()
 		velocity = 0.15;
 		break;
 	default:
-		velocity = 0.02;
+		velocity = Audio_GetSpectrum(0) ? PLAYER_FAST_MOVESPEED : PLAYER_BASE_MOVESPEED;
 		break;
 	}
 	double speed = 1.0 * dt * velocity * factor;

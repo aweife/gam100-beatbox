@@ -77,18 +77,22 @@ void Game_Update()
 {
 	Player_Update();
 	Map_Update();
-	Attack_Update();
 	GameUI_Update();
 	Audio_Update();
+
+	// Update together
+	Enemy_Update();
+	Attack_Update();
 }
 
 void Game_Render()
 {
-	Player_Render();
+	// By order of rendering
+	GameUI_Render();
 	Map_Render();
 	Attack_Render();
 	Enemy_Render();
-	GameUI_Render();
+	Player_Render();
 }
 
 void Game_Exit()

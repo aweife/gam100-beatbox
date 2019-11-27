@@ -30,7 +30,7 @@ int main(void)
 	{
 		Console_SetSquareFont();
 		Console_SetWindowedMode(GAME_WIDTH, GAME_HEIGHT, true);
-		StateMachine_ChangeState(State_Logo);
+		StateMachine_ChangeState(State_Game);
 	}
 
 	// MAIN loop
