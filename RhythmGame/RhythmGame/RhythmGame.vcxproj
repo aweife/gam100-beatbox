@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="%24Resources\Tutorial\Dialogue2_DontSpam.txt" />
+    <ClCompile Include="%24Resources\Tutorial\Dialogue2_DashAttack1.txt" />
     <ClCompile Include="Attack\Attack.c" />
     <ClCompile Include="Audio\AudioEngine.c" />
     <ClCompile Include="Beat\Beat.c" />
@@ -64,6 +66,24 @@
     <Text Include="$Resources\Beatbar.txt" />
     <Text Include="$Resources\Health.txt" />
     <Text Include="$Resources\Health2.txt" />
+    <Text Include="$Resources\Tutorial\ArrowKeyDown.txt" />
+    <Text Include="$Resources\Tutorial\ArrowKeyLeft.txt" />
+    <Text Include="$Resources\Tutorial\ArrowKeyRight.txt" />
+    <Text Include="$Resources\Tutorial\ArrowKeyUp.txt" />
+    <Text Include="$Resources\Tutorial\Dialogue1_MovePlayer.txt" />
+    <Text Include="$Resources\Tutorial\Dialogue3_DodgeEnemy.txt" />
+    <Text Include="$Resources\Tutorial\Dialogue3_EnemySpotted.txt" />
+    <Text Include="$Resources\Tutorial\Dialogue4_AllSet.txt" />
+    <Text Include="$Resources\Tutorial\Dialogue4_Groove.txt" />
+    <Text Include="$Resources\Tutorial\Enter.txt" />
+    <Text Include="$Resources\Tutorial\Space.txt" />
+    <Text Include="%24Resources\Tutorial\Instruction_Enter.txt" />
+    <Text Include="$Resources\Tutorial\Instruction1_Point2.txt" />
+    <Text Include="$Resources\Tutorial\Instruction1_Point3.txt" />
+    <Text Include="$Resources\Tutorial\Instruction2_DashAttack.txt" />
+    <Text Include="$Resources\Tutorial\Instruction2_Move.txt" />
+    <Text Include="%24Resources\Tutorial\Instruction_Header.txt" />
+    <Text Include="%24Resources\Tutorial\Instruction1_Point1.txt" />
     <Text Include="$Resources\laser.txt" />
     <Text Include="$Resources\Logo.txt" />
     <Text Include="$Resources\Logo2.txt" />
