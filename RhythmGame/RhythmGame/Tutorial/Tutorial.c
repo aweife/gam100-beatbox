@@ -14,7 +14,7 @@
 #include <Windows.h>
 #include <stdbool.h>
 
-#define TUTORIAL_SCREEN_OFFSET 60
+#define TUTORIAL_SCREEN_OFFSET 50
 #define TUTORIAL_DIALOGUE_OFFSET 70
 
 
@@ -31,7 +31,8 @@
 // Dialogue5: End Tutorial
 // Dialogue6: Move on to real game after all this!
 
-sprite Intro1;
+sprite Intro1_1;
+sprite Intro1_2;
 sprite Intro2;
 sprite Dialogue1;
 sprite Dialogue2;
@@ -58,20 +59,20 @@ void Tutorial_ProcessInput()
 		// Everything from here onwards will execute once
 		currentIntro = 1;
 	}
-	else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && currentIntro == 1) {
+	/*else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && currentIntro == 1) {
 		RETURN_DOWN = true;
 		// Everything from here onwards will execute once
 		currentIntro = 2;
 	}
 	else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
 		StateMachine_ChangeState(State_Game);
-	}
+	}*/
 	else if (!GetAsyncKeyState(VK_RETURN)) {
 		RETURN_DOWN = false;
 	}
 
 	// Allows player to move
-	if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_UP))
+	/*if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_UP))
 		Player_SetVel(TOPLEFT, SpeedUp);
 	else if (GetAsyncKeyState(VK_RIGHT) && GetAsyncKeyState(VK_UP))
 		Player_SetVel(TOPRIGHT, SpeedUp);
@@ -102,7 +103,7 @@ void Tutorial_ProcessInput()
 		spaceDown = true;
 		Player_Dash();
 	}
-	else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
+	else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;*/
 }
 
 //*********************************************************************************
@@ -116,10 +117,10 @@ void Tutorial_Update()
 	Player_Update();
 
 
-	if (currentIntro == 2)
+	/*if (currentIntro == 2)
 	{
 		tutorialDuration += Clock_GetDeltaTime();
-	}
+	}*/
 }
 
 //*********************************************************************************
@@ -129,7 +130,8 @@ void Tutorial_Render()
 {
 	if (currentIntro == 0)
 	{
-		Text_RenderWords(&Intro1, 0, 0);
+		Text_RenderWords(&Intro1_1, 0, 0);
+		Text_RenderWords(&Intro1_2, 0, 0);
 	}
 
 	if (currentIntro == 1)
@@ -179,9 +181,13 @@ void Tutorial_EnterState()
 	// Use heap
 
 	// Brief Description Of Game
-	Intro1 = Text_CreateSprite();
-	Text_Init(&Intro1, "..//RhythmGame//$Resources//Intro1.txt");
-	Text_Move(&Intro1, (GAME_WIDTH / 2) - TUTORIAL_SCREEN_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2));
+	Intro1_1 = Text_CreateSprite();
+	Text_Init(&Intro1_1, "..//RhythmGame//$Resources//Instruction_Header.txt");
+	Text_Move(&Intro1_1, (GAME_WIDTH / 2) - TUTORIAL_SCREEN_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2));
+
+	Intro1_2 = Text_CreateSprite();
+	Text_Init(&Intro1_2, "..//RhythmGame//$Resources//Instruction1_Point1.txt");
+	Text_Move(&Intro1_2, (GAME_WIDTH / 2) - (TUTORIAL_SCREEN_OFFSET - 2), (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2) - 10);
 
 	// Main Controls of Game
 	Intro2 = Text_CreateSprite();
