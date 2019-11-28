@@ -11,18 +11,21 @@
 #define ENEMY_BASE_MOVESPEED 0.01
 #define ENEMY_FAST_MOVESPEED 0.05
 #define PROJECTILE_SPAWN_SPEED 100.0
-#define LASER_SPAWN_SPEED 2000.0
+#define PROJECTILE_SPEED 0.04
+#define PROJECTILE_SPEED_FAST 0.1
+#define LASER_SPAWN_SPEED 200.0
 
 // The skull enemy
 Enemy skullEnemy = { 0 };
 
 // Attack speed
+static double laserSpawnTimer = 0;
 static double projectileSpawnTimer = 0;
 
 /* Internal functions */
 void _MoveToPosition(double velocity);
 void _DecideNextPosition(int position);
-void _SpawnAttack(ATTACKTYPE type, DIRECTION dir);
+void _EnemyAttack();
 
 void Enemy_Init()
 {
@@ -48,23 +51,7 @@ void Enemy_Update()
 	_MoveToPosition(skullEnemy.velocity);
 	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
 
-	// If projectile beat(1), spawn projectile
-	if (projectileSpawnTimer > 0.0)
-		projectileSpawnTimer -= Clock_GetDeltaTime();
-
-	if (projectileSpawnTimer <= 0.0)
-	{
-		if (Audio_GetSpectrum(2))
-		{
-			Attack_Spawn(LASER, skullEnemy.position, Random_Range(5, 8));
-			projectileSpawnTimer = LASER_SPAWN_SPEED;
-		}
-		/*if (Audio_GetSpectrum(1))
-		{
-			Attack_Spawn(PROJECTILE, skullEnemy.position, Random_Range(1, 8));
-			projectileSpawnTimer = PROJECTILE_SPAWN_SPEED;
-		}*/
-	}
+	_EnemyAttack();
 }
 
 void Enemy_Render()
@@ -85,7 +72,7 @@ void _MoveToPosition(double velocity)
 {
 	// If reach next position
 	if (skullEnemy.position.x == skullEnemy.nextPosition.x && skullEnemy.position.y == skullEnemy.nextPosition.y)
-		_DecideNextPosition(Random_Range(0, 9));
+		_DecideNextPosition(Random_Range(1, 6));
 
 	{
 		double speed = 1.0 * Clock_GetDeltaTime() * velocity;
@@ -165,7 +152,27 @@ void _DecideNextPosition(int position)
 
 }
 
-void _SpawnAttack(ATTACKTYPE type, DIRECTION dir)
+void _EnemyAttack()
 {
-	Attack_Spawn(type, skullEnemy.position, dir);
+	// If projectile beat(1), spawn projectile
+	if (projectileSpawnTimer > 0.0)
+		projectileSpawnTimer -= Clock_GetDeltaTime();
+	if (laserSpawnTimer > 0.0)
+		laserSpawnTimer -= Clock_GetDeltaTime();
+
+	if (laserSpawnTimer <= 0.0)
+	{
+		if (Audio_GetSpectrum(3))
+		{
+			Attack_Spawn(LASER, skullEnemy.position, Random_Range(5, 8), (projectileSpeed) { 0, 0 });
+			laserSpawnTimer = LASER_SPAWN_SPEED;
+		}
+
+		if (Audio_GetSpectrum(1))
+		{
+			projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED_FAST };
+			Attack_Spawn(PROJECTILE, skullEnemy.position, Random_Range(1, 8), speed);
+			projectileSpawnTimer = PROJECTILE_SPAWN_SPEED;
+		}
+	}
 }

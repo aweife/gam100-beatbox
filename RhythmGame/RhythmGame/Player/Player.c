@@ -7,9 +7,12 @@
 #include "../Clock/Clock.h"
 #include "../UI/GameUI.h"
 #include "../Audio/AudioEngine.h"
+#include "../Attack/Attack.h"
 
-#define PLAYER_BASE_MOVESPEED 0.03
+#define PLAYER_BASE_MOVESPEED 0.06
 #define PLAYER_FAST_MOVESPEED 0.075
+#define PLAYER_ATTACKSPEED 200.0
+#define PROJECTILE_SPEED 0.1
 
 static Player player;
 static double factor;
@@ -26,6 +29,7 @@ static double EaseTimer; // Ease
 static double dashCooldownTimer; // Cooldown of Dash
 static double speedUpTimer; // Duration of Dash
 static double invulTimer; // Invulnerable timer
+static double attackTimer;
 
 /* Internal functions */
 
@@ -33,6 +37,7 @@ void _MovePlayer();
 void _CheckBorder(); // Checks if player collision with border
 void _UpdateState();// Updates timers
 void _CheckGameOver();// Checks if player's life is 0
+void _AutoAttack();
 
 
 void Player_Init()
@@ -67,6 +72,7 @@ void Player_Update()
 	// Check against the border
 	_CheckBorder();
 	_CheckGameOver();
+	_AutoAttack();
 }
 
 void Player_Render()
@@ -284,4 +290,16 @@ void _MovePlayer()
 	player.endPosition.y = (int)(player.startPosition.eulerY + player.playerSprite.position[player.playerSprite.charCount - 1].y);
 
 	Text_Move(&player.playerSprite, player.startPosition.x, player.startPosition.y);
+}
+
+void _AutoAttack()
+{
+	if (attackTimer > 0.0)
+		attackTimer -= Clock_GetDeltaTime();
+	else if (attackTimer <= 0.0)
+	{
+		attackTimer = PLAYER_ATTACKSPEED;
+		projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED };
+		Attack_Spawn(PROJECTILE, player.startPosition, UP, speed);
+	}
 }
