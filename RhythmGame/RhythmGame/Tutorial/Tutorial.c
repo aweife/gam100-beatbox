@@ -130,7 +130,7 @@ void Tutorial_Render()
 {
 	if (currentIntro == 0)
 	{
-		Text_RenderWords(&Intro1_1, 0, 0);
+		Text_Render(&Intro1_1, 0, 0);
 		Text_RenderWords(&Intro1_2, 0, 0);
 	}
 
@@ -182,7 +182,7 @@ void Tutorial_EnterState()
 
 	// Brief Description Of Game
 	Intro1_1 = Text_CreateSprite();
-	Text_Init(&Intro1_1, "..//RhythmGame//$Resources//Instruction_Header.txt");
+	Text_Init(&Intro1_1, "..//RhythmGame//$Resources//beatman1.txt");
 	Text_Move(&Intro1_1, (GAME_WIDTH / 2) - TUTORIAL_SCREEN_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2));
 
 	Intro1_2 = Text_CreateSprite();

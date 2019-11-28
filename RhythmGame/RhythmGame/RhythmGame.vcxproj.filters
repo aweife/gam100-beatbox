@@ -80,5 +80,6 @@
     <Text Include="$Resources\Instruction2_DashAttack.txt" />
     <Text Include="$Resources\Instruction2_Move.txt" />
     <Text Include="$Resources\Space.txt" />
+    <Text Include="$Resources\beatman1.txt" />
   </ItemGroup>
 </Project>
