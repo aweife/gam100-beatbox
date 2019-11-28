@@ -14,8 +14,10 @@
 #include <Windows.h>
 #include <stdbool.h>
 
-#define TUTORIAL_SCREEN_OFFSET 50
+#define TUTORIAL_TEXT_OFFSET 50
+#define TUTORIAL_BEATMAN_OFFSET 40
 #define TUTORIAL_DIALOGUE_OFFSET 70
+#define TUTORIAL_MIRROR_OFFSET 145
 
 
 //*********************************************************************************
@@ -31,9 +33,10 @@
 // Dialogue5: End Tutorial
 // Dialogue6: Move on to real game after all this!
 
-sprite Intro1_1;
-sprite Intro1_2;
-sprite Intro2;
+sprite leftBeatmanState1;
+sprite rightBeatmanState1;
+sprite leftBeatmanState2;
+sprite rightBeatmanState2;
 sprite Dialogue1;
 sprite Dialogue2;
 sprite Dialogue3;
@@ -46,7 +49,9 @@ static bool RETURN_DOWN = true;
 static bool startTutorial = false;
 static bool startGame = false;
 static bool spawnEnemy = false;
+static bool animateBeatman = false;
 static double tutorialDuration = 0.0;
+static double animateDuration = 0.0;
 
 //*********************************************************************************
 //									INPUT
@@ -59,12 +64,7 @@ void Tutorial_ProcessInput()
 		// Everything from here onwards will execute once
 		currentIntro = 1;
 	}
-	/*else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && currentIntro == 1) {
-		RETURN_DOWN = true;
-		// Everything from here onwards will execute once
-		currentIntro = 2;
-	}
-	else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
+	/* else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
 		StateMachine_ChangeState(State_Game);
 	}*/
 	else if (!GetAsyncKeyState(VK_RETURN)) {
@@ -116,8 +116,12 @@ void Tutorial_Update()
 	Beat_Update();
 	Player_Update();
 
+	if (currentIntro == 0)
+	{
+		animateDuration += Clock_GetDeltaTime();
+	}
 
-	/*if (currentIntro == 2)
+	/*if (currentIntro == 1)
 	{
 		tutorialDuration += Clock_GetDeltaTime();
 	}*/
@@ -128,23 +132,37 @@ void Tutorial_Update()
 //*********************************************************************************
 void Tutorial_Render()
 {
-	if (currentIntro == 0)
+	if (currentIntro == 0 && animateDuration >= 0.0 && animateDuration <= 1000.0)
 	{
-		Text_Render(&Intro1_1, 0, 0);
-		Text_RenderWords(&Intro1_2, 0, 0);
+		animateBeatman = false;
+		Text_Render(&leftBeatmanState1, 0, 0);
+		Text_Render(&rightBeatmanState1, 0, 0);
 	}
+
+	if (currentIntro == 0 && animateDuration >= 1000.0 && animateDuration <= 2000.0)
+	{
+		animateBeatman = true;
+	}
+
+	if (currentIntro == 0 && animateBeatman == true)
+	{
+		Text_Render(&leftBeatmanState2, 0, 0);
+		Text_Render(&rightBeatmanState2, 0, 0);
+	}
+
+	if (currentIntro == 0 && animateDuration >= 2000.0)
+	{
+		animateDuration -= 2000.0;
+	}
+
+	/*if (currentIntro == 0 && animateDuration >= 1000.0 && animateDuration)*/
 
 	if (currentIntro == 1)
-	{
-		Text_RenderWords(&Intro2, 0, 0);
-	}
-
-	if (currentIntro == 2)
 	{
 		Map_Render();
 		Player_Render();
 
-		// For 20 seconds
+		// For 10 seconds
 		if (tutorialDuration >= 0.0 && tutorialDuration <= 10000.0)
 		{
 			if (!startTutorial)
@@ -152,7 +170,7 @@ void Tutorial_Render()
 			startTutorial = true;
 			Text_RenderWords(&Dialogue1, 0, 0);
 		}
-		// For 15 seconds
+		// For 10 seconds
 		else if (tutorialDuration > 10000.0 && tutorialDuration <= 20000.0) {
 			Text_RenderWords(&Dialogue2, 0, 0);
 		}
@@ -178,21 +196,22 @@ void Tutorial_Render()
 //*********************************************************************************
 void Tutorial_EnterState()
 {
-	// Use heap
-
 	// Brief Description Of Game
-	Intro1_1 = Text_CreateSprite();
-	Text_Init(&Intro1_1, "..//RhythmGame//$Resources//beatman1.txt");
-	Text_Move(&Intro1_1, (GAME_WIDTH / 2) - TUTORIAL_SCREEN_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2));
+	leftBeatmanState1 = Text_CreateSprite();
+	Text_Init(&leftBeatmanState1, "..//RhythmGame//$Resources//beatman1.txt");
+	Text_Move(&leftBeatmanState1, (GAME_WIDTH / 4) - TUTORIAL_BEATMAN_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2));
 
-	Intro1_2 = Text_CreateSprite();
-	Text_Init(&Intro1_2, "..//RhythmGame//$Resources//Instruction1_Point1.txt");
-	Text_Move(&Intro1_2, (GAME_WIDTH / 2) - (TUTORIAL_SCREEN_OFFSET - 2), (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2) - 10);
+	rightBeatmanState1 = Text_CreateSprite();
+	Text_Init(&rightBeatmanState1, "..//RhythmGame//$Resources//beatman2.txt");
+	Text_Move(&rightBeatmanState1, (GAME_WIDTH / 4) - (TUTORIAL_BEATMAN_OFFSET - 2) + TUTORIAL_MIRROR_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2) - 5);
 
-	// Main Controls of Game
-	Intro2 = Text_CreateSprite();
-	Text_Init(&Intro2, "..//RhythmGame//$Resources//Intro2.txt");
-	Text_Move(&Intro2, (GAME_WIDTH / 2) - TUTORIAL_SCREEN_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2));
+	leftBeatmanState2 = Text_CreateSprite();
+	Text_Init(&leftBeatmanState2, "..//RhythmGame//$Resources//beatman1.txt");
+	Text_Move(&leftBeatmanState2, (GAME_WIDTH / 4) - (TUTORIAL_BEATMAN_OFFSET - 2) + TUTORIAL_MIRROR_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2));
+
+	rightBeatmanState2 = Text_CreateSprite();
+	Text_Init(&rightBeatmanState2, "..//RhythmGame//$Resources//beatman2.txt");
+	Text_Move(&rightBeatmanState2, (GAME_WIDTH / 4) - TUTORIAL_BEATMAN_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2) - 5);
 
 	// Demo to Move Player
 	Audio_Init();
@@ -220,11 +239,6 @@ void Tutorial_EnterState()
 	Dialogue5 = Text_CreateSprite();
 	Text_Init(&Dialogue5, "..//RhythmGame//$Resources//DialogueEndTutorial.txt");
 	Text_Move(&Dialogue5, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
-
-	//// Move to Actual Game
-	//Dialogue6 = Text_CreateSprite();
-	//Text_Init(&Dialogue6, "..//RhythmGame//$Resources//DialogueMoveToGame.txt");
-	//Text_Move(&Dialogue6, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
 }
 
 void Tutorial_ExitState()

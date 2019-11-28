@@ -67,6 +67,7 @@
     <Text Include="$Resources\ArrowKeyUp.txt" />
     <Text Include="$Resources\Beatbar.txt" />
     <Text Include="$Resources\beatman1.txt" />
+    <Text Include="$Resources\beatman2.txt" />
     <Text Include="$Resources\Dialogue1_MovePlayer.txt" />
     <Text Include="$Resources\Dialogue2_DashAttack1.txt" />
     <Text Include="$Resources\Dialogue2_DontSpam.txt" />

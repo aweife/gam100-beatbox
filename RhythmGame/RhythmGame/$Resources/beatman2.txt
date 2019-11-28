@@ -14,13 +14,18 @@ DDDDDDDDDDDDyyyyyyyyyyDDDDDDDDDDDD
 DDDDDDDDDDDDyrrrrrrrryDDDDDDDDDDDD
 DDDDDDDDDDDDyyyyyyyyyyDDDDDDDDDDDD
 DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
- www                          www 
- www    wwwwwwwwwwwwwwwwww    www 
- www     w   DDwwwwDD   w     www 
- www    w   DD      DD   w    www 
- wwwwrrrww DD  wwww  DD wwrrrwwww 
- wwwwrrrwwDD   wwww   DDwwrrrwwww 
-     rrrwwwwwwwwwwwwwwwwwwrrr     
+            www   www             
+            www   www             
+            www   www             
+            www   www             
+            www   www             
+          rrrrr   rrrrr           
+        wwwwwwwwwwwwwwwwww        
+         w   DDwwwwDD   w         
+        w   DD      DD   w        
+        ww DD  wwww  DD ww        
+        wwDD   wwww   DDww        
+        wwwwwwwwwwwwwwwwww        
         wwww          wwww        
         wwww          wwww        
         wwwww        wwwww        
