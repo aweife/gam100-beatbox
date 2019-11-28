@@ -4,6 +4,8 @@
 #include "StateMachine.h"
 #include "Game.h"
 #include"../UI/UI.h"
+#include "../Audio/AudioEngine.h"
+#include "../Map/Map.h"
 
 sprite logo;
 sprite robot;
@@ -54,6 +56,8 @@ void MainMenu_Update()
 		choice = 1;
 	if (choice == 0)
 		choice = 3;
+
+	Map_Update();
 }
 
 
@@ -62,18 +66,13 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
-	//Text_Move(&logo,70, 20);
-	//Text_Render(&logo,0,0);
+	// Render map first!
+	Map_Render();
+
+
 	_renderChoice(choice);
-
 	Text_Move(&robot, 25, 50);
-	Text_Render(&robot,0,0);
-	
-	
-	
-	
-	//UI_Render();
-
+	Text_Render(&robot, 0, 0);
 }
 
 //*********************************************************************************
@@ -91,10 +90,15 @@ void MainMenu_EnterState()
 	Text_Init(&Eye_Level, "..//RhythmGame//$Resources//Eye_Level.txt");
 	Eye_Quit = Text_CreateSprite();
 	Text_Init(&Eye_Quit, "..//RhythmGame//$Resources//Eye_Quit.txt");
+
+	Audio_Load(MAINMENU);
+	Audio_PlayBGM(MAINMENU);
+	Map_Init();
 }
 
 void MainMenu_ExitState()
 {
+	Audio_Unload();
 }
 
 void _confirmChoice(int choice)
@@ -113,21 +117,21 @@ void _renderChoice(int choice)
 	{
 	case 1:
 		Text_Move(&Eye_Play, 51, 71);
-		Text_Render(&Eye_Play,0,0);
+		Text_Render(&Eye_Play, 0, 0);
 		Text_Move(&eyeball, 110, 78);
-		Text_Render(&eyeball,0,0);
+		Text_Render(&eyeball, 0, 0);
 		break;
 	case 2:
 		Text_Move(&Eye_Level, 52, 72);
-		Text_Render(&Eye_Level,0,0);
+		Text_Render(&Eye_Level, 0, 0);
 		Text_Move(&eyeball, 110, 73);
-		Text_Render(&eyeball,0,0);
+		Text_Render(&eyeball, 0, 0);
 		break;
 	case 3:
 		Text_Move(&Eye_Quit, 50, 70);
-		Text_Render(&Eye_Quit,0,0);
+		Text_Render(&Eye_Quit, 0, 0);
 		Text_Move(&eyeball, 125, 75);
-		Text_Render(&eyeball,0,0);
+		Text_Render(&eyeball, 0, 0);
 		break;
 	}
 }

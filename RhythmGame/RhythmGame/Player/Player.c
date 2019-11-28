@@ -8,6 +8,9 @@
 #include "../UI/GameUI.h"
 #include "../Audio/AudioEngine.h"
 
+#define PLAYER_BASE_MOVESPEED 0.03
+#define PLAYER_FAST_MOVESPEED 0.075
+
 static Player player;
 static double factor;
 static double velocity;
@@ -27,10 +30,9 @@ static double invulTimer; // Invulnerable timer
 /* Internal functions */
 
 void _MovePlayer();
-// Checks if player is out of border
-void _CheckBorder();
-// Updates Timer
-void _UpdateState();
+void _CheckBorder(); // Checks if player collision with border
+void _UpdateState();// Updates timers
+void _CheckGameOver();// Checks if player's life is 0
 
 
 void Player_Init()
@@ -64,6 +66,7 @@ void Player_Update()
 	_UpdateState();
 	// Check against the border
 	_CheckBorder();
+	_CheckGameOver();
 }
 
 void Player_Render()
@@ -98,12 +101,11 @@ void Player_Render()
 	Console_SetRenderBuffer_CharColor(player.endPosition.x, player.endPosition.y, '+', CYAN);
 }
 
-void Player_CheckGameOver()
+void _CheckGameOver()
 {
 	if (player.health == 0)
 	{
 		StateMachine_ChangeState(State_GameOver);
-		Audio_FadeOutBGM(1000.0);
 	}
 }
 
@@ -243,7 +245,7 @@ void _MovePlayer()
 		velocity = 0.15;
 		break;
 	default:
-		velocity = 0.02;
+		velocity = Audio_GetSpectrum(0) ? PLAYER_FAST_MOVESPEED : PLAYER_BASE_MOVESPEED;
 		break;
 	}
 	double speed = 1.0 * dt * velocity * factor;

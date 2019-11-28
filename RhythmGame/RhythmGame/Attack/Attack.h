@@ -6,27 +6,33 @@
 
 #define NUMBER_OF_PROJECTILE 100
 #define LENGTH_OF_LASER 200
+#define NUMBER_OF_LASER 4
+
+typedef enum ATTACKTYPE {
+	PROJECTILE,
+	LASER,
+}ATTACKTYPE;
 
 //Projectile Structure
 typedef struct Projectile {
 	Vector2d position;
-	bool visible;
+	bool active;
 	DIRECTION direction;
-	int speed;
-	int distanceToTravel;
-	char debugChar;
 	sprite projectileSprite;
 } Projectile;
 
-//void _chooseAttack();
+typedef struct Laser {
+	Vector2d laserPosition;
+	DIRECTION direction;
+	bool active;
+	sprite spawnSprite;
+	sprite laserSprite[LENGTH_OF_LASER];
+	int laserIndex;
+	double tick;
+} Laser;
+
 extern void Attack_Init();
 extern void Attack_Update();
-extern void Attack_FixedUpdate();
 extern void Attack_Render();
-extern void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int speed, int distance);
-extern void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int length);
+extern void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction);
 extern void Attack_Cleanup();
-//void Attack_spawnClusterBomb();
-//void Attack_updateClusterBomb();
-
-/* extern Projectile* Enemy_GetProjectile(); */

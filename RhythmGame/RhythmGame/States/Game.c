@@ -5,7 +5,6 @@
 #include "../Audio/AudioEngine.h"
 #include "../Enemy/Enemy.h"
 #include "../Clock/Clock.h"
-#include "../Beat/Beat.h"
 #include "../UI/UI.h"
 #include "../Attack/Attack.h"
 #include "../Random/Random.h"
@@ -14,35 +13,29 @@
 
 static int reqExit = 0;
 
+// For pressing spacebar once
+int spaceDown = false;
+
 void Game_EnterState()
 {
 	// Random
 	Random_Init();
-
-	// Call this to init player
 	Player_Init();
 	Map_Init();
-	Audio_Init();
 	Enemy_Init();
-	Beat_Init();
 	Attack_Init();
 	GameUI_Init();
 
-	// Play the music for stage one
-	Audio_PlayBGMWithDelay(0.000001, STAGEONE);
-	Audio_SetBGMVolume(SILENCE_FACTOR, SNARE);
-	Audio_SetBGMVolume(SILENCE_FACTOR, PROJECTILE);
-	Audio_SetBGMVolume(SILENCE_FACTOR, WARNING);
-	Audio_SetBGMVolume(SILENCE_FACTOR, LASER);
-	Audio_SetBGMVolume(1.0, BGM);
+	// Play bgm for audio
+	Audio_Load(STAGEONE);
+	Audio_PlayBGM(STAGEONE);
 }
 
 void Game_ExitState()
 {
 	Attack_Cleanup();
+	Audio_Unload();
 }
-
-int spaceDown = false;
 
 void Game_ProcessInput()
 {
@@ -82,25 +75,24 @@ void Game_ProcessInput()
 
 void Game_Update()
 {
-	Clock_GameLoopStart();
-
 	Player_Update();
-	Audio_Update();
 	Map_Update();
-	Attack_Update();
-	Beat_Update();
 	GameUI_Update();
-	Attack_FixedUpdate();
-	Player_CheckGameOver();
+	Audio_Update();
+
+	// Update together
+	Enemy_Update();
+	Attack_Update();
 }
 
 void Game_Render()
 {
-	Player_Render();
+	// By order of rendering
+	GameUI_Render();
 	Map_Render();
 	Attack_Render();
 	Enemy_Render();
-	GameUI_Render();
+	Player_Render();
 }
 
 void Game_Exit()
