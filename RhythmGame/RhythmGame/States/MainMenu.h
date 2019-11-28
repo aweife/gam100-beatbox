@@ -8,3 +8,6 @@ extern void MainMenu_Render();
 
 extern void _renderChoice(int choice);
 extern void _confirmChoice(int choice);
+extern void _moveToBeat();
+extern void _updateTimer();
+extern void _renderBeat();

@@ -1,5 +1,6 @@
-#include "MainMenu.h"
 #include <Windows.h>
+#include "MainMenu.h"
+#include "../Clock/Clock.h"
 #include "../Text/TextReader.h"
 #include "StateMachine.h"
 #include "Game.h"
@@ -7,14 +8,17 @@
 #include "../Audio/AudioEngine.h"
 #include "../Map/Map.h"
 
-sprite logo;
-sprite robot;
-sprite eyeball;
-sprite Eye_Play;
-sprite Eye_Level;
-sprite Eye_Quit;
-int choice = 1;
-int keyDown = 1;
+sprite diamond1;
+sprite diamond2;
+sprite diamond3;
+static int choice = 1;
+static int keyDown = 1;
+
+static double beatTimer = 0.0;
+static int beatFlag = 0;
+static int toggle = 0;
+
+static int spriteAni = 1;
 
 //*********************************************************************************
 //								LOCAL VARIABLES
@@ -57,7 +61,19 @@ void MainMenu_Update()
 	if (choice == 0)
 		choice = 3;
 
-	Map_Update();
+	if (Audio_GetSpectrum(0) && toggle == 0)
+	{
+		beatFlag = 1;
+		toggle = 1;
+	}
+	else
+		toggle = 0;
+
+	if (beatFlag == 1)
+		_moveToBeat();
+	
+	_updateTimer();
+	//Map_Update();
 }
 
 
@@ -66,12 +82,12 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
-	_renderChoice(choice);
-	Text_Move(&robot, 25, 50);
-	Text_Render(&robot, 0, 0);
+	//_renderChoice(choice);
+	
+	_renderBeat();
 
 	// Render map
-	Map_Render();
+	//Map_Render();
 }
 
 //*********************************************************************************
@@ -79,20 +95,16 @@ void MainMenu_Render()
 //*********************************************************************************
 void MainMenu_EnterState()
 {
-	robot = Text_CreateSprite();
-	Text_Init(&robot, "..//RhythmGame//$Resources//Robot.txt");
-	Eye_Play = Text_CreateSprite();
-	Text_Init(&Eye_Play, "..//RhythmGame//$Resources//Eye_Play.txt");
-	eyeball = Text_CreateSprite();
-	Text_Init(&eyeball, "..//RhythmGame//$Resources//eyeball.txt");
-	Eye_Level = Text_CreateSprite();
-	Text_Init(&Eye_Level, "..//RhythmGame//$Resources//Eye_Level.txt");
-	Eye_Quit = Text_CreateSprite();
-	Text_Init(&Eye_Quit, "..//RhythmGame//$Resources//Eye_Quit.txt");
+	diamond1 = Text_CreateSprite();
+	Text_Init(&diamond1, "..//RhythmGame//$Resources//Diamond1.txt");
+	diamond2 = Text_CreateSprite();
+	Text_Init(&diamond2, "..//RhythmGame//$Resources//Diamond2.txt");
+	diamond3 = Text_CreateSprite();
+	Text_Init(&diamond3, "..//RhythmGame//$Resources//Diamond3.txt");
 
 	Audio_Load(MAINMENU);
 	Audio_PlayBGM(MAINMENU);
-	Map_Init();
+	//Map_Init();
 }
 
 void MainMenu_ExitState()
@@ -110,27 +122,45 @@ void _confirmChoice(int choice)
 	}
 }
 
-void _renderChoice(int choice)
+void _moveToBeat()
 {
-	switch (choice)
+	if (beatTimer < 0)
 	{
-	case 1:
-		Text_Move(&Eye_Play, 51, 71);
-		Text_Render(&Eye_Play, 0, 0);
-		Text_Move(&eyeball, 110, 78);
-		Text_Render(&eyeball, 0, 0);
-		break;
+		beatTimer = 15.0;
+		spriteAni++;
+		if (spriteAni >= 4)
+		{
+			spriteAni = 0;
+			beatFlag = 0;
+		}
+	}
+}
+
+void _renderBeat()
+{
+	switch (spriteAni)
+	{
 	case 2:
-		Text_Move(&Eye_Level, 52, 72);
-		Text_Render(&Eye_Level, 0, 0);
-		Text_Move(&eyeball, 110, 73);
-		Text_Render(&eyeball, 0, 0);
+		Text_Move(&diamond2, 23, 49);
+		Text_Render(&diamond2, 0, 0);
 		break;
 	case 3:
-		Text_Move(&Eye_Quit, 50, 70);
-		Text_Render(&Eye_Quit, 0, 0);
-		Text_Move(&eyeball, 125, 75);
-		Text_Render(&eyeball, 0, 0);
+		Text_Move(&diamond3, 21, 48);
+		Text_Render(&diamond3, 0, 0);
+		break;
+	default:
+		Text_Move(&diamond1, 25, 50);
+		Text_Render(&diamond1, 0, 0);
 		break;
 	}
+}
+
+void _updateTimer()
+{
+	if (beatTimer >= 0.0)
+		beatTimer -= Clock_GetDeltaTime();
+}
+
+void _renderChoice(int choice)
+{
 }
