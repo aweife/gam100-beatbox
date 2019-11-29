@@ -30,7 +30,10 @@ typedef struct Projectile {
 } Projectile;
 
 typedef struct Laser {
-	Vector2d laserPosition;
+	Vector2d startPosition;
+	Vector2d startPositionCheck;
+	Vector2d endPosition;
+	Vector2d endPositionCheck;
 	DIRECTION direction;
 	bool spawned;
 	bool active;

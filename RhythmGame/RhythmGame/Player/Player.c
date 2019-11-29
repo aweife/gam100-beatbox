@@ -9,10 +9,14 @@
 #include "../Audio/AudioEngine.h"
 #include "../Attack/Attack.h"
 
+#define DEBUG_AABB 0
+
 #define PLAYER_BASE_MOVESPEED 0.06
 #define PLAYER_FAST_MOVESPEED 0.075
+#define PLAYER_INVUL_DURATION 1000.0
 #define PLAYER_ATTACKSPEED 300.0
 #define PROJECTILE_SPEED 0.1
+#define COLLISION_OFFSET 1
 
 static Player player;
 static double factor;
@@ -99,10 +103,14 @@ void Player_Render()
 			player.playerSprite.spriteI[i].printColor = d;
 
 	Text_Render(&player.playerSprite, Map_GetShakeFactor(RIGHT) / 2, 0);
-	// Debug origin
-	Console_SetRenderBuffer_CharColor(player.startPosition.x, player.startPosition.y, '+', CYAN);
-	// Debug endposition
-	Console_SetRenderBuffer_CharColor(player.endPosition.x, player.endPosition.y, '+', CYAN);
+	
+	if (DEBUG_AABB)
+	{
+		// Debug origin
+		Console_SetRenderBuffer_CharColor(player.startPosition.x, player.startPosition.y, '+', CYAN);
+		// Debug endposition
+		Console_SetRenderBuffer_CharColor(player.endPosition.x, player.endPosition.y, '+', CYAN);
+	}
 }
 
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
@@ -129,7 +137,7 @@ void Player_Dash()
 
 	factor = 1;
 	speedUpTimer = 100.0;
-	invulTimer = 200.0;
+	invulTimer = PLAYER_INVUL_DURATION;
 	player.state = Dash;
 	dashCooldownTimer = 1000.0;
 }
@@ -150,7 +158,7 @@ void Player_Damage()
 	if (invulTimer > 0.0) return;
 
 	player.state = Invul;
-	invulTimer = 2000.0;
+	invulTimer = PLAYER_INVUL_DURATION;
 	Map_Shake(RIGHT, 100.0, MAP_SHAKE_X);
 	GameUI_DecreaseHealth(1);
 }
@@ -270,7 +278,7 @@ void _MovePlayer()
 
 	player.startPosition.x = (int)player.startPosition.eulerX;
 	player.startPosition.y = (int)player.startPosition.eulerY;
-	player.endPosition.x = (int)(player.startPosition.eulerX + player.playerSprite.spriteI[player.playerSprite.charCount - 1].position.x + 1);
+	player.endPosition.x = (int)(player.startPosition.eulerX + player.playerSprite.spriteI[player.playerSprite.charCount - 1].position.x + COLLISION_OFFSET);
 	player.endPosition.y = (int)(player.startPosition.eulerY + player.playerSprite.spriteI[player.playerSprite.charCount - 1].position.y);
 
 	Text_Move(&player.playerSprite, player.startPosition.x, player.startPosition.y);

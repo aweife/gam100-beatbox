@@ -8,7 +8,10 @@
 #include "../Audio/AudioEngine.h"
 #include <stdlib.h>
 
-#define LASER_UPDATE_SPEED 3
+#define DEBUG_AABB 0
+
+#define LASER_UPDATE_SPEED 1
+#define COLLISION_OFFSET 2
 
 // Keep tracks of how many projectiles are currently in use
 // then we update all in-use projectiles
@@ -103,6 +106,18 @@ void Attack_Render() // put in game.c
 		// Spawn should overlap laser body
 		if (lArray[i].spawned)
 			Text_Render(&lArray[i].spawnSprite, 0, 0);
+
+		// Debug 
+		if (lArray[i].active && DEBUG_AABB)
+		{
+			Console_SetRenderBuffer_CharColor(lArray[i].startPosition.x, lArray[i].startPosition.y, '+', GREEN);
+
+			Console_SetRenderBuffer_CharColor(lArray[i].startPositionCheck.x, lArray[i].startPositionCheck.y, '+', WHITE);
+
+			Console_SetRenderBuffer_CharColor(lArray[i].endPosition.x, lArray[i].endPosition.y, '+', WHITE);
+
+			Console_SetRenderBuffer_CharColor(lArray[i].endPositionCheck.x, lArray[i].endPositionCheck.y, '+', GREEN);
+		}
 	}
 }
 
@@ -161,7 +176,8 @@ void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, 
 			// Find a laser that is not in use
 			if (lArray[i].spawned || lArray[i].active) continue;
 			Text_Move(&lArray[i].spawnSprite, spawnPosition.x, spawnPosition.y);
-			lArray[i].laserPosition = spawnPosition;
+			lArray[i].startPosition = spawnPosition;
+			lArray[i].endPosition = spawnPosition;
 			lArray[i].direction = direction;
 			lArray[i].laserIndex = 0;
 			lArray[i].spawned = true;
@@ -284,13 +300,14 @@ void _CheckProjectileCollision()
 		// Check against enemy 
 		if (plArray[i].position.x >= Enemy_GetEnemy()->startPosition.x &&
 			plArray[i].position.x <= Enemy_GetEnemy()->endPosition.x &&
+			plArray[i].position.y >= Enemy_GetEnemy()->startPosition.y &&
 			plArray[i].position.y <= Enemy_GetEnemy()->endPosition.y)
-			{
-				plArray[i].active = false;
-				plArray[i].position.x = -3;
-				plArray[i].position.y = -3;
-				Enemy_Damage();
-			}
+		{
+			plArray[i].active = false;
+			plArray[i].position.x = -3;
+			plArray[i].position.y = -3;
+			Enemy_Damage();
+		}
 	}
 }
 
@@ -313,29 +330,39 @@ void _MoveLaser()
 		if (!lArray[i].active || !lArray[i].spawned) continue;
 
 		int orientation = 0; // 0 = vertical, 1 = horizontal
+		lArray[i].startPositionCheck = lArray[i].startPosition;
 		// Expand the laser according to the speed
 		for (int j = 0; j < LASER_UPDATE_SPEED; j++)
 		{
 			switch (lArray[i].direction)
 			{
 			case UP:
-				lArray[i].laserPosition.y--;
-				orientation = 0;
-				break;
-			case DOWN:
-				lArray[i].laserPosition.y++;
+				lArray[i].endPosition.y--;
+				lArray[i].endPositionCheck = lArray[i].endPosition;
+				lArray[i].startPositionCheck.x += COLLISION_OFFSET;
 				orientation = 0;
 				break;
 			case LEFT:
-				lArray[i].laserPosition.x--;
+				lArray[i].endPosition.x--;
+				lArray[i].endPositionCheck = lArray[i].endPosition;
+				lArray[i].startPositionCheck.y += COLLISION_OFFSET;
 				orientation = 1;
 				break;
+			case DOWN:
+				lArray[i].endPosition.y++;
+				lArray[i].endPositionCheck = lArray[i].endPosition;
+				lArray[i].endPositionCheck.x += COLLISION_OFFSET;
+				orientation = 0;
+				break;
 			case RIGHT:
-				lArray[i].laserPosition.x++;
+				lArray[i].endPosition.x++;
+				lArray[i].endPositionCheck = lArray[i].endPosition;
+				lArray[i].endPositionCheck.y += COLLISION_OFFSET;
 				orientation = 1;
 				break;
 			}
-			Text_Move(&lArray[i].laserSprite[lArray[i].laserIndex][orientation], lArray[i].laserPosition.x, lArray[i].laserPosition.y);
+
+			Text_Move(&lArray[i].laserSprite[lArray[i].laserIndex][orientation], lArray[i].endPosition.x, lArray[i].endPosition.y);
 			lArray[i].laserIndex++;
 		}
 	}
@@ -349,26 +376,41 @@ void _CheckLaserCollision()
 		if (!lArray[i].active || !lArray[i].spawned) continue;
 
 		// Check against border
-		if (lArray[i].laserPosition.x <= Map_GetOrigin().x ||
-			lArray[i].laserPosition.x >= Map_GetEnd().x ||
-			lArray[i].laserPosition.y <= Map_GetOrigin().y ||
-			lArray[i].laserPosition.y >= Map_GetEnd().y)
+		if (lArray[i].endPosition.x <= Map_GetOrigin().x ||
+			lArray[i].endPosition.x >= Map_GetEnd().x ||
+			lArray[i].endPosition.y <= Map_GetOrigin().y ||
+			lArray[i].endPosition.y >= Map_GetEnd().y)
 		{
 			_ClearLaser(i);
 		}
-		//continue;
+
 		// Check against player
-		for (int k = 0; k < lArray[i].laserIndex; k++) // every laser sprite
-			for (int l = 0; l < 2; l++) // animation state
-				for (int m = 0, count2 = lArray[i].laserSprite[k][l].charCount; m < count2; m++)
-					if (lArray[i].laserSprite[k][l].spriteI[m].position.x + lArray[i].laserSprite[k][l].origin.x >= Player_GetPlayer()->startPosition.x &&
-						lArray[i].laserSprite[k][l].spriteI[m].position.x + lArray[i].laserSprite[k][l].origin.x <= Player_GetPlayer()->endPosition.x &&
-						lArray[i].laserSprite[k][l].spriteI[m].position.y + lArray[i].laserSprite[k][l].origin.y >= Player_GetPlayer()->startPosition.y &&
-						lArray[i].laserSprite[k][l].spriteI[m].position.y + lArray[i].laserSprite[k][l].origin.y <= Player_GetPlayer()->endPosition.y)
-					{
-						_ClearLaser(i);
-						Player_Damage();
-					}
+		if (lArray[i].direction == DOWN || lArray[i].direction == RIGHT)
+		{
+			if (lArray[i].startPosition.x < Player_GetPlayer()->endPosition.x &&
+				lArray[i].endPositionCheck.x > Player_GetPlayer()->startPosition.x &&
+				lArray[i].startPosition.y < Player_GetPlayer()->endPosition.y &&
+				lArray[i].endPositionCheck.y > Player_GetPlayer()->startPosition.y)
+			{
+				if (Player_GetState() == NORMAL)
+				{
+					Player_Damage();
+					_ClearLaser(i);
+				}
+			}
+		}
+		else if (lArray[i].direction == UP || lArray[i].direction == LEFT)
+			if (lArray[i].endPosition.x < Player_GetPlayer()->endPosition.x &&
+				lArray[i].startPositionCheck.x > Player_GetPlayer()->startPosition.x &&
+				lArray[i].endPosition.y < Player_GetPlayer()->endPosition.y &&
+				lArray[i].startPositionCheck.y > Player_GetPlayer()->startPosition.y)
+			{
+				if (Player_GetState() == NORMAL)
+				{
+					Player_Damage();
+					_ClearLaser(i);
+				}
+			}
 	}
 }
 
@@ -376,10 +418,10 @@ void _ClearLaser(int i)
 {
 	lArray[i].spawned = false;
 	lArray[i].active = false;
-	lArray[i].laserPosition.x = -3;
-	lArray[i].laserPosition.y = -3;
+	lArray[i].endPosition.x = -3;
+	lArray[i].endPosition.y = -3;
 
-	for (int j = 0; j < LENGTH_OF_LASER; j++)
+	for (int j = 0; j < lArray[i].laserIndex; j++)
 		for (int k = 0; k < 2; k++)
-			Text_Move(&lArray[i].laserSprite[j][k], lArray[i].laserPosition.x, lArray[i].laserPosition.y);
+			Text_Move(&lArray[i].laserSprite[j][k], lArray[i].endPosition.x, lArray[i].endPosition.y);
 }

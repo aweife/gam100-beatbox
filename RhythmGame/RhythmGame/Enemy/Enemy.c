@@ -9,12 +9,15 @@
 #include "../UI/GameUI.h"
 #include <math.h>
 
+#define DEBUG_AABB 0
+
 #define ENEMY_BASE_MOVESPEED 0.01
 #define ENEMY_FAST_MOVESPEED 0.05
 #define PROJECTILE_SPAWN_SPEED 100.0
 #define PROJECTILE_SPEED 0.04
 #define PROJECTILE_SPEED_FAST 0.1
 #define LASER_SPAWN_SPEED 200.0
+#define COLLISION_OFFSET 7
 
 #define HEALTHBAR_WIDTH 25
 #define HEALTHBAR_HEIGHT 4
@@ -94,8 +97,11 @@ void Enemy_Render()
 	}
 
 	// Debug origin point
-	Console_SetRenderBuffer_CharColor(skullEnemy.startPosition.x, skullEnemy.startPosition.y, '+', CYAN);
-	Console_SetRenderBuffer_CharColor(skullEnemy.endPosition.x, skullEnemy.endPosition.y, '+', CYAN);
+	if (DEBUG_AABB)
+	{
+		Console_SetRenderBuffer_CharColor(skullEnemy.startPosition.x, skullEnemy.startPosition.y, '+', CYAN);
+		Console_SetRenderBuffer_CharColor(skullEnemy.endPosition.x, skullEnemy.endPosition.y, '+', CYAN);
+	}
 
 	// Render healthbar state
 	_RenderHealthBar();
@@ -164,7 +170,7 @@ void _MoveToPosition(double velocity)
 		// Update position with euler
 		skullEnemy.startPosition.x = (int)skullEnemy.startPosition.eulerX;
 		skullEnemy.startPosition.y = (int)skullEnemy.startPosition.eulerY;
-		skullEnemy.endPosition.x = (int)(skullEnemy.startPosition.eulerX + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.x + 7);
+		skullEnemy.endPosition.x = (int)(skullEnemy.startPosition.eulerX + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.x + COLLISION_OFFSET);
 		skullEnemy.endPosition.y = (int)(skullEnemy.startPosition.eulerY + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.y);
 
 		Text_Move(&skullEnemy.enemySprite, skullEnemy.startPosition.x, skullEnemy.startPosition.y);
@@ -233,7 +239,7 @@ void _EnemyAttack()
 			Attack_Spawn(LASER, skullEnemy.startPosition, Random_Range(5, 8), (projectileSpeed) { 0, 0 });
 			laserSpawnTimer = LASER_SPAWN_SPEED;
 		}
-
+		return;
 		if (Audio_GetSpectrum(1))
 		{
 			projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED_FAST };

@@ -65,10 +65,10 @@ void GameUI_Render()
 
 void GameUI_DecreaseHealth(int damage)
 {
-	if (health.count > 0)
-		health.count--;
-	else
+	if (health.count <= 1)
 		StateMachine_ChangeState(State_GameOver);
+	else
+		health.count--;
 }
 
 void GameUI_AddScore(int amt)
