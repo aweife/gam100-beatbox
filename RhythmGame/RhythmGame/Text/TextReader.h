@@ -1,7 +1,9 @@
 #pragma once
+<<<<<<< HEAD
 
 #define SPRITE_SIZE 10000
-
+=======
+>>>>>>> master
 #include "../Global.h"
 
 typedef struct spriteInfo
