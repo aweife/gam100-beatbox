@@ -8,6 +8,8 @@
 #define HEART_SPRITE_WIDTH 10
 #define HEART_SPRITE_HEIGHT 8
 
+#define MAX_SCORE_DIGITS 5
+
 typedef struct Hearts {
 	bool visible;
 	sprite heartSprite;
@@ -19,13 +21,22 @@ typedef struct HealthUI {
 	Hearts hearts[2][5];
 } HealthUI;
 
+typedef struct ScoreDigit {
+	bool visible;
+	sprite numbers[10];
+} ScoreDigit;
 
-static int score = 0;
-static int combo = 0;
+typedef struct ScoreUI {
+	Vector2d origin;
+	int count;
+	ScoreDigit digits[MAX_SCORE_DIGITS];
+} ScoreUI;
 
 static HealthUI health = { 0 };
+static ScoreUI score;
 
 void _InitHealth();
+void _InitScore();
 void _RenderHealth();
 void _RenderScore();
 
@@ -43,6 +54,7 @@ void GameUI_Update()
 void GameUI_Render()
 {
 	_RenderHealth();
+	_RenderScore();
 }
 
 void GameUI_DecreaseHealth(int damage)
@@ -55,7 +67,7 @@ void GameUI_DecreaseHealth(int damage)
 
 void GameUI_AddScore(int amt)
 {
-	score += amt;
+
 }
 
 void _InitHealth()
@@ -81,7 +93,23 @@ void _InitHealth()
 
 void _InitScore()
 {
-	score = 0;
+	// Init sprites for numbers
+	for (int i = 0; i < 10; i++)
+		for (int j = 0; j < MAX_SCORE_DIGITS; j++)
+		{
+			score.digits[j].visible = false;
+			Text_InitArray(&score.digits[j].numbers[i], "..//RhythmGame//$Resources//numbers.txt", i);
+		}
+
+	// Init score
+	score.count = 0;
+
+	// Init position on screen
+	score.origin.x = GAME_WIDTH - MAP_OFFSET;
+	score.origin.y = MAP_OFFSET;
+
+	score.digits[0].visible = true;
+	Text_Move(&score.digits[0].numbers[5], score.origin.x, score.origin.y);
 }
 
 void _RenderHealth()
@@ -94,5 +122,8 @@ void _RenderHealth()
 
 void _RenderScore()
 {
+	//for (int i = 0; i < MAX_SCORE_DIGITS; i++)
+		//if (score.digits[i].visible)
+			Text_Render(&score.digits[0].numbers[5], score.origin.x, score.origin.y);
 
 }

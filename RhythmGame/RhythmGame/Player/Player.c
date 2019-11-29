@@ -36,7 +36,6 @@ static double attackTimer;
 void _MovePlayer();
 void _CheckBorder(); // Checks if player collision with border
 void _UpdateState();// Updates timers
-void _CheckGameOver();// Checks if player's life is 0
 void _AutoAttack();
 
 
@@ -68,9 +67,9 @@ void Player_Update()
 {
 	_MovePlayer();
 	_UpdateState();
+
 	// Check against the border
 	_CheckBorder();
-	_CheckGameOver();
 	_AutoAttack();
 }
 
