@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_DEPRECATE
 
 #include <stdio.h>
+#include<stdlib.h>
 #include <ctype.h>
 #include "TextReader.h"
 #include "../Console/Console.h"
@@ -8,7 +9,7 @@
 
 
 FILE *pFile;
-sprite skullenemy = { 0 };
+sprite skullenemy;
 char Charline[150] = { 0 };
 int length = 0;
 int charcount = 0;
@@ -17,16 +18,144 @@ int totalcharcount = 0;
 int currentyposition = 0;
 int iteration = 0;
 int Xoffset = 0;
+int count = 0;
+int rendertrue = 0;
+int jump = 0;
 
 
 void Text_Init(sprite *s, char *path)
 {
+	 count = _CountChars(path);
+	s->charCount = count;
+	s->spriteI = (spriteInfo *)malloc(sizeof(spriteInfo) * count);
 	_Readandstoretext(s, path);
 }
 
-void Text_InitArray(sprite *s, char *path)
+void Text_Cleanup(sprite *s)
 {
-	_ReadandstoretextArray(s, path);
+	free(s->spriteI);
+}
+
+int _CountCharsArray(char *path,int state)
+{
+	rendertrue = 0;
+	jump = 0;
+	totalcharcount = 0;
+
+	for (int i = 0; i < 150; i++)
+	{
+		Charline[i] = 'n';
+	}
+
+	pFile = fopen(path, "r");
+	if (pFile == NULL)
+	{
+		perror("Error opening file");
+		return 0;
+	}
+	else
+	{
+		while (!feof(pFile))
+		{
+			charcount = 0;
+
+			fgets(Charline, 150, pFile);
+
+			for (int i = 0; i < 150; i++)
+			{
+				if (isdigit(Charline[i]) && (Charline[i] - '0') == state)
+				{
+					rendertrue = 1;
+					jump = 1;
+					break;
+				}
+				else if (isdigit(Charline[i]) && (Charline[i] - '0') != state)
+				{
+					rendertrue = 0;
+
+				}
+			}
+
+			if (jump == 1)
+			{
+				jump = 0;
+				continue;
+			}
+
+
+			if (rendertrue == 1)
+			{
+				for (int i = 0; i < 150; i++)
+				{
+					if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n')
+					{
+
+						charcount++;
+					}
+					else
+					{
+						Charline[i] = 'n';
+					}
+				}
+
+				totalcharcount += charcount;
+			}
+		}
+
+		fclose(pFile);
+		return totalcharcount;
+	}
+
+}
+
+
+
+int _CountChars(char * path)
+{
+	totalcharcount = 0;
+
+	pFile = fopen(path, "r");
+	if (pFile == NULL)
+	{
+		perror("Error opening file");
+		return 0;
+	}
+	else
+	{
+		while (!feof(pFile))
+		{
+			charcount = 0;
+
+			fgets(Charline, 150, pFile);
+
+			for (int i = 0; i < 150; i++)
+			{
+				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0')
+				{
+				
+					charcount++;
+				}
+				else
+				{
+					Charline[i] = '0';
+				}
+			}
+
+			totalcharcount +=charcount;
+		}
+
+		fclose(pFile);
+		return totalcharcount;
+	}
+
+}
+
+void Text_InitArray(sprite *s, char *path,int state)
+{
+	count = _CountCharsArray(path,state);
+	s->charCount = count;
+	s->spriteI = (spriteInfo *)malloc(sizeof(spriteInfo) * count);
+	_ReadandstoretextArray(s->spriteI, path, state);
 
 }
 
@@ -34,18 +163,28 @@ sprite Text_CreateSprite()
 {
 	return skullenemy;
 }
+
 void Text_Render(sprite *s, int offsetX, int offsetY)
 {
-	for (int i = 0; i < SPRITE_SIZE; i++)
+	for (int i = 0; i < s->charCount; i++)
 	{
-		Console_SetRenderBuffer_CharColor((s->position[i].x + s->origin.x) + offsetX, (s->position[i].y + s->origin.y) + offsetY, ' ', (WORD)s->printColor[i]);
-		if (s->printchar[i] == '\0')
+		Console_SetRenderBuffer_CharColor((s->spriteI[i].position.x + s->origin.x) + offsetX, (s->spriteI[i].position.y + s->origin.y) + offsetY, ' ', (WORD)s->spriteI[i].printColor);
+		if (s->spriteI[i].printchar == '\0')
 			break;
 	}
-	Console_SetRenderBuffer_CharColor((s->position[0].x) + s->origin.x, (s->position[0].y + s->origin.y), ' ', (WORD)s->printColor[0]);
+	Console_SetRenderBuffer_CharColor((s->spriteI[0].position.x) + s->origin.x, (s->spriteI[0].position.y + s->origin.y), ' ', (WORD)s->spriteI[0].printColor);
 }
 
-
+void Text_RenderWords(sprite* s)
+{
+	for (int i = 0; i < s->charCount; i++)
+	{
+		Console_SetRenderBuffer_CharColor((s->spriteI[i].position.x) + s->origin.x, (s->spriteI[i].position.y + s->origin.y), s->spriteI[i].printchar, fWHITE);
+		if (s->spriteI[i].printchar == '\0')
+			break;
+	}
+	Console_SetRenderBuffer_CharColor((s->spriteI[0].position.x) + s->origin.x, (s->spriteI[0].position.y + s->origin.y), s->spriteI[0].printchar, WHITE);
+}
 
 void Text_RenderRainbow(sprite *s)
 {
@@ -53,9 +192,9 @@ void Text_RenderRainbow(sprite *s)
 	int oldyvalue = 0;
 	CONSOLECOLOR rainbow;
 
-	for (int i = 0; i < SPRITE_SIZE; i++)
+	for (int i = 0; i < s->charCount; i++)
 	{
-		if (s->position[i].y > oldyvalue)
+		if (s->spriteI[i].position.y > oldyvalue)
 		{
 			rainbowinterator++;
 			if (rainbowinterator == 7)
@@ -63,7 +202,7 @@ void Text_RenderRainbow(sprite *s)
 
 		}
 
-		oldyvalue = s->position[i].y;
+		oldyvalue = s->spriteI[i].position.y;
 
 
 		switch (rainbowinterator)
@@ -81,9 +220,9 @@ void Text_RenderRainbow(sprite *s)
 		case 6: rainbow = MAGENTA;
 			break;
 		}
-		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y), ' ', rainbow);
+		Console_SetRenderBuffer_CharColor((s->spriteI[i].position.x) + s->origin.x, (s->spriteI[i].position.y + s->origin.y), ' ', rainbow);
 
-		if (s->printchar[i] == '\0')
+		if (s->spriteI[i].printchar == '\0')
 			break;
 	}
 }
@@ -108,7 +247,8 @@ void _Readandstoretext(sprite *s, const char *path)
 	}
 
 	pFile = fopen(path, "r");
-	if (pFile == NULL) perror("Error opening file");
+	if (pFile == NULL)
+		perror("Error opening file");
 	else
 	{
 		while (!feof(pFile))
@@ -141,45 +281,45 @@ void _Readandstoretext(sprite *s, const char *path)
 			{
 				if (Charline[i] != ' ' && Charline[i] != '0')
 				{
-					s->position[newcharcount + iteration].x = Xoffset;
-					s->position[newcharcount + iteration].y = currentyposition;
-					s->printchar[newcharcount + iteration] = Charline[i];
+					s->spriteI[newcharcount + iteration].position.x = Xoffset;
+					s->spriteI[newcharcount + iteration].position.y = currentyposition;
+					s->spriteI[newcharcount + iteration].printchar = Charline[i];
 					if (Charline[i] == 'g')
-						s->printColor[newcharcount + iteration] = GREEN;
+						s->spriteI[newcharcount + iteration].printColor = GREEN;
 					else if (Charline[i] == 'G')
-						s->printColor[newcharcount + iteration] = DARKGREEN;
+						s->spriteI[newcharcount + iteration].printColor = DARKGREEN;
 					else if (Charline[i] == 'b')
-						s->printColor[newcharcount + iteration] = BLUE;
+						s->spriteI[newcharcount + iteration].printColor = BLUE;
 					else if (Charline[i] == 'B')
-						s->printColor[newcharcount + iteration] = DARKBLUE;
+						s->spriteI[newcharcount + iteration].printColor = DARKBLUE;
 					else if (Charline[i] == 'c')
-						s->printColor[newcharcount + iteration] = CYAN;
+						s->spriteI[newcharcount + iteration].printColor = CYAN;
 					else if (Charline[i] == 'C')
-						s->printColor[newcharcount + iteration] = DARKCYAN;
+						s->spriteI[newcharcount + iteration].printColor = DARKCYAN;
 					else if (Charline[i] == 'y')
-						s->printColor[newcharcount + iteration] = YELLOW;
+						s->spriteI[newcharcount + iteration].printColor = YELLOW;
 					else if (Charline[i] == 'Y')
-						s->printColor[newcharcount + iteration] = DARKYELLOW;
+						s->spriteI[newcharcount + iteration].printColor = DARKYELLOW;
 					else if (Charline[i] == 'r')
-						s->printColor[newcharcount + iteration] = RED;
+						s->spriteI[newcharcount + iteration].printColor = RED;
 					else if (Charline[i] == 'R')
-						s->printColor[newcharcount + iteration] = DARKRED;
+						s->spriteI[newcharcount + iteration].printColor = DARKRED;
 					else if (Charline[i] == 'm')
-						s->printColor[newcharcount + iteration] = MAGENTA;
+						s->spriteI[newcharcount + iteration].printColor = MAGENTA;
 					else if (Charline[i] == 'M')
-						s->printColor[newcharcount + iteration] = DARKMAGENTA;
+						s->spriteI[newcharcount + iteration].printColor = DARKMAGENTA;
 					else if (Charline[i] == 'w')
-						s->printColor[newcharcount + iteration] = WHITE;
+						s->spriteI[newcharcount + iteration].printColor = WHITE;
 					else if (Charline[i] == 'W')
-						s->printColor[newcharcount + iteration] = BLACK;
+						s->spriteI[newcharcount + iteration].printColor = BLACK;
 					else if (Charline[i] == 'd')
-						s->printColor[newcharcount + iteration] = DARKGRAY;
+						s->spriteI[newcharcount + iteration].printColor = DARKGRAY;
 					else if (Charline[i] == 'D')
-						s->printColor[newcharcount + iteration] = GRAY;
+						s->spriteI[newcharcount + iteration].printColor = GRAY;
 					else if (Charline[i] == 'B')
-						s->printColor[newcharcount + iteration] = DARKBLUE;
+						s->spriteI[newcharcount + iteration].printColor = DARKBLUE;
 					else
-						s->printColor[newcharcount + iteration] = WHITE;
+						s->spriteI[newcharcount + iteration].printColor = WHITE;
 
 					iteration++;
 				}
@@ -196,20 +336,10 @@ void _Readandstoretext(sprite *s, const char *path)
 	}
 }
 
-void Text_RenderWords(sprite* s)
+void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 {
-	for (int i = 0; i < SPRITE_SIZE; i++)
-	{
-		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y), s->printchar[i], fWHITE);
-		if (s->printchar[i] == '\0')
-			break;
-	}
-	Console_SetRenderBuffer_CharColor((s->position[0].x) + s->origin.x, (s->position[0].y + s->origin.y), s->printchar[0], WHITE);
-}
-
-void _ReadandstoretextArray(sprite *s, const char *path)
-{
-	int state = 0;
+	jump = 0;
+	rendertrue = 0;
 	iteration = 0;
 	newcharcount = 0;
 	totalcharcount = 0;
@@ -225,6 +355,8 @@ void _ReadandstoretextArray(sprite *s, const char *path)
 	if (pFile == NULL) perror("Error opening file");
 	else
 	{
+
+
 		while (!feof(pFile))
 		{
 			charcount = 0;
@@ -233,77 +365,91 @@ void _ReadandstoretextArray(sprite *s, const char *path)
 
 			fgets(Charline, 150, pFile);
 
-			if (isdigit(Charline[0]))
+			for (int i = 0; i < 150; i++)
 			{
-				state = Charline[0] - '0';
-				newcharcount = 0;
-				totalcharcount = 0;
-				iteration = 0;
-				currentyposition = 0;
+
+
+				if (isdigit(Charline[i]) && (Charline[i] - '0') == state)
+				{
+					rendertrue = 1;
+					jump = 1;
+					break;
+				}
+				else if (isdigit(Charline[i]) && (Charline[i] - '0') != state)
+				{
+					rendertrue = 0;
+
+				}
+			}
+
+			if (jump == 1)
+			{
+				jump = 0;
 				continue;
 			}
 
 
-			for (int i = 0; i < 150; i++)
+			if (rendertrue == 1)
 			{
-				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0')
+				for (int i = 0; i < 150; i++)
 				{
+					if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n')
+					{
 
-					charcount++;
+						charcount++;
+					}
+					else
+					{
+						Charline[i] = 'n';
+					}
+
+
 				}
-				else
-				{
-					Charline[i] = '0';
-				}
 
-
-			}
-
-			printf("%d\n", charcount);
 
 			for (int i = 0; i < charcount; i++)
 			{
-				if (Charline[i] != ' ' && Charline[i] != '\0')
+				if (Charline[i] != ' ' && Charline[i] != '\0' && Charline[i] != 'n')
 				{
-					(s + state)->position[newcharcount + iteration].x = Xoffset;
-					(s + state)->position[newcharcount + iteration].y = currentyposition;
-					(s + state)->printchar[newcharcount + iteration] = Charline[i];
+					 spriteI[newcharcount + iteration].position.x = Xoffset;
+					 spriteI[newcharcount + iteration].position.y = currentyposition;
+					 spriteI[newcharcount + iteration].printchar= Charline[i];
 					if (Charline[i] == 'g')
-						(s + state)->printColor[newcharcount + iteration] = GREEN;
+						 spriteI[newcharcount + iteration].printColor = GREEN;
 					else if (Charline[i] == 'G')
-						(s + state)->printColor[newcharcount + iteration] = DARKGREEN;
+						 spriteI[newcharcount + iteration].printColor = DARKGREEN;
 					else if (Charline[i] == 'b')
-						(s + state)->printColor[newcharcount + iteration] = BLUE;
+						 spriteI[newcharcount + iteration].printColor = BLUE;
 					else if (Charline[i] == 'B')
-						(s + state)->printColor[newcharcount + iteration] = DARKBLUE;
+						 spriteI[newcharcount + iteration].printColor = DARKBLUE;
 					else if (Charline[i] == 'c')
-						(s + state)->printColor[newcharcount + iteration] = CYAN;
+						 spriteI[newcharcount + iteration].printColor = CYAN;
 					else if (Charline[i] == 'C')
-						(s + state)->printColor[newcharcount + iteration] = DARKCYAN;
+						 spriteI[newcharcount + iteration].printColor = DARKCYAN;
 					else if (Charline[i] == 'y')
-						(s + state)->printColor[newcharcount + iteration] = YELLOW;
+						 spriteI[newcharcount + iteration].printColor = YELLOW;
 					else if (Charline[i] == 'Y')
-						(s + state)->printColor[newcharcount + iteration] = DARKYELLOW;
+						 spriteI[newcharcount + iteration].printColor = DARKYELLOW;
 					else if (Charline[i] == 'r')
-						(s + state)->printColor[newcharcount + iteration] = RED;
+						 spriteI[newcharcount + iteration].printColor = RED;
 					else if (Charline[i] == 'R')
-						(s + state)->printColor[newcharcount + iteration] = DARKRED;
+						 spriteI[newcharcount + iteration].printColor = DARKRED;
 					else if (Charline[i] == 'm')
-						(s + state)->printColor[newcharcount + iteration] = MAGENTA;
+						 spriteI[newcharcount + iteration].printColor = MAGENTA;
 					else if (Charline[i] == 'M')
-						(s + state)->printColor[newcharcount + iteration] = DARKMAGENTA;
+						 spriteI[newcharcount + iteration].printColor = DARKMAGENTA;
 					else if (Charline[i] == 'w')
-						(s + state)->printColor[newcharcount + iteration] = WHITE;
+						 spriteI[newcharcount + iteration].printColor = WHITE;
 					else if (Charline[i] == 'W')
-						(s + state)->printColor[newcharcount + iteration] = BLACK;
+						 spriteI[newcharcount + iteration].printColor = BLACK;
 					else if (Charline[i] == 'd')
-						(s + state)->printColor[newcharcount + iteration] = GRAY;
+						 spriteI[newcharcount + iteration].printColor = GRAY;
 					else if (Charline[i] == 'D')
-						(s + state)->printColor[newcharcount + iteration] = DARKGRAY;
+						 spriteI[newcharcount + iteration].printColor = DARKGRAY;
 					else if (Charline[i] == 'B')
-						(s + state)->printColor[newcharcount + iteration] = DARKBLUE;
+						 spriteI[newcharcount + iteration].printColor = DARKBLUE;
 					else
-						(s + state)->printColor[newcharcount + iteration] = WHITE;
+						 spriteI[newcharcount + iteration].printColor = WHITE;
 
 					iteration++;
 				}
@@ -315,6 +461,7 @@ void _ReadandstoretextArray(sprite *s, const char *path)
 
 			newcharcount = totalcharcount;
 			currentyposition++;
+		}
 		}
 		fclose(pFile);
 	}
