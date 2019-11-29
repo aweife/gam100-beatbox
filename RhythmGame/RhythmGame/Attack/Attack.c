@@ -254,7 +254,7 @@ void _CheckProjectileCollision()
 			pArray[i].position.x = -3;
 			pArray[i].position.y = -3;
 		}
-		continue;
+		//continue;
 		// Check against player 
 		for (int j = 0, count = Player_GetPlayerSprite()->charCount; j < count; j++)
 			if (pArray[i].position.x == Player_GetPlayerSprite()->spriteI[j].position.x + Player_GetPlayerSprite()->origin.x &&
@@ -355,10 +355,10 @@ void _CheckLaserCollision()
 		{
 			_ClearLaser(i);
 		}
-		continue;
+		//continue;
 		// Check against player
-		for (int k = 0; k < lArray[i].laserIndex; k++)
-			for (int l = 0; l < 2; l++)
+		for (int k = 0; k < lArray[i].laserIndex; k++) // every laser sprite
+			for (int l = 0; l < 2; l++) // animation state
 				for (int j = 0, count = Player_GetPlayerSprite()->charCount; j < count; j++)
 					for (int m = 0, count2 = lArray[i].laserSprite[k][l].charCount; m < count2; m++)
 						if (lArray[i].laserSprite[k][l].spriteI[m].position.x + lArray[i].laserSprite[k][l].origin.x ==

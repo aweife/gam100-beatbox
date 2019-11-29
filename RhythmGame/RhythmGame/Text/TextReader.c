@@ -36,6 +36,80 @@ void Text_Cleanup(sprite *s)
 	free(s->spriteI);
 }
 
+int _CountCharsArray(char *path,int state)
+{
+	rendertrue = 0;
+	jump = 0;
+	totalcharcount = 0;
+
+	for (int i = 0; i < 150; i++)
+	{
+		Charline[i] = 'n';
+	}
+
+	pFile = fopen(path, "r");
+	if (pFile == NULL)
+	{
+		perror("Error opening file");
+		return 0;
+	}
+	else
+	{
+		while (!feof(pFile))
+		{
+			charcount = 0;
+
+			fgets(Charline, 150, pFile);
+
+			for (int i = 0; i < 150; i++)
+			{
+				if (isdigit(Charline[i]) && (Charline[i] - '0') == state)
+				{
+					rendertrue = 1;
+					jump = 1;
+					break;
+				}
+				else if (isdigit(Charline[i]) && (Charline[i] - '0') != state)
+				{
+					rendertrue = 0;
+
+				}
+			}
+
+			if (jump == 1)
+			{
+				jump = 0;
+				continue;
+			}
+
+
+			if (rendertrue == 1)
+			{
+				for (int i = 0; i < 150; i++)
+				{
+					if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n')
+					{
+
+						charcount++;
+					}
+					else
+					{
+						Charline[i] = 'n';
+					}
+				}
+
+				totalcharcount += charcount;
+			}
+		}
+
+		fclose(pFile);
+		return totalcharcount;
+	}
+
+}
+
+
+
 int _CountChars(char * path)
 {
 	totalcharcount = 0;
@@ -58,7 +132,7 @@ int _CountChars(char * path)
 			{
 				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0')
 				{
-
+				
 					charcount++;
 				}
 				else
@@ -78,7 +152,7 @@ int _CountChars(char * path)
 
 void Text_InitArray(sprite *s, char *path,int state)
 {
-	count = _CountChars(path);
+	count = _CountCharsArray(path,state);
 	s->charCount = count;
 	s->spriteI = (spriteInfo *)malloc(sizeof(spriteInfo) * count);
 	_ReadandstoretextArray(s->spriteI, path, state);
@@ -264,6 +338,8 @@ void _Readandstoretext(sprite *s, const char *path)
 
 void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 {
+	jump = 0;
+	rendertrue = 0;
 	iteration = 0;
 	newcharcount = 0;
 	totalcharcount = 0;
