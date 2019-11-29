@@ -1,61 +1,141 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Attack\Attack.c" />
-    <ClCompile Include="Audio\AudioEngine.c" />
-    <ClCompile Include="Clock\Clock.cpp" />
-    <ClCompile Include="Console\Console.c" />
-    <ClCompile Include="Enemy\Enemy.c" />
-    <ClCompile Include="Main.c" />
-    <ClCompile Include="Map\Map.c" />
-    <ClCompile Include="Player\Player.c" />
-    <ClCompile Include="Random\Random.c" />
-    <ClCompile Include="States\Game.c" />
-    <ClCompile Include="States\GameOver.c" />
-    <ClCompile Include="States\MainMenu.c" />
-    <ClCompile Include="States\StateMachine.c" />
-    <ClCompile Include="Text\TextReader.c" />
-    <ClCompile Include="UI\GameUI.c" />
-    <ClCompile Include="UI\UI.c" />
-    <ClCompile Include="States\Logo.c" />
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Console">
+      <UniqueIdentifier>{88666842-40b3-4c0e-bd06-06c857cd9f8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Clock">
+      <UniqueIdentifier>{b85859e1-56f9-45ba-9872-82e448cc8ba9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Random">
+      <UniqueIdentifier>{2ce6280a-4ef7-408b-b989-58aac7b21397}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{2246e372-f896-46c1-b98b-be62d1c13f84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Attack\Attack.h" />
-    <ClInclude Include="Audio\AudioEngine.h" />
-    <ClInclude Include="Clock\Clock.h" />
-    <ClInclude Include="Console\Console.h" />
-    <ClInclude Include="Enemy\Enemy.h" />
-    <ClInclude Include="Global.h" />
-    <ClInclude Include="Map\Map.h" />
-    <ClInclude Include="Player\Player.h" />
-    <ClInclude Include="Random\Random.h" />
-    <ClInclude Include="States\Game.h" />
-    <ClInclude Include="States\GameOver.h" />
-    <ClInclude Include="States\MainMenu.h" />
-    <ClInclude Include="States\StateMachine.h" />
-    <ClInclude Include="Text\TextReader.h" />
-    <ClInclude Include="UI\GameUI.h" />
-    <ClInclude Include="UI\UI.h" />
-    <ClInclude Include="States\Logo.h" />
+    <ClCompile Include="Console\Console.c">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Clock\Clock.cpp">
+      <Filter>Clock</Filter>
+    </ClCompile>
+    <ClCompile Include="Random\Random.c">
+      <Filter>Random</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioEngine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Beat\Beat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy\Enemy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\Map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\Player.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="States\Game.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="States\GameOver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="States\MainMenu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="States\StateMachine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Text\TextReader.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UI.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="$Resources\Kick.wav" />
-    <Media Include="$Resources\Melody.wav" />
-    <Media Include="$Resources\Snare.wav" />
+    <ClInclude Include="Console\Console.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Clock\Clock.h">
+      <Filter>Clock</Filter>
+    </ClInclude>
+    <ClInclude Include="Random\Random.h">
+      <Filter>Random</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Beat\Beat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\Enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\Map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="States\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="States\GameOver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="States\MainMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="States\StateMachine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Text\TextReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="$Resources\Beatbar.txt" />
-    <Text Include="$Resources\Health.txt" />
-    <Text Include="$Resources\Health2.txt" />
-    <Text Include="$Resources\Logo.txt" />
-    <Text Include="$Resources\Logo2.txt" />
-    <Text Include="$Resources\Logo2.txt.txt" />
-    <Text Include="$Resources\MainMenu.txt" />
-    <Text Include="$Resources\skull.txt" />
-    <Text Include="$Resources\TestLogo.txt" />
-    <Text Include="$Resources\player.txt" />
-    <Text Include="$Resources\projectile.txt" />
-    <Text Include="%24Resources\laser.txt" />
-    <Text Include="$Resources\projectile2.txt" />
+    <Text Include="$Resources\Logo.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="$Resources\Logo2.txt.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="$Resources\skull.txt">
+      <Filter>Resources</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="$Resources\Kick.wav">
+      <Filter>Resources</Filter>
+    </Media>
+    <Media Include="$Resources\Melody.wav">
+      <Filter>Resources</Filter>
+    </Media>
+    <Media Include="$Resources\Snare.wav">
+      <Filter>Resources</Filter>
+    </Media>
   </ItemGroup>
 </Project>
