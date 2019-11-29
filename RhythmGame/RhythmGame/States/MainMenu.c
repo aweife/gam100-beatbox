@@ -4,6 +4,7 @@
 #include "../Text/TextReader.h"
 #include "StateMachine.h"
 #include "Game.h"
+#include "../Global.h"
 #include"../UI/UI.h"
 #include "../Audio/AudioEngine.h"
 #include "../Map/Map.h"
@@ -117,10 +118,8 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
-<<<<<<< HEAD
 	_renderBeat();
 	_renderChoice(choice);
-=======
 	// Render map first!
 	Map_Render();
 
@@ -128,7 +127,6 @@ void MainMenu_Render()
 	_renderChoice(choice);
 	Text_Move(&robot, 25, 50);
 	Text_Render(&robot, 0, 0);
->>>>>>> master
 }
 
 //*********************************************************************************
