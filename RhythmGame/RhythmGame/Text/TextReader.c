@@ -19,6 +19,9 @@ int currentyposition = 0;
 int iteration = 0;
 int Xoffset = 0;
 int count = 0;
+int rendertrue = 0;
+int jump = 0;
+
 
 void Text_Init(sprite *s, char *path)
 {
@@ -74,9 +77,9 @@ int _CountChars(char * path)
 }
 
 
-void Text_InitArray(sprite *s, char *path)
+void Text_InitArray(sprite *s, char *path,int state)
 {
-	_ReadandstoretextArray(s, path);
+	_ReadandstoretextArray(s, path,state);
 
 }
 
@@ -95,6 +98,16 @@ void Text_Render(sprite *s, int offsetX, int offsetY)
 	Console_SetRenderBuffer_CharColor((s->spriteI[0].position.x) + s->origin.x, (s->spriteI[0].position.y + s->origin.y), ' ', (WORD)s->spriteI[0].printColor);
 }
 
+void Text_RenderWords(sprite* s)
+{
+	for (int i = 0; i < SPRITE_SIZE; i++)
+	{
+		Console_SetRenderBuffer_CharColor((s->position[i].x) + s->origin.x, (s->position[i].y + s->origin.y), s->printchar[i], fWHITE);
+		if (s->printchar[i] == '\0')
+			break;
+	}
+	Console_SetRenderBuffer_CharColor((s->position[0].x) + s->origin.x, (s->position[0].y + s->origin.y), s->printchar[0], WHITE);
+}
 
 
 void Text_RenderRainbow(sprite *s)
@@ -258,9 +271,8 @@ void Text_RenderWords(sprite* s)
 	Console_SetRenderBuffer_CharColor((s->spriteI[0].position.x) + s->origin.x, (s->spriteI[0].position.y + s->origin.y), s->spriteI[0].printchar, WHITE);
 }
 
-void _ReadandstoretextArray(sprite *s, const char *path)
+void _ReadandstoretextArray(sprite *s, const char *path,int state)
 {
-	int state = 0;
 	iteration = 0;
 	newcharcount = 0;
 	totalcharcount = 0;
@@ -269,13 +281,15 @@ void _ReadandstoretextArray(sprite *s, const char *path)
 
 	for (int i = 0; i < 150; i++)
 	{
-		Charline[i] = '0';
+		Charline[i] = 'n';
 	}
 
 	pFile = fopen(path, "r");
 	if (pFile == NULL) perror("Error opening file");
 	else
 	{
+
+
 		while (!feof(pFile))
 		{
 			charcount = 0;
@@ -284,37 +298,51 @@ void _ReadandstoretextArray(sprite *s, const char *path)
 
 			fgets(Charline, 150, pFile);
 
-			if (isdigit(Charline[0]))
+			for (int i = 0; i < 150; i++)
 			{
-				state = Charline[0] - '0';
-				newcharcount = 0;
-				totalcharcount = 0;
-				iteration = 0;
-				currentyposition = 0;
+
+
+				if (isdigit(Charline[i]) && (Charline[i] - '0') == state)
+				{
+					rendertrue = 1;
+					jump = 1;
+					break;
+				}
+				else if (isdigit(Charline[i]) && (Charline[i] - '0') != state)
+				{
+					rendertrue = 0;
+
+				}
+			}
+
+			if (jump == 1)
+			{
+				jump = 0;
 				continue;
 			}
 
 
-			for (int i = 0; i < 150; i++)
+			if (rendertrue == 1)
 			{
-				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0')
+				for (int i = 0; i < 150; i++)
 				{
+					if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n')
+					{
 
-					charcount++;
+						charcount++;
+					}
+					else
+					{
+						Charline[i] = 'n';
+					}
+
+
 				}
-				else
-				{
-					Charline[i] = '0';
-				}
 
-
-			}
-
-			printf("%d\n", charcount);
 
 			for (int i = 0; i < charcount; i++)
 			{
-				if (Charline[i] != ' ' && Charline[i] != '\0')
+				if (Charline[i] != ' ' && Charline[i] != '\0' && Charline[i] != 'n')
 				{
 					(s + state)->spriteI[newcharcount + iteration].position.x = Xoffset;
 					(s + state)->spriteI[newcharcount + iteration].position.y = currentyposition;
@@ -366,6 +394,7 @@ void _ReadandstoretextArray(sprite *s, const char *path)
 
 			newcharcount = totalcharcount;
 			currentyposition++;
+		}
 		}
 		fclose(pFile);
 	}

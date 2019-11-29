@@ -23,7 +23,7 @@ typedef struct sprite
 //initialise sprite
 void Text_Init(sprite* s, char* path);
 //Initialise sprite with array
-void Text_InitArray(sprite* s, char* path);
+void Text_InitArray(sprite* s, char* path,int state);
 
 //creates a skullenemy
 sprite Text_CreateSprite();
@@ -41,7 +41,7 @@ void _Readandstoretext(sprite *s, const char *path);
 void Text_RenderRainbow(sprite* s);
 
 //stores text in arrays
-void _ReadandstoretextArray(sprite* s, const char* path);
+void _ReadandstoretextArray(sprite* s, const char* path,int state);
 
 //Render words
 void Text_RenderWords(sprite* s);
