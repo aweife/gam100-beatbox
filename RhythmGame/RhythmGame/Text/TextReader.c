@@ -218,7 +218,7 @@ void _ReadandstoretextArray(sprite *s, const char *path)
 
 	for (int i = 0; i < 150; i++)
 	{
-		Charline[i] = '0';
+		Charline[i] = 'n';
 	}
 
 	pFile = fopen(path, "r");

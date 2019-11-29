@@ -17,7 +17,7 @@ void StateMachine_Start()
 		{
 		case State_Logo: Logo_ExitState(); break;
 		case State_MainMenu: MainMenu_ExitState(); break;
-		//case State_Tutorial: Tutorial_ExitState(); break;
+		case State_Tutorial: Tutorial_ExitState(); break;
 		case State_Game: Game_ExitState(); break;
 		case State_GameOver: GameOver_ExitState(); break;
 		}
@@ -28,7 +28,7 @@ void StateMachine_Start()
 		{
 		case State_Logo: Logo_EnterState(); break;
 		case State_MainMenu: MainMenu_EnterState(); break;
-		//case State_Tutorial: Tutorial_EnterState(); break;
+		case State_Tutorial: Tutorial_EnterState(); break;
 		case State_Game: Game_EnterState(); break;
 		case State_GameOver: GameOver_EnterState(); break;
 		}
@@ -46,7 +46,7 @@ void StateMachine_ProcessInput()
 	{
 	case State_Logo: Logo_ProcessInput(); break;
 	case State_MainMenu: MainMenu_ProcessInput(); break;
-	//case State_Tutorial: Tutorial_ProcessInput(); break;
+	case State_Tutorial: Tutorial_ProcessInput(); break;
 	case State_Game: Game_ProcessInput(); break;
 	case State_GameOver: GameOver_ProcessInput(); break;
 	}
@@ -58,7 +58,7 @@ void StateMachine_Update()
 	{
 	case State_Logo: Logo_Update(); break;
 	case State_MainMenu: MainMenu_Update(); break;
-	//case State_Tutorial: Tutorial_Update(); break;
+	case State_Tutorial: Tutorial_Update(); break;
 	case State_Game: Game_Update(); break;
 	case State_GameOver: GameOver_Update(); break;
 	}
@@ -72,7 +72,7 @@ void StateMachine_Render()
 	{
 	case State_Logo: Logo_Render(); break;
 	case State_MainMenu: MainMenu_Render(); break;
-	//case State_Tutorial: Tutorial_Render(); break;
+	case State_Tutorial: Tutorial_Render(); break;
 	case State_Game: Game_Render(); break;
 	case State_GameOver: GameOver_Render(); break;
 	}

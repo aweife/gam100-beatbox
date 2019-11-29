@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClCompile Include="Attack\Attack.c" />
     <ClCompile Include="Audio\AudioEngine.c" />
-    <ClCompile Include="Beat\Beat.c" />
     <ClCompile Include="Clock\Clock.cpp" />
     <ClCompile Include="Console\Console.c" />
     <ClCompile Include="Enemy\Enemy.c" />
@@ -42,7 +41,6 @@
   <ItemGroup>
     <ClInclude Include="Attack\Attack.h" />
     <ClInclude Include="Audio\AudioEngine.h" />
-    <ClInclude Include="Beat\Beat.h" />
     <ClInclude Include="Clock\Clock.h" />
     <ClInclude Include="Console\Console.h" />
     <ClInclude Include="Enemy\Enemy.h" />
@@ -95,6 +93,7 @@
     <Text Include="$Resources\skull.txt" />
     <Text Include="$Resources\Space.txt" />
     <Text Include="$Resources\TestLogo.txt" />
+    <Text Include="%24Resources\beatman3.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$Resources\Kick.wav" />
