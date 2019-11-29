@@ -13,6 +13,7 @@
 // Keep tracks of how many projectiles are currently in use
 // then we update all in-use projectiles
 Projectile *pArray;
+Projectile *plArray;
 Laser *lArray;
 
 /* Internal functions */
@@ -27,6 +28,7 @@ void Attack_Init()
 	// Malloc memory for attacks
 	pArray = (Projectile *)malloc(sizeof(Projectile) * NUMBER_OF_PROJECTILE);
 	lArray = (Laser *)malloc(sizeof(Laser) * NUMBER_OF_LASER);
+	plArray = (Projectile *)malloc(sizeof(Projectile) * NUMBER_OF_PLAYER_PROJECTILE);
 
 	// Init projectiles sprites
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
@@ -36,6 +38,16 @@ void Attack_Init()
 		pArray[i].position.y = -1;
 		pArray[i].projectileSprite = Text_CreateSprite();
 		Text_Init(&pArray[i].projectileSprite, "..//RhythmGame//$Resources//projectile.txt");
+	}
+
+	// Init player projectiles sprites
+	for (int i = 0; i < NUMBER_OF_PLAYER_PROJECTILE; i++)
+	{
+		plArray[i].active = false;
+		plArray[i].position.x = -1;
+		plArray[i].position.y = -1;
+		plArray[i].projectileSprite = Text_CreateSprite();
+		Text_Init(&plArray[i].projectileSprite, "..//RhythmGame//$Resources//projectile2.txt");
 	}
 
 	// Init laser sprites
@@ -74,6 +86,11 @@ void Attack_Render() // put in game.c
 		if (pArray[i].active)
 			Text_Render(&pArray[i].projectileSprite, 0, 0);
 
+	//Print out projectile
+	for (int i = 0; i < NUMBER_OF_PLAYER_PROJECTILE; i++)
+		if (plArray[i].active)
+			Text_Render(&plArray[i].projectileSprite, 0, 0);
+
 	// Print out laser
 	for (int i = 0; i < NUMBER_OF_LASER; i++)
 	{
@@ -91,8 +108,25 @@ void Attack_Render() // put in game.c
 
 void Attack_Cleanup()
 {
+	// Free up the sprites after use
+	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
+		Text_Cleanup(&pArray[i].projectileSprite);
+
+	for (int i = 0; i < NUMBER_OF_PLAYER_PROJECTILE; i++)
+		Text_Cleanup(&plArray[i].projectileSprite);
+
+	for (int i = 0; i < NUMBER_OF_LASER; i++)
+	{
+		Text_Cleanup(&lArray[i].spawnSprite);
+		for (int k = 0; k < 2; k++)
+			for (int j = 0; j < LENGTH_OF_LASER; j++)
+				Text_Cleanup(&lArray[i].laserSprite[j][k]);
+
+	}
+
 	free(pArray);
 	free(lArray);
+	free(plArray);
 }
 
 void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, projectileSpeed speed)
@@ -108,6 +142,17 @@ void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, 
 			pArray[i].direction = direction;
 			pArray[i].speed = speed;
 			pArray[i].active = true;
+			return;
+		}
+	case PLAYER:
+		for (int i = 0; i < NUMBER_OF_PLAYER_PROJECTILE; i++)
+		{
+			// Find a projectile that is not in use
+			if (plArray[i].active) continue;
+			plArray[i].position = spawnPosition;
+			plArray[i].direction = direction;
+			plArray[i].speed = speed;
+			plArray[i].active = true;
 			return;
 		}
 	case LASER:
@@ -174,6 +219,22 @@ void _MoveProjectile()
 		pArray[i].position.y = (int)pArray[i].position.eulerY;
 		Text_Move(&pArray[i].projectileSprite, pArray[i].position.x, pArray[i].position.y);
 	}
+
+	// Update their movement if they are active
+	for (int i = 0; i < NUMBER_OF_PLAYER_PROJECTILE; i++)
+	{
+		// If projectile not in use, don't update it
+		if (!plArray[i].active) continue;
+
+		// Sync speed to projectile
+		double speed = plArray[i].speed.normal * Clock_GetDeltaTime();
+		plArray[i].position.eulerY -= speed;
+
+		// Move sprite
+		plArray[i].position.x = (int)plArray[i].position.eulerX;
+		plArray[i].position.y = (int)plArray[i].position.eulerY;
+		Text_Move(&plArray[i].projectileSprite, plArray[i].position.x, plArray[i].position.y);
+	}
 }
 
 void _CheckProjectileCollision()
@@ -193,6 +254,42 @@ void _CheckProjectileCollision()
 			pArray[i].position.x = -3;
 			pArray[i].position.y = -3;
 		}
+		continue;
+		// Check against player 
+		for (int j = 0, count = Player_GetPlayerSprite()->charCount; j < count; j++)
+			if (pArray[i].position.x == Player_GetPlayerSprite()->spriteI[j].position.x + Player_GetPlayerSprite()->origin.x &&
+				pArray[i].position.y == Player_GetPlayerSprite()->spriteI[j].position.y + Player_GetPlayerSprite()->origin.y)
+			{
+				pArray[i].active = false;
+				pArray[i].position.x = -3;
+				pArray[i].position.y = -3;
+				Player_Damage();
+			}
+	}
+
+	for (int i = 0; i < NUMBER_OF_PLAYER_PROJECTILE; i++)
+	{
+		// If projectile not in use, don't update it
+		if (!plArray[i].active) continue;
+
+		// Check against border
+		if (plArray[i].position.y <= Map_GetOrigin().y)
+		{
+			plArray[i].active = false;
+			plArray[i].position.x = -3;
+			plArray[i].position.y = -3;
+		}
+
+		// Check against enemy 
+		for (int j = 0, count = Enemy_GetEnemySprite()->charCount; j < count; j++)
+			if (plArray[i].position.x == Enemy_GetEnemySprite()->spriteI[j].position.x + Enemy_GetEnemySprite()->origin.x &&
+				plArray[i].position.y == Enemy_GetEnemySprite()->spriteI[j].position.y + Enemy_GetEnemySprite()->origin.y)
+			{
+				plArray[i].active = false;
+				plArray[i].position.x = -3;
+				plArray[i].position.y = -3;
+				// Enemy damage code
+			}
 	}
 }
 
@@ -248,7 +345,7 @@ void _CheckLaserCollision()
 	for (int i = 0; i < NUMBER_OF_LASER; i++)
 	{
 		// If not in use
-		if (!lArray[i].active) continue;
+		if (!lArray[i].active || !lArray[i].spawned) continue;
 
 		// Check against border
 		if (lArray[i].laserPosition.x <= Map_GetOrigin().x ||
@@ -258,6 +355,20 @@ void _CheckLaserCollision()
 		{
 			_ClearLaser(i);
 		}
+		continue;
+		// Check against player
+		for (int k = 0; k < lArray[i].laserIndex; k++)
+			for (int l = 0; l < 2; l++)
+				for (int j = 0, count = Player_GetPlayerSprite()->charCount; j < count; j++)
+					for (int m = 0, count2 = lArray[i].laserSprite[k][l].charCount; m < count2; m++)
+						if (lArray[i].laserSprite[k][l].spriteI[m].position.x + lArray[i].laserSprite[k][l].origin.x ==
+							Player_GetPlayerSprite()->spriteI[j].position.x + Player_GetPlayerSprite()->origin.x &&
+							lArray[i].laserSprite[k][l].spriteI[m].position.y + lArray[i].laserSprite[k][l].origin.y ==
+							Player_GetPlayerSprite()->spriteI[j].position.y + Player_GetPlayerSprite()->origin.y)
+						{
+							_ClearLaser(i);
+							Player_Damage();
+						}
 	}
 }
 

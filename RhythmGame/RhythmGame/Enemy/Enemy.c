@@ -38,7 +38,8 @@ void Enemy_Init()
 	skullEnemy.enemySprite = Text_CreateSprite();
 
 	// Delay before first attack
-	projectileSpawnTimer = 5000.0;
+	projectileSpawnTimer = 3000.0;
+	laserSpawnTimer = 3000.0;
 
 	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
 	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
@@ -63,9 +64,9 @@ void Enemy_Render()
 	Console_SetRenderBuffer_CharColor(skullEnemy.position.x, skullEnemy.position.y, '+', CYAN);
 }
 
-Enemy *Enemy_GetEnemy()
+sprite *Enemy_GetEnemySprite()
 {
-	return &skullEnemy;
+	return &skullEnemy.enemySprite;
 }
 
 void _MoveToPosition(double velocity)

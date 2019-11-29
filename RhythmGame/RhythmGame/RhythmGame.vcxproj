@@ -60,6 +60,7 @@
     <Text Include="$Resources\Beatbar.txt" />
     <Text Include="$Resources\Health.txt" />
     <Text Include="$Resources\Health2.txt" />
+    <Text Include="$Resources\projectile2.txt" />
     <Text Include="%24Resources\laser.txt" />
     <Text Include="$Resources\Logo.txt" />
     <Text Include="$Resources\Logo2.txt" />

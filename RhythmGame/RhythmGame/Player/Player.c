@@ -11,7 +11,7 @@
 
 #define PLAYER_BASE_MOVESPEED 0.06
 #define PLAYER_FAST_MOVESPEED 0.075
-#define PLAYER_ATTACKSPEED 200.0
+#define PLAYER_ATTACKSPEED 300.0
 #define PROJECTILE_SPEED 0.1
 
 static Player player;
@@ -94,11 +94,11 @@ void Player_Render()
 		d = DARKBLUE;
 		break;
 	}
-	for (int i = 0; i < SPRITE_SIZE; i++)
-		if (player.playerSprite.printchar[i] == 'b')
-			player.playerSprite.printColor[i] = c;
-		else if (player.playerSprite.printchar[i] == 'B')
-			player.playerSprite.printColor[i] = d;
+	for (int i = 0, count = player.playerSprite.charCount; i < count; i++)
+		if (player.playerSprite.spriteI[i].printchar == 'b')
+			player.playerSprite.spriteI[i].printColor = c;
+		else if (player.playerSprite.spriteI[i].printchar == 'B')
+			player.playerSprite.spriteI[i].printColor = d;
 
 	Text_Render(&player.playerSprite, Map_GetShakeFactor(RIGHT) / 2, 0);
 	// Debug origin
@@ -171,9 +171,9 @@ void Player_Damage()
 	GameUI_DecreaseHealth(1);
 }
 
-Player *Player_GetPlayer()
+sprite *Player_GetPlayerSprite()
 {
-	return &player;
+	return &player.playerSprite;
 }
 
 PLAYERSTATE Player_GetState()
@@ -235,9 +235,9 @@ void _CheckBorder()
 	if (player.startPosition.y < Map_GetOrigin().y + 2)
 		player.startPosition.eulerY = Map_GetOrigin().y + 2;
 	if (player.endPosition.x > Map_GetEnd().x - 2)
-		player.startPosition.eulerX = Map_GetEnd().x - 1 - player.playerSprite.position[player.playerSprite.charCount - 1].x - 1;
+		player.startPosition.eulerX = Map_GetEnd().x - 1 - player.playerSprite.spriteI[player.playerSprite.charCount - 1].position.x - 1;
 	if (player.endPosition.y > Map_GetEnd().y - 2)
-		player.startPosition.eulerY = Map_GetEnd().y - 1 - player.playerSprite.position[player.playerSprite.charCount - 1].y;
+		player.startPosition.eulerY = Map_GetEnd().y - 1 - player.playerSprite.spriteI[player.playerSprite.charCount - 1].position.y;
 }
 
 void _MovePlayer()
@@ -286,8 +286,8 @@ void _MovePlayer()
 
 	player.startPosition.x = (int)player.startPosition.eulerX;
 	player.startPosition.y = (int)player.startPosition.eulerY;
-	player.endPosition.x = (int)(player.startPosition.eulerX + player.playerSprite.position[player.playerSprite.charCount - 1].x + 1);
-	player.endPosition.y = (int)(player.startPosition.eulerY + player.playerSprite.position[player.playerSprite.charCount - 1].y);
+	player.endPosition.x = (int)(player.startPosition.eulerX + player.playerSprite.spriteI[player.playerSprite.charCount - 1].position.x + 1);
+	player.endPosition.y = (int)(player.startPosition.eulerY + player.playerSprite.spriteI[player.playerSprite.charCount - 1].position.y);
 
 	Text_Move(&player.playerSprite, player.startPosition.x, player.startPosition.y);
 }
@@ -300,6 +300,6 @@ void _AutoAttack()
 	{
 		attackTimer = PLAYER_ATTACKSPEED;
 		projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED };
-		Attack_Spawn(PROJECTILE, player.startPosition, UP, speed);
+		Attack_Spawn(PLAYER, player.startPosition, UP, speed);
 	}
 }

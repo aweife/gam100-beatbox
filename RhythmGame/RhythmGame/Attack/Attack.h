@@ -5,12 +5,14 @@
 #include <stdbool.h>
 
 #define NUMBER_OF_PROJECTILE 100
+#define NUMBER_OF_PLAYER_PROJECTILE 20
 #define LENGTH_OF_LASER 200
 #define NUMBER_OF_LASER 4
 
 typedef enum ATTACKTYPE {
 	PROJECTILE,
 	LASER,
+	PLAYER,
 }ATTACKTYPE;
 
 typedef struct projectileSpeed {

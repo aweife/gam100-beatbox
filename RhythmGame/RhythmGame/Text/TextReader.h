@@ -15,11 +15,6 @@ typedef struct sprite
 	int charCount;
 }sprite;
 
-
-
-
-
-
 //initialise sprite
 void Text_Init(sprite* s, char* path);
 //Initialise sprite with array
