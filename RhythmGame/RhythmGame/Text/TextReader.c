@@ -34,7 +34,7 @@ sprite Text_CreateSprite()
 {
 	return skullenemy;
 }
-void Text_Render(sprite *s, int offsetX, int offsetY)
+void Text_Render(sprite* s, int offsetX, int offsetY)
 {
 	for (int i = 0; i < SPRITE_SIZE; i++)
 	{
@@ -44,8 +44,6 @@ void Text_Render(sprite *s, int offsetX, int offsetY)
 	}
 	Console_SetRenderBuffer_CharColor((s->position[0].x) + s->origin.x, (s->position[0].y + s->origin.y), ' ', (WORD)s->printColor[0]);
 }
-
-
 
 void Text_RenderRainbow(sprite *s)
 {

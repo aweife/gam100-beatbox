@@ -1,0 +1,16 @@
+RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+R                                                         R
+R       WWWWWWWWW    W       W   WWWWWWW  WWWWWWWWW       R
+R      BWBBBBBBBW   BW      BW  BBBBWBB  BBBBBWBBB        R
+R      BW      BW   BW      BW     BW        BW           R
+R      BW      BW   BW      BW     BW        BW           R
+R      BW      BW   BW      BW     BW        BW           R
+R      BW      BW   BW      BW     BW        BW           R
+R      BW      BW   BW      BW     BW        BW           R
+R      BW     WBW   BW      BW     BW        BW           R
+R      BW    B WW   BW      BW     BW        BW           R
+R      BWWWWWWWWW   BW      BW     BW        BW           R
+R      BBBBBBBBB W  BWWWWWWWWW   WWWWWWW     BW           R
+R               B   BBBBBBBBB   BBBBBBB      B            R
+R                                                         R
+RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR

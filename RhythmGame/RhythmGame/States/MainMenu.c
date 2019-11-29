@@ -11,19 +11,55 @@
 sprite diamond1;
 sprite diamond2;
 sprite diamond3;
-static int choice = 1;
+sprite playButton;
+sprite levelButton;
+sprite quitButton;
+
+static int i = 0;
+
+static int choice = PLAY;
 static int keyDown = 1;
 
 static double beatTimer = 0.0;
 static int beatFlag = 0;
 static int toggle = 0;
 
-static int spriteAni = 1;
+static int spriteAni = 0;
+static int spriteColorCount = 1;
+static char spriteChar = 0;
+static int spriteColor = 0;
 
 //*********************************************************************************
 //								LOCAL VARIABLES
 //*********************************************************************************
 
+
+//*********************************************************************************
+//								STATE MANAGEMENT
+//*********************************************************************************
+void MainMenu_EnterState()
+{
+	diamond1 = Text_CreateSprite();
+	Text_Init(&diamond1, "..//RhythmGame//$Resources//MainMenu//Diamond1.txt");
+	diamond2 = Text_CreateSprite();
+	Text_Init(&diamond2, "..//RhythmGame//$Resources//MainMenu//Diamond2.txt");
+	diamond3 = Text_CreateSprite();
+	Text_Init(&diamond3, "..//RhythmGame//$Resources//MainMenu//Diamond3.txt");
+	playButton = Text_CreateSprite();
+	Text_Init(&playButton, "..//RhythmGame//$Resources//MainMenu//PlayButton.txt");
+	levelButton = Text_CreateSprite();
+	Text_Init(&levelButton, "..//RhythmGame//$Resources//MainMenu//LevelButton.txt");
+	quitButton = Text_CreateSprite();
+	Text_Init(&quitButton, "..//RhythmGame//$Resources//MainMenu//QuitButton.txt");
+
+	Audio_Load(MAINMENU);
+	Audio_PlayBGM(MAINMENU);
+}
+
+void MainMenu_ExitState()
+{
+	Audio_Unload();
+}
 
 //*********************************************************************************
 //									INPUT
@@ -35,9 +71,9 @@ void MainMenu_ProcessInput()
 
 	if (GetAsyncKeyState(VK_SPACE))
 		_confirmChoice(choice);
+
 	if (GetAsyncKeyState(VK_RETURN))
 		StateMachine_ChangeState(State_Tutorial);
-
 
 	if (GetAsyncKeyState(VK_LEFT) && keyDown == 0)
 		choice--;
@@ -49,6 +85,11 @@ void MainMenu_ProcessInput()
 		keyDown = 1;
 	else
 		keyDown = 0;
+
+	if (choice == REPEAT)
+		choice = PLAY;
+	if (choice < PLAY)
+		choice = QUIT;
 }
 
 //*********************************************************************************
@@ -56,11 +97,6 @@ void MainMenu_ProcessInput()
 //*********************************************************************************
 void MainMenu_Update()
 {
-	if (choice == 4)
-		choice = 1;
-	if (choice == 0)
-		choice = 3;
-
 	if (Audio_GetSpectrum(0) && toggle == 0)
 	{
 		beatFlag = 1;
@@ -73,7 +109,6 @@ void MainMenu_Update()
 		_moveToBeat();
 	
 	_updateTimer();
-	//Map_Update();
 }
 
 
@@ -82,36 +117,13 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
-	//_renderChoice(choice);
-	
 	_renderBeat();
-
-	// Render map
-	//Map_Render();
+	_renderChoice(choice);
 }
 
 //*********************************************************************************
-//								STATE MANAGEMENT
+//									FUNCTIONS
 //*********************************************************************************
-void MainMenu_EnterState()
-{
-	diamond1 = Text_CreateSprite();
-	Text_Init(&diamond1, "..//RhythmGame//$Resources//Diamond1.txt");
-	diamond2 = Text_CreateSprite();
-	Text_Init(&diamond2, "..//RhythmGame//$Resources//Diamond2.txt");
-	diamond3 = Text_CreateSprite();
-	Text_Init(&diamond3, "..//RhythmGame//$Resources//Diamond3.txt");
-
-	Audio_Load(MAINMENU);
-	Audio_PlayBGM(MAINMENU);
-	//Map_Init();
-}
-
-void MainMenu_ExitState()
-{
-	Audio_Unload();
-}
-
 void _confirmChoice(int choice)
 {
 	switch (choice)
@@ -126,10 +138,11 @@ void _moveToBeat()
 {
 	if (beatTimer < 0)
 	{
-		beatTimer = 15.0;
+		beatTimer = 5.0;
 		spriteAni++;
-		if (spriteAni >= 4)
+		if (spriteAni > FRAMES)
 		{
+			spriteColorCount++;
 			spriteAni = 0;
 			beatFlag = 0;
 		}
@@ -161,6 +174,56 @@ void _updateTimer()
 		beatTimer -= Clock_GetDeltaTime();
 }
 
+void _colorSwitch()
+{
+	switch (spriteColorCount)
+	{
+	case 1:
+		spriteChar = 'b';
+		spriteColor = DARKGREEN;
+		break;
+	case 2:
+		spriteChar = 'c';
+		spriteColor = DARKBLUE;
+		break;
+	case 3:
+		spriteChar = 'g';
+		spriteColor = GREEN;
+		break;
+	default:
+		spriteChar = 'M';
+		spriteColor = DARKMAGENTA;
+		break;
+	}
+
+	for (i = 0; i < SPRITE_SIZE; i++)
+	{
+		if (diamond1.printchar[i] != spriteColor && diamond1.printchar[i] != ' ')
+		{
+			diamond1.printchar[i] = spriteChar;
+			diamond1.printColor[i] = spriteColor;
+		}
+	}
+}
+
 void _renderChoice(int choice)
 {
+	spriteColorCount = choice;
+	_colorSwitch();
+
+	switch (choice)
+	{
+	case PLAY:
+		Text_Move(&playButton, 61, 75);
+		Text_Render(&playButton, 0, 0);
+		break;
+	case LEVEL:
+		Text_Move(&levelButton, 61, 75);
+		Text_Render(&levelButton, 0, 0);
+		break;
+	case QUIT:
+		Text_Move(&quitButton, 61, 75);
+		Text_Render(&quitButton, 0, 0);
+		break;
+	}
 }
