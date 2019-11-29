@@ -48,14 +48,14 @@ void _RenderHealthBar();
 void Enemy_Init()
 {
 	// Initialise skull enemy
-	skullEnemy.position.x = 90;
-	skullEnemy.position.y = 40;
-	skullEnemy.position.eulerX = 90.0;
-	skullEnemy.position.eulerY = 40.0;
-	skullEnemy.nextPosition = skullEnemy.position;
+	skullEnemy.startPosition.x = 90;
+	skullEnemy.startPosition.y = 40;
+	skullEnemy.startPosition.eulerX = 90.0;
+	skullEnemy.startPosition.eulerY = 40.0;
+	skullEnemy.nextPosition = skullEnemy.startPosition;
 	skullEnemy.enemySprite = Text_CreateSprite();
 	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
-	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
+	Text_Move(&skullEnemy.enemySprite, skullEnemy.startPosition.x, skullEnemy.startPosition.y);
 
 	// Delay before first attack
 	projectileSpawnTimer = 3000.0;
@@ -70,7 +70,6 @@ void Enemy_Update()
 	// If the snare(0) hits, increase enemy speed
 	skullEnemy.velocity = (Audio_GetSpectrum(0)) ? ENEMY_FAST_MOVESPEED : ENEMY_BASE_MOVESPEED;
 	_MoveToPosition(skullEnemy.velocity);
-	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
 
 	_EnemyAttack();
 
@@ -95,15 +94,16 @@ void Enemy_Render()
 	}
 
 	// Debug origin point
-	Console_SetRenderBuffer_CharColor(skullEnemy.position.x, skullEnemy.position.y, '+', CYAN);
+	Console_SetRenderBuffer_CharColor(skullEnemy.startPosition.x, skullEnemy.startPosition.y, '+', CYAN);
+	Console_SetRenderBuffer_CharColor(skullEnemy.endPosition.x, skullEnemy.endPosition.y, '+', CYAN);
 
 	// Render healthbar state
 	_RenderHealthBar();
 }
 
-sprite *Enemy_GetEnemySprite()
+Enemy *Enemy_GetEnemy()
 {
-	return &skullEnemy.enemySprite;
+	return &skullEnemy;
 }
 
 void Enemy_Damage()
@@ -133,37 +133,41 @@ void Enemy_Damage()
 void _MoveToPosition(double velocity)
 {
 	// If reach next position
-	if (skullEnemy.position.x == skullEnemy.nextPosition.x && skullEnemy.position.y == skullEnemy.nextPosition.y)
+	if (skullEnemy.startPosition.x == skullEnemy.nextPosition.x && skullEnemy.startPosition.y == skullEnemy.nextPosition.y)
 		_DecideNextPosition(Random_Range(1, 6));
 
 	{
 		double speed = 1.0 * Clock_GetDeltaTime() * velocity;
 		// We move to position with euler
-		if (skullEnemy.position.eulerX < skullEnemy.nextPosition.eulerX)
-			if ((skullEnemy.position.eulerX + speed) > skullEnemy.nextPosition.eulerX)
-				skullEnemy.position.eulerX = skullEnemy.nextPosition.eulerX;
+		if (skullEnemy.startPosition.eulerX < skullEnemy.nextPosition.eulerX)
+			if ((skullEnemy.startPosition.eulerX + speed) > skullEnemy.nextPosition.eulerX)
+				skullEnemy.startPosition.eulerX = skullEnemy.nextPosition.eulerX;
 			else
-				skullEnemy.position.eulerX += speed;
-		else if (skullEnemy.position.eulerX > skullEnemy.nextPosition.eulerX)
-			if ((skullEnemy.position.eulerX - speed) < skullEnemy.nextPosition.eulerX)
-				skullEnemy.position.eulerX = skullEnemy.nextPosition.eulerX;
+				skullEnemy.startPosition.eulerX += speed;
+		else if (skullEnemy.startPosition.eulerX > skullEnemy.nextPosition.eulerX)
+			if ((skullEnemy.startPosition.eulerX - speed) < skullEnemy.nextPosition.eulerX)
+				skullEnemy.startPosition.eulerX = skullEnemy.nextPosition.eulerX;
 			else
-				skullEnemy.position.eulerX -= speed;
+				skullEnemy.startPosition.eulerX -= speed;
 
-		if (skullEnemy.position.eulerY < skullEnemy.nextPosition.eulerY)
-			if ((skullEnemy.position.eulerY + speed) > skullEnemy.nextPosition.eulerY)
-				skullEnemy.position.eulerY = skullEnemy.nextPosition.eulerY;
+		if (skullEnemy.startPosition.eulerY < skullEnemy.nextPosition.eulerY)
+			if ((skullEnemy.startPosition.eulerY + speed) > skullEnemy.nextPosition.eulerY)
+				skullEnemy.startPosition.eulerY = skullEnemy.nextPosition.eulerY;
 			else
-				skullEnemy.position.eulerY += speed;
-		else if (skullEnemy.position.eulerY > skullEnemy.nextPosition.eulerY)
-			if ((skullEnemy.position.eulerY - speed) < skullEnemy.nextPosition.eulerY)
-				skullEnemy.position.eulerY = skullEnemy.nextPosition.eulerY;
+				skullEnemy.startPosition.eulerY += speed;
+		else if (skullEnemy.startPosition.eulerY > skullEnemy.nextPosition.eulerY)
+			if ((skullEnemy.startPosition.eulerY - speed) < skullEnemy.nextPosition.eulerY)
+				skullEnemy.startPosition.eulerY = skullEnemy.nextPosition.eulerY;
 			else
-				skullEnemy.position.eulerY -= speed;
+				skullEnemy.startPosition.eulerY -= speed;
 
 		// Update position with euler
-		skullEnemy.position.x = (int)skullEnemy.position.eulerX;
-		skullEnemy.position.y = (int)skullEnemy.position.eulerY;
+		skullEnemy.startPosition.x = (int)skullEnemy.startPosition.eulerX;
+		skullEnemy.startPosition.y = (int)skullEnemy.startPosition.eulerY;
+		skullEnemy.endPosition.x = (int)(skullEnemy.startPosition.eulerX + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.x + 7);
+		skullEnemy.endPosition.y = (int)(skullEnemy.startPosition.eulerY + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.y);
+
+		Text_Move(&skullEnemy.enemySprite, skullEnemy.startPosition.x, skullEnemy.startPosition.y);
 	}
 }
 
@@ -226,14 +230,14 @@ void _EnemyAttack()
 	{
 		if (Audio_GetSpectrum(3))
 		{
-			Attack_Spawn(LASER, skullEnemy.position, Random_Range(5, 8), (projectileSpeed) { 0, 0 });
+			Attack_Spawn(LASER, skullEnemy.startPosition, Random_Range(5, 8), (projectileSpeed) { 0, 0 });
 			laserSpawnTimer = LASER_SPAWN_SPEED;
 		}
 
 		if (Audio_GetSpectrum(1))
 		{
 			projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED_FAST };
-			Attack_Spawn(PROJECTILE, skullEnemy.position, Random_Range(1, 8), speed);
+			Attack_Spawn(PROJECTILE, skullEnemy.startPosition, Random_Range(1, 8), speed);
 			projectileSpawnTimer = PROJECTILE_SPAWN_SPEED;
 		}
 	}
@@ -244,5 +248,5 @@ void _RenderHealthBar()
 	// Render the background
 	for (int i = 0; i < HEALTHBAR_WIDTH; i++)
 		for (int j = 0; j < HEALTHBAR_HEIGHT; j++)
-			Console_SetRenderBuffer_CharColor(skullEnemy.position.x + HEALTHBAR_OFFSET_X + i, skullEnemy.position.y + HEALTHBAR_OFFSET_Y - j, ' ', GRAY);
+			Console_SetRenderBuffer_CharColor(skullEnemy.startPosition.x + HEALTHBAR_OFFSET_X + i, skullEnemy.startPosition.y + HEALTHBAR_OFFSET_Y - j, ' ', GRAY);
 }

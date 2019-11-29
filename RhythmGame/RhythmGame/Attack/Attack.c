@@ -254,17 +254,18 @@ void _CheckProjectileCollision()
 			pArray[i].position.x = -3;
 			pArray[i].position.y = -3;
 		}
-		//continue;
+
 		// Check against player 
-		for (int j = 0, count = Player_GetPlayerSprite()->charCount; j < count; j++)
-			if (pArray[i].position.x == Player_GetPlayerSprite()->spriteI[j].position.x + Player_GetPlayerSprite()->origin.x &&
-				pArray[i].position.y == Player_GetPlayerSprite()->spriteI[j].position.y + Player_GetPlayerSprite()->origin.y)
-			{
-				pArray[i].active = false;
-				pArray[i].position.x = -3;
-				pArray[i].position.y = -3;
-				Player_Damage();
-			}
+		if (pArray[i].position.x >= Player_GetPlayer()->startPosition.x &&
+			pArray[i].position.x <= Player_GetPlayer()->endPosition.x &&
+			pArray[i].position.y >= Player_GetPlayer()->startPosition.y &&
+			pArray[i].position.y <= Player_GetPlayer()->endPosition.y)
+		{
+			pArray[i].active = false;
+			pArray[i].position.x = -3;
+			pArray[i].position.y = -3;
+			Player_Damage();
+		}
 	}
 
 	for (int i = 0; i < NUMBER_OF_PLAYER_PROJECTILE; i++)
@@ -281,9 +282,9 @@ void _CheckProjectileCollision()
 		}
 
 		// Check against enemy 
-		for (int j = 0, count = Enemy_GetEnemySprite()->charCount; j < count; j++)
-			if (plArray[i].position.x == Enemy_GetEnemySprite()->spriteI[j].position.x + Enemy_GetEnemySprite()->origin.x &&
-				plArray[i].position.y == Enemy_GetEnemySprite()->spriteI[j].position.y + Enemy_GetEnemySprite()->origin.y)
+		if (plArray[i].position.x >= Enemy_GetEnemy()->startPosition.x &&
+			plArray[i].position.x <= Enemy_GetEnemy()->endPosition.x &&
+			plArray[i].position.y <= Enemy_GetEnemy()->endPosition.y)
 			{
 				plArray[i].active = false;
 				plArray[i].position.x = -3;
@@ -359,16 +360,15 @@ void _CheckLaserCollision()
 		// Check against player
 		for (int k = 0; k < lArray[i].laserIndex; k++) // every laser sprite
 			for (int l = 0; l < 2; l++) // animation state
-				for (int j = 0, count = Player_GetPlayerSprite()->charCount; j < count; j++)
-					for (int m = 0, count2 = lArray[i].laserSprite[k][l].charCount; m < count2; m++)
-						if (lArray[i].laserSprite[k][l].spriteI[m].position.x + lArray[i].laserSprite[k][l].origin.x ==
-							Player_GetPlayerSprite()->spriteI[j].position.x + Player_GetPlayerSprite()->origin.x &&
-							lArray[i].laserSprite[k][l].spriteI[m].position.y + lArray[i].laserSprite[k][l].origin.y ==
-							Player_GetPlayerSprite()->spriteI[j].position.y + Player_GetPlayerSprite()->origin.y)
-						{
-							_ClearLaser(i);
-							Player_Damage();
-						}
+				for (int m = 0, count2 = lArray[i].laserSprite[k][l].charCount; m < count2; m++)
+					if (lArray[i].laserSprite[k][l].spriteI[m].position.x + lArray[i].laserSprite[k][l].origin.x >= Player_GetPlayer()->startPosition.x &&
+						lArray[i].laserSprite[k][l].spriteI[m].position.x + lArray[i].laserSprite[k][l].origin.x <= Player_GetPlayer()->endPosition.x &&
+						lArray[i].laserSprite[k][l].spriteI[m].position.y + lArray[i].laserSprite[k][l].origin.y >= Player_GetPlayer()->startPosition.y &&
+						lArray[i].laserSprite[k][l].spriteI[m].position.y + lArray[i].laserSprite[k][l].origin.y <= Player_GetPlayer()->endPosition.y)
+					{
+						_ClearLaser(i);
+						Player_Damage();
+					}
 	}
 }
 

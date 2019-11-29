@@ -155,9 +155,9 @@ void Player_Damage()
 	GameUI_DecreaseHealth(1);
 }
 
-sprite *Player_GetPlayerSprite()
+Player *Player_GetPlayer()
 {
-	return &player.playerSprite;
+	return &player;
 }
 
 PLAYERSTATE Player_GetState()

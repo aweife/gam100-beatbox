@@ -50,11 +50,8 @@ extern double Player_GetEaseFactor();
 // Returns direction of player
 extern int Player_GetDirection();
 
-// Returns health of player
-extern int Player_GetHealth();
-
 // Returns sprite of player
-extern sprite *Player_GetPlayerSprite();
+extern Player *Player_GetPlayer();
 
 // Returns the attack state of player
 extern PLAYERSTATE Player_GetState();
