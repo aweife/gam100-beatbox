@@ -81,7 +81,8 @@
     <Text Include="$Resources\Instruction1_Point3.txt" />
     <Text Include="$Resources\Instruction2_DashAttack.txt" />
     <Text Include="$Resources\Instruction2_Move.txt" />
-    <Text Include="$Resources\Instruction_Enter.txt" />
+    <Text Include="$Resources\Instruction_Enter2.txt" />
+    <Text Include="%24Resources\Instruction_Enter1.txt" />
     <Text Include="$Resources\Instruction_Header.txt" />
     <Text Include="$Resources\laser.txt" />
     <Text Include="$Resources\Logo.txt" />

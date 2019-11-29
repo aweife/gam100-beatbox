@@ -70,7 +70,6 @@
     <Text Include="$Resources\Dialogue4_AllSet.txt" />
     <Text Include="$Resources\Dialogue4_Groove.txt" />
     <Text Include="$Resources\Enter.txt" />
-    <Text Include="$Resources\Instruction_Enter.txt" />
     <Text Include="$Resources\Instruction_Header.txt" />
     <Text Include="$Resources\Instruction1_Point1.txt" />
     <Text Include="$Resources\Instruction1_Point2.txt" />
@@ -81,5 +80,7 @@
     <Text Include="$Resources\beatman1.txt" />
     <Text Include="$Resources\beatman2.txt" />
     <Text Include="%24Resources\beatman3.txt" />
+    <Text Include="%24Resources\Instruction_Enter1.txt" />
+    <Text Include="$Resources\Instruction_Enter2.txt" />
   </ItemGroup>
 </Project>
