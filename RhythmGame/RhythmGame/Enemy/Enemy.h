@@ -9,12 +9,19 @@ typedef enum ENEMYSTATE {
 	DAMAGED,
 }ENEMYSTATE;
 
+typedef enum SCORESTATE {
+	SMALL,
+	MEDIUM,
+	BIG,
+}SCORESTATE;
+
 typedef struct Enemy {
 	Vector2d position;
 	Vector2d nextPosition;
 	sprite enemySprite;
 	double velocity;
 	ENEMYSTATE state;
+	SCORESTATE scoreState;
 } Enemy;
 
 

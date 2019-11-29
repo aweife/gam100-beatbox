@@ -6,6 +6,7 @@
 #include "../Console/Console.h"
 #include "../Audio/AudioEngine.h"
 #include "../Random/Random.h"
+#include "../UI/GameUI.h"
 #include <math.h>
 
 #define ENEMY_BASE_MOVESPEED 0.01
@@ -15,18 +16,34 @@
 #define PROJECTILE_SPEED_FAST 0.1
 #define LASER_SPAWN_SPEED 200.0
 
+#define HEALTHBAR_WIDTH 25
+#define HEALTHBAR_HEIGHT 4
+#define HEALTHBAR_OFFSET_X -2
+#define HEALTHBAR_OFFSET_Y -4
+#define HEALTH_FEEDBACK 50.0
+#define SMALL_PROGRESS 25
+#define MEDIUM_PROGRESS 15
+#define BIG_PROGRESS 10
+#define SMALL_SCORE 10
+#define MEDIUM_SCORE 50
+#define BIG_SCORE 100
+
 // The skull enemy
 Enemy skullEnemy = { 0 };
 
 // Attack speed
 static double laserSpawnTimer = 0;
 static double projectileSpawnTimer = 0;
+
+// Health
+static int progress = 0;
 static double damagedTimer = 0;
 
 /* Internal functions */
 void _MoveToPosition(double velocity);
 void _DecideNextPosition(int position);
 void _EnemyAttack();
+void _RenderHealthBar();
 
 void Enemy_Init()
 {
@@ -37,13 +54,15 @@ void Enemy_Init()
 	skullEnemy.position.eulerY = 40.0;
 	skullEnemy.nextPosition = skullEnemy.position;
 	skullEnemy.enemySprite = Text_CreateSprite();
+	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
+	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
 
 	// Delay before first attack
 	projectileSpawnTimer = 3000.0;
 	laserSpawnTimer = 3000.0;
 
-	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
-	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
+	// Score
+	progress = 0;
 }
 
 void Enemy_Update()
@@ -77,6 +96,9 @@ void Enemy_Render()
 
 	// Debug origin point
 	Console_SetRenderBuffer_CharColor(skullEnemy.position.x, skullEnemy.position.y, '+', CYAN);
+
+	// Render healthbar state
+	_RenderHealthBar();
 }
 
 sprite *Enemy_GetEnemySprite()
@@ -88,8 +110,24 @@ void Enemy_Damage()
 {
 	if (skullEnemy.state == DAMAGED) return;
 
-		skullEnemy.state = DAMAGED;
-		damagedTimer = 50.0;
+	switch (skullEnemy.scoreState)
+	{
+	case SMALL:
+		progress += SMALL_PROGRESS;
+		GameUI_AddScore(SMALL_SCORE);
+		break;
+	case MEDIUM:
+		progress += MEDIUM_PROGRESS;
+		GameUI_AddScore(MEDIUM_SCORE);
+		break;
+	case BIG:
+		progress += BIG_PROGRESS;
+		GameUI_AddScore(MEDIUM_SCORE);
+		break;
+	}
+
+	skullEnemy.state = DAMAGED;
+	damagedTimer = HEALTH_FEEDBACK;
 }
 
 void _MoveToPosition(double velocity)
@@ -199,4 +237,12 @@ void _EnemyAttack()
 			projectileSpawnTimer = PROJECTILE_SPAWN_SPEED;
 		}
 	}
+}
+
+void _RenderHealthBar()
+{
+	// Render the background
+	for (int i = 0; i < HEALTHBAR_WIDTH; i++)
+		for (int j = 0; j < HEALTHBAR_HEIGHT; j++)
+			Console_SetRenderBuffer_CharColor(skullEnemy.position.x + HEALTHBAR_OFFSET_X + i, skullEnemy.position.y + HEALTHBAR_OFFSET_Y - j, ' ', GRAY);
 }

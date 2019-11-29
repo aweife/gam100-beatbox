@@ -22,7 +22,6 @@ typedef struct Player {
 	Vector2d startPosition;
 	Vector2d endPosition;
 	int direction;
-	int health;
 	sprite playerSprite;
 	PLAYERSTATE state;
 }Player;

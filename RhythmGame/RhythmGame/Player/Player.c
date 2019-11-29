@@ -45,7 +45,6 @@ void Player_Init()
 	player.direction = STAY;
 	player.startPosition.eulerX = player.startPosition.x = 95;
 	player.startPosition.eulerY = player.startPosition.y = 80;
-	player.health = 10;
 	player.playerSprite = Text_CreateSprite();
 	player.state = Normal;
 
@@ -107,23 +106,10 @@ void Player_Render()
 	Console_SetRenderBuffer_CharColor(player.endPosition.x, player.endPosition.y, '+', CYAN);
 }
 
-void _CheckGameOver()
-{
-	if (player.health == 0)
-	{
-		StateMachine_ChangeState(State_GameOver);
-	}
-}
-
 void Player_SetVel(DIRECTION dir, EASEMOVEMENT EaseC)
 {
 	player.direction = dir;
 	EaseCheck = EaseC;
-}
-
-int Player_GetHealth()
-{
-	return player.health;
 }
 
 double Player_GetEaseFactor()
@@ -164,7 +150,6 @@ void Player_Damage()
 {
 	if (invulTimer > 0.0) return;
 
-	player.health--;
 	player.state = Invul;
 	invulTimer = 2000.0;
 	Map_Shake(RIGHT, 100.0, MAP_SHAKE_X);

@@ -1,5 +1,23 @@
 #include "GameUI.h"
 #include "../Map/Map.h"
+#include "../States/StateMachine.h"
+#include <stdbool.h>
+#include "../Text/TextReader.h"
+#include "../Global.h"
+
+#define HEART_SPRITE_WIDTH 10
+#define HEART_SPRITE_HEIGHT 8
+
+typedef struct Hearts {
+	bool visible;
+	sprite heartSprite;
+} Hearts;
+
+typedef struct HealthUI {
+	int count;
+	Vector2d origin;
+	Hearts hearts[2][5];
+} HealthUI;
 
 
 static int score = 0;
@@ -10,11 +28,11 @@ static HealthUI health = { 0 };
 void _InitHealth();
 void _RenderHealth();
 void _RenderScore();
-void _RenderCombo();
 
 void GameUI_Init()
 {
 	_InitHealth();
+	_InitScore();
 }
 
 void GameUI_Update()
@@ -31,6 +49,13 @@ void GameUI_DecreaseHealth(int damage)
 {
 	if (health.count)
 		health.count--;
+	else
+		StateMachine_ChangeState(State_GameOver);
+}
+
+void GameUI_AddScore(int amt)
+{
+	score += amt;
 }
 
 void _InitHealth()
@@ -54,6 +79,11 @@ void _InitHealth()
 	}
 }
 
+void _InitScore()
+{
+	score = 0;
+}
+
 void _RenderHealth()
 {
 	// Then first row
@@ -63,11 +93,6 @@ void _RenderHealth()
 }
 
 void _RenderScore()
-{
-
-}
-
-void _RenderCombo()
 {
 
 }

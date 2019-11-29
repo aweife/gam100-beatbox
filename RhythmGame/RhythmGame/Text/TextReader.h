@@ -29,10 +29,8 @@ void Text_Render(sprite *s, int offsetX, int offsetY);
 // Set enemy position
 void Text_Move(sprite *s, int x, int y);
 
-
 //Render each line according to rainbow colour
 void Text_RenderRainbow(sprite* s);
-
 
 //Render words
 void Text_RenderWords(sprite* s);
