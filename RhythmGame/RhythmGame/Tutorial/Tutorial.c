@@ -33,6 +33,7 @@
 // Dialogue5: End Tutorial
 // Dialogue6: Move on to real game after all this!
 
+//Sprites of Pixel Art
 sprite leftBeatmanState1;
 sprite rightBeatmanState1;
 sprite leftBeatmanState2;
@@ -41,14 +42,19 @@ sprite Instruction;
 sprite EnterState1;
 sprite EnterState2;
 
+//Controls State of Tutorial
 static int currentIntro = 0;
-static int spaceDown = false;
+
+//Boolean Variables
+static bool spaceDown = false;
 static bool RETURN_DOWN = true;
 static bool startTutorial = false;
 static bool startGame = false;
 static bool spawnEnemy = false;
 static bool animateBeatman = false;
 static bool animateEnter = false;
+
+//Controls Duration of States
 static double tutorialDuration = 0.0;
 static double animateDuration = 0.0;
 
