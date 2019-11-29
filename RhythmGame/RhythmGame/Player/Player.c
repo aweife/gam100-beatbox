@@ -10,13 +10,13 @@
 #include "../Attack/Attack.h"
 
 #define DEBUG_AABB 0
+#define COLLISION_OFFSET 1
 
 #define PLAYER_BASE_MOVESPEED 0.06
 #define PLAYER_FAST_MOVESPEED 0.075
 #define PLAYER_INVUL_DURATION 1000.0
 #define PLAYER_ATTACKSPEED 300.0
 #define PROJECTILE_SPEED 0.1
-#define COLLISION_OFFSET 1
 
 static Player player;
 static double factor;

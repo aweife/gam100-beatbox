@@ -9,9 +9,9 @@
 #include <stdlib.h>
 
 #define DEBUG_AABB 0
-
-#define LASER_UPDATE_SPEED 1
 #define COLLISION_OFFSET 2
+
+#define LASER_UPDATE_SPEED 3
 
 // Keep tracks of how many projectiles are currently in use
 // then we update all in-use projectiles
