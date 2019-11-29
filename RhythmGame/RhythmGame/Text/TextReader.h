@@ -1,16 +1,24 @@
 #pragma once
-
-#define SPRITE_SIZE 4600
 #include "../Global.h"
+
+typedef struct spriteInfo
+{
+	Vector2d position;
+	char printchar;
+	CONSOLECOLOR printColor;
+}spriteInfo;
 
 typedef struct sprite
 {
 	Vector2d origin;
-	Vector2d position[SPRITE_SIZE];
-	char printchar[SPRITE_SIZE];
-	CONSOLECOLOR printColor[SPRITE_SIZE];
+	spriteInfo *spriteI;
 	int charCount;
 }sprite;
+
+
+
+
+
 
 //initialise sprite
 void Text_Init(sprite* s, char* path);
@@ -37,3 +45,9 @@ void _ReadandstoretextArray(sprite* s, const char* path);
 
 //Render words
 void Text_RenderWords(sprite* s);
+
+//free memory allocated to spriteInfo
+void Text_Cleanup(sprite* s);
+
+//counts the amount of characters so that Text_Init can malloc accordingly
+int _CountChars(char* path);
