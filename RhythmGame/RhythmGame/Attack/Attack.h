@@ -5,23 +5,42 @@
 #include <stdbool.h>
 
 #define NUMBER_OF_PROJECTILE 100
+#define NUMBER_OF_PLAYER_PROJECTILE 20
 #define LENGTH_OF_LASER 200
+#define NUMBER_OF_LASER 4
+
+typedef enum ATTACKTYPE {
+	PROJECTILE,
+	LASER,
+	PLAYER,
+}ATTACKTYPE;
+
+typedef struct projectileSpeed {
+	double normal;
+	double fast;
+}projectileSpeed;
 
 //Projectile Structure
 typedef struct Projectile {
 	Vector2d position;
-	bool visible;
+	bool active;
 	DIRECTION direction;
-	int speed;
-	int distanceToTravel;
-	char debugChar;
 	sprite projectileSprite;
+	projectileSpeed speed;
 } Projectile;
+
+typedef struct Laser {
+	Vector2d laserPosition;
+	DIRECTION direction;
+	bool spawned;
+	bool active;
+	sprite spawnSprite;
+	sprite laserSprite[LENGTH_OF_LASER][2];
+	int laserIndex;
+} Laser;
 
 extern void Attack_Init();
 extern void Attack_Update();
 extern void Attack_Render();
-extern void Attack_SpawnProjectile(Vector2d spawnPosition, DIRECTION direction, int speed, int distance);
-extern void Attack_SpawnLaser(Vector2d spawnPosition, DIRECTION direction, int length);
+extern void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, projectileSpeed speed);
 extern void Attack_Cleanup();
-

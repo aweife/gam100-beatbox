@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #define NUMBER_OF_CHANNELS 20
-#define MAX_NUMBER_OF_TRACKS 4
+#define MAX_NUMBER_OF_TRACKS 5
 
 #define BEAT_THRESHOLD 0.0000000017
 
@@ -66,7 +66,8 @@ void Audio_Load(STAGE stage)
 		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//Snare1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[0].sound);
 		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//Normal1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[1].sound);
 		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//Laser1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[2].sound);
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//Melody1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[3].sound);
+		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//Warning1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[3].sound);
+		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//Melody1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[4].sound);
 		break;
 	}
 }
@@ -118,7 +119,7 @@ void Audio_PlayBGM(STAGE stage)
 		}
 		break;
 	case STAGEONE:
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			FMOD_System_PlaySound(_system, tracks[i].sound, 0, false, &tracks[i].channel);
 			FMOD_Channel_AddDSP(tracks[i].channel, 0, tracks[i].dsp);

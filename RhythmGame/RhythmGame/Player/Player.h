@@ -55,7 +55,7 @@ extern int Player_GetDirection();
 extern int Player_GetHealth();
 
 // Returns sprite of player
-extern Player *Player_GetPlayer();
+extern sprite *Player_GetPlayerSprite();
 
 // Returns the attack state of player
 extern PLAYERSTATE Player_GetState();
