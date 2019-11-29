@@ -239,7 +239,7 @@ void _EnemyAttack()
 			Attack_Spawn(LASER, skullEnemy.startPosition, Random_Range(5, 8), (projectileSpeed) { 0, 0 });
 			laserSpawnTimer = LASER_SPAWN_SPEED;
 		}
-		return;
+
 		if (Audio_GetSpectrum(1))
 		{
 			projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED_FAST };
