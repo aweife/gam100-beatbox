@@ -12,24 +12,27 @@
 #define DEBUG_AABB 0
 #define COLLISION_OFFSET 7
 
+// ENEMY AI
 #define ENEMY_BASE_MOVESPEED 0.01
 #define ENEMY_FAST_MOVESPEED 0.05
-#define PROJECTILE_SPAWN_SPEED 100.0
-#define PROJECTILE_SPEED 0.04
-#define PROJECTILE_SPEED_FAST 0.1
+#define PROJECTILE_SPAWN_SPEED 150.0
+#define PROJECTILE_SPEED 0.03
+#define PROJECTILE_SPEED_FAST 0.08
 #define LASER_SPAWN_SPEED 200.0
 
+// SCORING
 #define HEALTHBAR_WIDTH 25
-#define HEALTHBAR_HEIGHT 4
+#define HEALTHBAR_HEIGHT 2
 #define HEALTHBAR_OFFSET_X -2
 #define HEALTHBAR_OFFSET_Y -4
 #define HEALTH_FEEDBACK 50.0
-#define SMALL_PROGRESS 25
-#define MEDIUM_PROGRESS 15
-#define BIG_PROGRESS 10
-#define SMALL_SCORE 10
-#define MEDIUM_SCORE 50
+#define SMALL_PROGRESS Random_Range(15,25)
+#define MEDIUM_PROGRESS Random_Range(10,20)
+#define BIG_PROGRESS Random_Range(5,15)
+#define SMALL_SCORE 1
+#define MEDIUM_SCORE 10
 #define BIG_SCORE 100
+
 
 // The skull enemy
 Enemy skullEnemy = { 0 };
@@ -121,14 +124,35 @@ void Enemy_Damage()
 	case SMALL:
 		progress += SMALL_PROGRESS;
 		GameUI_AddScore(SMALL_SCORE);
+		if (progress >= 100)
+		{
+			progress = 0;
+			Attack_SpawnNote(skullEnemy.endPosition, skullEnemy.scoreState);
+			skullEnemy.scoreState = MEDIUM;
+			Map_Shake(UP, 40.0, MAP_SHAKE_Y);
+		}
 		break;
 	case MEDIUM:
 		progress += MEDIUM_PROGRESS;
 		GameUI_AddScore(MEDIUM_SCORE);
+		if (progress >= 100)
+		{
+			progress = 0;
+			Attack_SpawnNote(skullEnemy.endPosition, skullEnemy.scoreState);
+			skullEnemy.scoreState = BIG;
+			Map_Shake(UP, 40.0, MAP_SHAKE_Y);
+		}
 		break;
 	case BIG:
 		progress += BIG_PROGRESS;
-		GameUI_AddScore(MEDIUM_SCORE);
+		GameUI_AddScore(BIG_SCORE);
+		if (progress >= 100)
+		{
+			progress = 0;
+			Attack_SpawnNote(skullEnemy.endPosition, skullEnemy.scoreState);
+			skullEnemy.scoreState = SMALL;
+			Map_Shake(UP, 40.0, MAP_SHAKE_Y);
+		}
 		break;
 	}
 
@@ -251,8 +275,21 @@ void _EnemyAttack()
 
 void _RenderHealthBar()
 {
+	CONSOLECOLOR color;
+	switch (skullEnemy.scoreState)
+	{
+	case SMALL:
+		color = BLUE;
+		break;
+	case MEDIUM:
+		color = DARKMAGENTA;
+		break;
+	case BIG:
+		color = DARKYELLOW;
+		break;
+	}
 	// Render the background
-	for (int i = 0; i < HEALTHBAR_WIDTH; i++)
+	for (int i = 0; i < progress / 4; i++)
 		for (int j = 0; j < HEALTHBAR_HEIGHT; j++)
-			Console_SetRenderBuffer_CharColor(skullEnemy.startPosition.x + HEALTHBAR_OFFSET_X + i, skullEnemy.startPosition.y + HEALTHBAR_OFFSET_Y - j, ' ', GRAY);
+			Console_SetRenderBuffer_CharColor(skullEnemy.startPosition.x + HEALTHBAR_OFFSET_X + i, skullEnemy.startPosition.y + HEALTHBAR_OFFSET_Y - j, ' ', color);
 }

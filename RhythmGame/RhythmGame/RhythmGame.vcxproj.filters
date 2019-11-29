@@ -82,5 +82,6 @@
     <Text Include="$Resources\Robot.txt" />
     <Text Include="$Resources\TextLogo2.txt" />
     <Text Include="$Resources\numbers.txt" />
+    <Text Include="$Resources\notes.txt" />
   </ItemGroup>
 </Project>

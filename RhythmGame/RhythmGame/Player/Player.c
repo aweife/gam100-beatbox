@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "../Global.h"
 #include "../Console/Console.h"
 #include "../Map/Map.h"
 #include "../Enemy/Enemy.h"
@@ -13,8 +12,10 @@
 #define COLLISION_OFFSET 1
 
 #define PLAYER_BASE_MOVESPEED 0.06
-#define PLAYER_FAST_MOVESPEED 0.075
+#define PLAYER_FAST_MOVESPEED 0.3
 #define PLAYER_INVUL_DURATION 1000.0
+#define PLAYER_INVUL_COOLDOWN 1000.0
+#define PLAYER_DASH_COOLDOWN 300.0
 #define PLAYER_ATTACKSPEED 300.0
 #define PROJECTILE_SPEED 0.1
 
@@ -33,6 +34,7 @@ static double EaseTimer; // Ease
 static double dashCooldownTimer; // Cooldown of Dash
 static double speedUpTimer; // Duration of Dash
 static double invulTimer; // Invulnerable timer
+static double invulCooldownTimer; // Cooldown of invul
 static double attackTimer;
 
 /* Internal functions */
@@ -82,12 +84,11 @@ void Player_Render()
 	CONSOLECOLOR c, d;
 	switch (player.state)
 	{
-	case Invul:
+	case Damaged:
 		c = RED;
 		d = DARKRED;
 		break;
-	case Dash:
-	case ExDash:
+	case Invul:
 		c = CYAN;
 		d = DARKCYAN;
 		break;
@@ -103,7 +104,7 @@ void Player_Render()
 			player.playerSprite.spriteI[i].printColor = d;
 
 	Text_Render(&player.playerSprite, Map_GetShakeFactor(RIGHT) / 2, 0);
-	
+
 	if (DEBUG_AABB)
 	{
 		// Debug origin
@@ -137,9 +138,13 @@ void Player_Dash()
 
 	factor = 1;
 	speedUpTimer = 100.0;
-	invulTimer = PLAYER_INVUL_DURATION;
-	player.state = Dash;
-	dashCooldownTimer = 1000.0;
+	if (invulCooldownTimer <= 0.0)
+	{
+		player.state = Invul;
+		invulTimer = PLAYER_INVUL_DURATION;
+	}
+	invulCooldownTimer = PLAYER_INVUL_COOLDOWN;
+	dashCooldownTimer = PLAYER_DASH_COOLDOWN;
 }
 
 void Player_ExtendDash()
@@ -148,18 +153,17 @@ void Player_ExtendDash()
 	canAttack = false;
 	factor = 1;
 	speedUpTimer += 20.0;
-	player.state = ExDash;
+	player.state = Invul;
 	invulTimer += 100.0;
-	Map_Shake(UP, 40.0, MAP_SHAKE_Y);
 }
 
 void Player_Damage()
 {
 	if (invulTimer > 0.0) return;
 
-	player.state = Invul;
 	invulTimer = PLAYER_INVUL_DURATION;
-	Map_Shake(RIGHT, 100.0, MAP_SHAKE_X);
+	player.state = Damaged;
+	Map_Shake(RIGHT, 80.0, MAP_SHAKE_X);
 	GameUI_DecreaseHealth(1);
 }
 
@@ -180,30 +184,16 @@ void _UpdateState()
 
 	if (invulTimer > 0.0)
 		invulTimer -= Clock_GetDeltaTime();
+	else if (invulTimer <= 0.0)
+		player.state = Normal;
+	if (invulCooldownTimer > 0.0)
+		invulCooldownTimer -= Clock_GetDeltaTime();
 	if (speedUpTimer > 0.0)
 		speedUpTimer -= Clock_GetDeltaTime();
 	if (dashCooldownTimer > 0.0)
 		dashCooldownTimer -= Clock_GetDeltaTime();
-
-	switch (player.state)
-	{
-	case Invul:
-		if (invulTimer < 0.0)
-			player.state = Normal;
-		break;
-	case Dash:
-		if (speedUpTimer < 0.0)
-			player.state = Normal;
-		break;
-	case ExDash:
-		if (speedUpTimer < 0.0)
-			player.state = Normal;
-		break;
-	default:
-		if (dashCooldownTimer < 0.0)
-			canAttack = true;
-		break;
-	}
+	else if (dashCooldownTimer <= 0.0)
+		canAttack = true;
 
 	if (EaseTimer >= 25.0)
 	{
@@ -234,18 +224,7 @@ void _CheckBorder()
 
 void _MovePlayer()
 {
-	switch (player.state)
-	{
-	case ExDash:
-		velocity = 0.35;
-		break;
-	case Dash:
-		velocity = 0.15;
-		break;
-	default:
-		velocity = Audio_GetSpectrum(0) ? PLAYER_FAST_MOVESPEED : PLAYER_BASE_MOVESPEED;
-		break;
-	}
+	velocity = (speedUpTimer > 0.0) ? PLAYER_FAST_MOVESPEED : PLAYER_BASE_MOVESPEED;
 	double speed = 1.0 * dt * velocity * factor;
 	switch (player.direction)
 	{

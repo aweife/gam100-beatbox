@@ -3,20 +3,17 @@
 #include "../Global.h"
 #include "../Text/TextReader.h"
 
-#define BOXSIZE 3
-
-typedef enum PLAYERSTATE {
-	Normal,
-	ExDash,
-	Dash,
-	Invul,
-}PLAYERSTATE;
-
 typedef enum EASEMOVEMENT {
 	SpeedUp = 0,
 	SlowDown = 1,
 	Default = 2,
 }EASEMOVEMENT;
+
+typedef enum PLAYERSTATE {
+	Normal,
+	Invul,
+	Damaged,
+}PLAYERSTATE;
 
 typedef struct Player {
 	Vector2d startPosition;

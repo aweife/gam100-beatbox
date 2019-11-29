@@ -4,14 +4,20 @@
 #include "../Map/Map.h"
 #include "../Player/Player.h"
 #include "../Console/Console.h"
-#include "../Enemy/Enemy.h"
 #include "../Audio/AudioEngine.h"
 #include <stdlib.h>
+#include <math.h>
 
-#define DEBUG_AABB 0
+#define DEBUG_AABB 1
 #define COLLISION_OFFSET 2
 
-#define LASER_UPDATE_SPEED 3
+#define LASER_UPDATE_SPEED 4
+#define NOTE_MOVESPEED 0.02
+
+#define NOTE_SLOW_1 0.3
+#define NOTE_SLOW_2 0.15
+#define NOTE_SLOW_3 0.075
+#define NOTE_SLOW_TIME 3000.0
 
 // Keep tracks of how many projectiles are currently in use
 // then we update all in-use projectiles
@@ -19,12 +25,21 @@ Projectile *pArray;
 Projectile *plArray;
 Laser *lArray;
 
+// For notes
+sprite notes[TYPES_OF_NOTES] = { 0 };
+Note nArray[NUMBER_OF_NOTES] = { 0 };
+static double noteTimer = 0;
+static double slowFactor = 0;
+
 /* Internal functions */
 void _MoveProjectile();
 void _CheckProjectileCollision();
 void _MoveLaser();
 void _CheckLaserCollision();
 void _ClearLaser(int i);
+void _MoveNote();
+void _CheckNoteCollision();
+void _SlowTime(double factor);
 
 void Attack_Init()
 {
@@ -67,19 +82,44 @@ void Attack_Init()
 				lArray[i].laserSprite[j][k] = Text_CreateSprite();
 				Text_InitArray(&lArray[i].laserSprite[j][k], "..//RhythmGame//$Resources//laser.txt", k);
 			}
-
 	}
+
+	// Init sprites for notes
+	for (int i = 0; i < TYPES_OF_NOTES; i++)
+	{
+		notes[i] = Text_CreateSprite();
+		Text_InitArray(&notes[i], "..//RhythmGame//$Resources//notes.txt", i);
+	}
+
+	// Init notes array
+	for (int i = 0; i < NUMBER_OF_NOTES; i++)
+	{
+		nArray[i].active = false;
+		nArray[i].startPosition = (Vector2d){ 0,0,0,0 };
+		nArray[i].endPosition = (Vector2d){ 0,0,0,0 };
+	}
+	noteTimer = 0;
 }
 
 void Attack_Update()
 {
-	// Projectile
+	// Prevent projectile from moving past border
 	_CheckProjectileCollision();
 	_MoveProjectile();
 
-	// Must update laser movement before collision!
+	// Must update laser movement before collision! We want it to move past border
 	_MoveLaser();
 	_CheckLaserCollision();
+
+	// Notes
+	_MoveNote();
+	_CheckNoteCollision();
+
+	// Slow powerup
+	if (noteTimer > 0.0)
+		noteTimer -= Clock_GetDeltaTime();
+	else if (noteTimer <= 0.0)
+		slowFactor = 1.0;
 }
 
 void Attack_Render() // put in game.c
@@ -87,7 +127,27 @@ void Attack_Render() // put in game.c
 	//Print out projectile
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 		if (pArray[i].active)
+		{
+			CONSOLECOLOR c, d;
+			if (noteTimer > 0.0)
+			{
+				c = CYAN;
+				d = DARKCYAN;
+			}
+			else
+			{
+				c = WHITE;
+				d = LIGHTGRAY;
+			}
+			// Change the letter color
+			for (int j = 0, count = pArray[i].projectileSprite.charCount; j < count; j++)
+				if (pArray[i].projectileSprite.spriteI[j].printchar == 'w')
+					pArray[i].projectileSprite.spriteI[j].printColor = c;
+				else if (pArray[i].projectileSprite.spriteI[j].printchar == 'd')
+					pArray[i].projectileSprite.spriteI[j].printColor = d;
+
 			Text_Render(&pArray[i].projectileSprite, 0, 0);
+		}
 
 	//Print out projectile
 	for (int i = 0; i < NUMBER_OF_PLAYER_PROJECTILE; i++)
@@ -101,22 +161,69 @@ void Attack_Render() // put in game.c
 		if (lArray[i].active)
 			for (int j = 0; j < lArray[i].laserIndex; j++)
 				for (int k = 0; k < 2; k++)
+				{
+					CONSOLECOLOR c, d;
+					if (noteTimer > 0.0)
+					{
+						c = DARKCYAN;
+						d = CYAN;
+					}
+					else
+					{
+						c = DARKRED;
+						d = RED;
+					}
+					for (int m = 0, count = lArray[i].laserSprite[j][k].charCount; m < count; m++)
+						if (lArray[i].laserSprite[j][k].spriteI[m].printchar == 'R')
+							lArray[i].laserSprite[j][k].spriteI[m].printColor = c;
+						else if (lArray[i].laserSprite[j][k].spriteI[m].printchar == 'r')
+							lArray[i].laserSprite[j][k].spriteI[m].printColor = d;
 					Text_Render(&lArray[i].laserSprite[j][k], 0, 0);
+				}
 
 		// Spawn should overlap laser body
 		if (lArray[i].spawned)
+		{
+			CONSOLECOLOR c, d;
+			if (noteTimer > 0.0)
+			{
+				c = CYAN;
+				d = DARKCYAN;
+			}
+			else
+			{
+				c = DARKRED;
+				d = RED;
+			}
+			for (int m = 0, count = lArray[i].spawnSprite.charCount; m < count; m++)
+				if (lArray[i].spawnSprite.spriteI[m].printchar == 'R')
+					lArray[i].spawnSprite.spriteI[m].printColor = c;
+				else if (lArray[i].spawnSprite.spriteI[m].printchar == 'r')
+					lArray[i].spawnSprite.spriteI[m].printColor = d;
 			Text_Render(&lArray[i].spawnSprite, 0, 0);
+		}
 
 		// Debug 
 		if (lArray[i].active && DEBUG_AABB)
 		{
 			Console_SetRenderBuffer_CharColor(lArray[i].startPosition.x, lArray[i].startPosition.y, '+', GREEN);
-
 			Console_SetRenderBuffer_CharColor(lArray[i].startPositionCheck.x, lArray[i].startPositionCheck.y, '+', WHITE);
-
 			Console_SetRenderBuffer_CharColor(lArray[i].endPosition.x, lArray[i].endPosition.y, '+', WHITE);
-
 			Console_SetRenderBuffer_CharColor(lArray[i].endPositionCheck.x, lArray[i].endPositionCheck.y, '+', GREEN);
+		}
+	}
+
+	// Print out notes
+	for (int i = 0; i < NUMBER_OF_NOTES; i++)
+	{
+		if (nArray[i].active)
+		{
+			Text_Render(&nArray[i].noteSprite, 0, 0);
+			if (DEBUG_AABB)
+			{
+				Console_SetRenderBuffer_CharColor(nArray[i].startPosition.x, nArray[i].startPosition.y, '+', RED);
+				Console_SetRenderBuffer_CharColor(nArray[i].endPosition.x, nArray[i].endPosition.y, '+', WHITE);
+			}
 		}
 	}
 }
@@ -186,8 +293,38 @@ void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, 
 	}
 }
 
+void Attack_SpawnNote(Vector2d spawnPosition, SCORESTATE type)
+{
+	for (int i = 0; i < NUMBER_OF_NOTES; i++)
+	{
+		// Dont touch active notes
+		if (nArray[i].active) continue;
+
+		nArray[i].startPosition = spawnPosition;
+		nArray[i].startPosition.eulerX = (double)nArray[i].startPosition.x;
+		nArray[i].startPosition.eulerY = (double)nArray[i].startPosition.y;
+		nArray[i].endPosition = spawnPosition;
+		switch (type)
+		{
+		default:
+			nArray[i].noteSprite = notes[0];
+			break;
+		case MEDIUM:
+			nArray[i].noteSprite = notes[1];
+			break;
+		case BIG:
+			nArray[i].noteSprite = notes[2];
+			break;
+		}
+		nArray[i].noteType = type;
+		nArray[i].active = true;
+		return;
+	}
+}
+
 void _MoveProjectile()
 {
+	// ENEMY PROJECTILE
 	// Update their movement if they are active
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
 	{
@@ -195,7 +332,7 @@ void _MoveProjectile()
 		if (!pArray[i].active) continue;
 
 		// Sync speed to projectile
-		double speed = (Audio_GetSpectrum(1) ? pArray[i].speed.fast : pArray[i].speed.normal) * Clock_GetDeltaTime();
+		double speed = (Audio_GetSpectrum(1) ? pArray[i].speed.fast : pArray[i].speed.normal) * Clock_GetDeltaTime() * slowFactor;
 
 		// Move using euler
 		switch (pArray[i].direction)
@@ -236,7 +373,7 @@ void _MoveProjectile()
 		Text_Move(&pArray[i].projectileSprite, pArray[i].position.x, pArray[i].position.y);
 	}
 
-	// Update their movement if they are active
+	// PLAYER PROJECTILE
 	for (int i = 0; i < NUMBER_OF_PLAYER_PROJECTILE; i++)
 	{
 		// If projectile not in use, don't update it
@@ -332,7 +469,7 @@ void _MoveLaser()
 		int orientation = 0; // 0 = vertical, 1 = horizontal
 		lArray[i].startPositionCheck = lArray[i].startPosition;
 		// Expand the laser according to the speed
-		for (int j = 0; j < LASER_UPDATE_SPEED; j++)
+		for (int j = 0; j < (int)ceil((double)LASER_UPDATE_SPEED * slowFactor); j++)
 		{
 			switch (lArray[i].direction)
 			{
@@ -424,4 +561,70 @@ void _ClearLaser(int i)
 	for (int j = 0; j < lArray[i].laserIndex; j++)
 		for (int k = 0; k < 2; k++)
 			Text_Move(&lArray[i].laserSprite[j][k], lArray[i].endPosition.x, lArray[i].endPosition.y);
+}
+
+void _MoveNote()
+{
+	// Move note
+	for (int i = 0; i < NUMBER_OF_NOTES; i++)
+	{
+		// If projectile not in use, don't update it
+		if (!nArray[i].active) continue;
+
+		if (nArray[i].startPosition.x < Player_GetPlayer()->startPosition.x)
+			nArray[i].startPosition.eulerX += NOTE_MOVESPEED * Clock_GetDeltaTime();
+		if (nArray[i].startPosition.x > Player_GetPlayer()->startPosition.x)
+			nArray[i].startPosition.eulerX -= NOTE_MOVESPEED * Clock_GetDeltaTime();
+		if (nArray[i].startPosition.y < Player_GetPlayer()->startPosition.y)
+			nArray[i].startPosition.eulerY += NOTE_MOVESPEED * Clock_GetDeltaTime();
+		if (nArray[i].startPosition.y > Player_GetPlayer()->startPosition.y)
+			nArray[i].startPosition.eulerY -= NOTE_MOVESPEED * Clock_GetDeltaTime();
+
+		nArray[i].startPosition.x = (int)(nArray[i].startPosition.eulerX);
+		nArray[i].startPosition.y = (int)(nArray[i].startPosition.eulerY);
+		//nArray[i].endPosition.x = (int)(nArray[i].startPosition.eulerX + nArray[i].noteSprite.spriteI[nArray[i].noteSprite.charCount - 1].position.x);
+		//nArray[i].endPosition.y = (int)(nArray[i].startPosition.eulerY + nArray[i].noteSprite.spriteI[nArray[i].noteSprite.charCount - 1].position.y);
+		nArray[i].endPosition.x = (int)(nArray[i].startPosition.eulerX + nArray[i].noteSprite.spriteI[40].position.x + 5);
+		nArray[i].endPosition.y = (int)(nArray[i].startPosition.eulerY + nArray[i].noteSprite.spriteI[40].position.y);
+		Text_Move(&nArray[i].noteSprite, nArray[i].startPosition.x, nArray[i].startPosition.y);
+	}
+}
+
+void _CheckNoteCollision()
+{
+	for (int i = 0; i < NUMBER_OF_NOTES; i++)
+	{
+		if (!nArray[i].active) continue;
+
+		if (nArray[i].startPosition.x < Player_GetPlayer()->endPosition.x &&
+			nArray[i].endPosition.x > Player_GetPlayer()->startPosition.x &&
+			nArray[i].startPosition.y < Player_GetPlayer()->endPosition.y &&
+			nArray[i].endPosition.y > Player_GetPlayer()->startPosition.y)
+		{
+			nArray[i].active = false;
+			nArray[i].startPosition.x = -3;
+			nArray[i].startPosition.y = -3;
+
+			// Do time slow
+			switch (nArray[i].noteType)
+			{
+			default:
+				_SlowTime(NOTE_SLOW_1);
+				break;
+			case MEDIUM:
+				_SlowTime(NOTE_SLOW_2);
+				break;
+			case BIG:
+				_SlowTime(NOTE_SLOW_3);
+				break;
+			}
+
+		}
+	}
+}
+
+void _SlowTime(double factor)
+{
+	noteTimer = NOTE_SLOW_TIME;
+	slowFactor = factor;
 }
