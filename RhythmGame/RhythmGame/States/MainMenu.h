@@ -22,3 +22,4 @@ extern void _moveToBeat();
 extern void _updateTimer();
 extern void _colorSwitch();
 extern void _renderBeat();
+extern void _renderArrow();

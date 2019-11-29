@@ -57,5 +57,7 @@
     <Text Include="$Resources\projectile.txt" />
     <Text Include="%24Resources\laser.txt" />
     <Text Include="$Resources\projectile2.txt" />
+    <Text Include="$Resources\MainMenu\LeftArrow.txt" />
+    <Text Include="$Resources\MainMenu\RightArrow.txt" />
   </ItemGroup>
 </Project>

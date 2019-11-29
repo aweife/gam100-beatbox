@@ -14,6 +14,8 @@ sprite diamond3;
 sprite playButton;
 sprite levelButton;
 sprite quitButton;
+sprite leftArrow;
+sprite rightArrow;
 
 static int i = 0;
 
@@ -23,6 +25,9 @@ static int keyDown = 1;
 static double beatTimer = 0.0;
 static int beatFlag = 0;
 static int toggle = 0;
+
+static double arrowTimer = 0.0;
+static int shakeDirection = 0;
 
 static int spriteAni = 0;
 static int spriteColorCount = 1;
@@ -51,6 +56,13 @@ void MainMenu_EnterState()
 	Text_Init(&levelButton, "..//RhythmGame//$Resources//MainMenu//LevelButton.txt");
 	quitButton = Text_CreateSprite();
 	Text_Init(&quitButton, "..//RhythmGame//$Resources//MainMenu//QuitButton.txt");
+	leftArrow = Text_CreateSprite();
+	Text_Init(&leftArrow, "..//RhythmGame//$Resources//MainMenu//LeftArrow.txt");
+	rightArrow = Text_CreateSprite();
+	Text_Init(&rightArrow, "..//RhythmGame//$Resources//MainMenu//RightArrow.txt");
+
+	Text_Move(&leftArrow, 12, 75);
+	Text_Move(&rightArrow, 154, 75);
 
 	Audio_Load(MAINMENU);
 	Audio_PlayBGM(MAINMENU);
@@ -69,17 +81,22 @@ void MainMenu_ProcessInput()
 	if (GetAsyncKeyState(VK_ESCAPE))
 		Game_Exit();
 
-	if (GetAsyncKeyState(VK_SPACE))
+	if (GetAsyncKeyState(VK_RETURN))
 		_confirmChoice(choice);
 
-	if (GetAsyncKeyState(VK_RETURN))
-		StateMachine_ChangeState(State_Tutorial);
-
 	if (GetAsyncKeyState(VK_LEFT) && keyDown == 0)
+	{
 		choice--;
+		arrowTimer = 100.0;
+		shakeDirection = LEFT;
+	}
 
 	if (GetAsyncKeyState(VK_RIGHT) && keyDown == 0)
+	{
 		choice++;
+		arrowTimer = 100.0;
+		shakeDirection = RIGHT;
+	}
 
 	if (GetAsyncKeyState(VK_RIGHT) || GetAsyncKeyState(VK_LEFT))
 		keyDown = 1;
@@ -120,8 +137,10 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
+	_renderArrow();
 	_renderBeat();
 	_renderChoice(choice);
+	
 }
 
 //*********************************************************************************
@@ -175,6 +194,9 @@ void _updateTimer()
 {
 	if (beatTimer >= 0.0)
 		beatTimer -= Clock_GetDeltaTime();
+
+	if (arrowTimer >= 0.0)
+		arrowTimer -= Clock_GetDeltaTime();
 }
 
 void _colorSwitch()
@@ -212,5 +234,27 @@ void _renderChoice(int choice)
 		Text_Move(&quitButton, 61, 75);
 		Text_Render(&quitButton, 0, 0);
 		break;
+	}
+}
+
+int leftArrowX = 0;
+int rightArrowX = 0;
+
+void _renderArrow()
+{
+	Text_RenderColor(&leftArrow, RED, leftArrowX, 0);
+	Text_RenderColor(&rightArrow, RED, rightArrowX, 0);
+	if (arrowTimer < 0)
+	{
+		shakeDirection = 0;
+		rightArrowX = 0;
+		leftArrowX = 0;
+	}
+	else if (arrowTimer >= 0)
+	{
+		if (shakeDirection == RIGHT)
+			rightArrowX = 4;
+		else if (shakeDirection == LEFT)
+			leftArrowX = -4;
 	}
 }

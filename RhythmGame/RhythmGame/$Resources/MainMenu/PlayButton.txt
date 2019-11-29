@@ -1,16 +1,17 @@
-RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-R                                                         R
-R     WWWWWWW    W               WW       W         W     R
-R    MWMMMMM W  MW              WM W     MW        MW     R
-R    MW     M W MW             MW MW     M W       W      R
-R    MW      MW MW             W  M W     M WW   WW       R
-R    MW      W  MW            MW   MW      MM WWWM        R
-R    MWWWWWWW   MW            W    M W       MMW          R
-R    MWMMMMM    MW           MWWWWWWWW        MW          R
-R    MW         MW           WMMMMMMM W       MW          R
-R    MW         MW          MW       MW       MW          R
-R    MW         MW          W        M W      MW          R
-R    MW         MWWWWWWWWW MW         MW      MW          R
-R    M          MMMMMMMMM  M          M       M           R
-R                                                         R
-RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+ RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+MRMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMR
+MR     WWWWWWW    W               WW       W         W    MR
+MR    MWMMMMM W  MW              WM W     MW        MW    MR
+MR    MW     M W MW             MW MW     M W       W     MR
+MR    MW      MW MW             W  M W     M WW   WW      MR
+MR    MW      W  MW            MW   MW      MM WWWM       MR
+MR    MWWWWWWW   MW            W    M W       MMW         MR
+MR    MWMMMMM    MW           MWWWWWWWW        MW         MR
+MR    MW         MW           WMMMMMMM W       MW         MR
+MR    MW         MW          MW       MW       MW         MR
+MR    MW         MW          W        M W      MW         MR
+MR    MW         MWWWWWWWWW MW         MW      MW         MR
+MR    M          MMMMMMMMM  M          M       M          MR
+MR                                                        MR
+MRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
