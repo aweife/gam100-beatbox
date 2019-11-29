@@ -11,10 +11,19 @@
 #include "../UI/GameUI.h"
 #include "../States/StateMachine.h"
 
+#define DELAY_AFTER_GAME_ENDS 5000
+
 static int reqExit = 0;
 
 // For pressing spacebar once
 int spaceDown = false;
+
+// STAGE ONE
+static double exitTimer = 0;
+static bool stageOneEnded = 0;
+
+/* Internal */
+void _CheckGameEnd();
 
 void Game_EnterState()
 {
@@ -29,6 +38,10 @@ void Game_EnterState()
 	// Play bgm for audio
 	Audio_Load(STAGEONE);
 	Audio_PlayBGM(STAGEONE);
+
+	// For ending the game after song ends
+	exitTimer = 0.0;
+	stageOneEnded = false;
 }
 
 void Game_ExitState()
@@ -39,6 +52,9 @@ void Game_ExitState()
 
 void Game_ProcessInput()
 {
+	// If game has not ended
+	if (stageOneEnded) return;
+
 	if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_UP))
 		Player_SetVel(TOPLEFT, SpeedUp);
 	else if (GetAsyncKeyState(VK_RIGHT) && GetAsyncKeyState(VK_UP))
@@ -75,6 +91,9 @@ void Game_ProcessInput()
 
 void Game_Update()
 {
+	// If game has not ended
+	if (stageOneEnded) return;
+
 	Player_Update();
 	Map_Update();
 	GameUI_Update();
@@ -83,10 +102,15 @@ void Game_Update()
 	// Update together
 	Enemy_Update();
 	Attack_Update();
+
+	_CheckGameEnd();
 }
 
 void Game_Render()
 {
+	// If game has not ended
+	if (stageOneEnded) return;
+
 	// By order of rendering
 	GameUI_Render();
 	Map_Render();
@@ -103,4 +127,17 @@ void Game_Exit()
 int Game_IsRunning()
 {
 	return (reqExit == 0);
+}
+
+void _CheckGameEnd()
+{
+	if (!Audio_GetSpectrum(4))
+		exitTimer += Clock_GetDeltaTime();
+	else
+		exitTimer = 0.0;
+
+	if (exitTimer >= DELAY_AFTER_GAME_ENDS)
+	{
+		StateMachine_ChangeState(State_MainMenu);
+	}
 }

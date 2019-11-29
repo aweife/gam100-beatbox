@@ -327,7 +327,7 @@ void _Readandstoretext(sprite *s, const char *path)
 					else if (Charline[i] == 'W')
 						s->spriteI[newcharcount + iteration].printColor = BLACK;
 					else if (Charline[i] == 'd')
-						s->spriteI[newcharcount + iteration].printColor = DARKGRAY;
+						s->spriteI[newcharcount + iteration].printColor = LIGHTGRAY;
 					else if (Charline[i] == 'D')
 						s->spriteI[newcharcount + iteration].printColor = GRAY;
 					else if (Charline[i] == 'B')
@@ -457,9 +457,9 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 					else if (Charline[i] == 'W')
 						 spriteI[newcharcount + iteration].printColor = BLACK;
 					else if (Charline[i] == 'd')
-						 spriteI[newcharcount + iteration].printColor = GRAY;
+						 spriteI[newcharcount + iteration].printColor = LIGHTGRAY;
 					else if (Charline[i] == 'D')
-						 spriteI[newcharcount + iteration].printColor = DARKGRAY;
+						 spriteI[newcharcount + iteration].printColor = GRAY;
 					else if (Charline[i] == 'B')
 						 spriteI[newcharcount + iteration].printColor = DARKBLUE;
 					else

@@ -1,60 +1,60 @@
 0
-WWW
-W W
-W W
-W W
-WWW
+www
+w w
+w w
+w w
+www
 1
-WW
- W
- W
- W
-WWW
+ww 
+ w 
+ w 
+ w 
+www
 2
-WWW
-  W
-WWW
-W
-WWW
+www
+  w
+www
+w  
+www
 3
-WWW
-  W
-WWW
-  W
-WWW
+www
+  w
+www
+  w
+www
 4
-W W
-W W
-WWW
-  W
-  W
+w w
+w w
+www
+  w
+  w
 5
-WWW
-W
-WWW
-  W
-WWW
+www
+w  
+www
+  w
+www
 6
-WWW
-W
-WWW
-W W
-WWW
+www
+w  
+www
+w w
+www
 7
-WWW
-  W
-  W
-  W
-  W
+www
+  w
+  w
+  w
+  w
 8
-WWW
-W W
-WWW
-W W
-WWW
+www
+w w
+www
+w w
+www
 9
-WWW
-W W
-WWW
-  W
-  W
+www
+w w
+www
+  w
+  w
