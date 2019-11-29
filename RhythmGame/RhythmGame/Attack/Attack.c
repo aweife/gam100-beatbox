@@ -288,7 +288,7 @@ void _CheckProjectileCollision()
 				plArray[i].active = false;
 				plArray[i].position.x = -3;
 				plArray[i].position.y = -3;
-				Enemy_Damage();
+				// Enemy damage code
 			}
 	}
 }

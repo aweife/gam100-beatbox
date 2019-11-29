@@ -32,10 +32,14 @@ void Text_Render(sprite *s, int offsetX, int offsetY);
 // Set enemy position
 void Text_Move(sprite *s, int x, int y);
 
+//Read from text file and store in array
+void _Readandstoretext(sprite *s, const char *path);
 
 //Render each line according to rainbow colour
 void Text_RenderRainbow(sprite* s);
 
+//stores text in arrays
+void _ReadandstoretextArray(sprite* s, const char* path,int state);
 
 //Render words
 void Text_RenderWords(sprite* s);
@@ -43,6 +47,5 @@ void Text_RenderWords(sprite* s);
 //free memory allocated to spriteInfo
 void Text_Cleanup(sprite* s);
 
-//renders everything with 1 colour specified
-void Text_RenderColor(sprite *s, CONSOLECOLOR cc, int offsetX, int offsetY);
-
+//counts the amount of characters so that Text_Init can malloc accordingly
+int _CountChars(char* path);

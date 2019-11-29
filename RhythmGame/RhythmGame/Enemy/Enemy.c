@@ -21,7 +21,6 @@ Enemy skullEnemy = { 0 };
 // Attack speed
 static double laserSpawnTimer = 0;
 static double projectileSpawnTimer = 0;
-static double damagedTimer = 0;
 
 /* Internal functions */
 void _MoveToPosition(double velocity);
@@ -54,26 +53,12 @@ void Enemy_Update()
 	Text_Move(&skullEnemy.enemySprite, skullEnemy.position.x, skullEnemy.position.y);
 
 	_EnemyAttack();
-
-	// Damaged recovery
-	if (damagedTimer > 0.0)
-		damagedTimer -= Clock_GetDeltaTime();
-	else if (damagedTimer <= 0.0)
-		skullEnemy.state = NORMAL;
 }
 
 void Enemy_Render()
 {
 	//ASCI ENEMY
-	switch (skullEnemy.state)
-	{
-	default:
-		Text_Render(&skullEnemy.enemySprite, 0, Map_GetShakeFactor(UP) / 2);
-		break;
-	case DAMAGED:
-		Text_RenderColor(&skullEnemy.enemySprite, WHITE, 0, Map_GetShakeFactor(UP) / 2);
-		break;
-	}
+	Text_Render(&skullEnemy.enemySprite, 0, Map_GetShakeFactor(UP) / 2);
 
 	// Debug origin point
 	Console_SetRenderBuffer_CharColor(skullEnemy.position.x, skullEnemy.position.y, '+', CYAN);
@@ -82,14 +67,6 @@ void Enemy_Render()
 sprite *Enemy_GetEnemySprite()
 {
 	return &skullEnemy.enemySprite;
-}
-
-void Enemy_Damage()
-{
-	if (skullEnemy.state == DAMAGED) return;
-
-		skullEnemy.state = DAMAGED;
-		damagedTimer = 50.0;
 }
 
 void _MoveToPosition(double velocity)
