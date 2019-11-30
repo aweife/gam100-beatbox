@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Global.h"
+
 #define GAMEUI_OFFSET 8
 
 extern void GameUI_Init();

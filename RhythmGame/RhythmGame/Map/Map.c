@@ -63,6 +63,7 @@ void Map_Render()
 
 void Map_Shake(DIRECTION dir, double duration, int intensity)
 {
+	if (shakeCount > 0) return; 
 	shakeDuration = duration;
 	shakeCount = intensity;
 	if(dir == UP)

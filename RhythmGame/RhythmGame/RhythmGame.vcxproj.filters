@@ -18,7 +18,6 @@
     <ClCompile Include="UI\GameUI.c" />
     <ClCompile Include="UI\UI.c" />
     <ClCompile Include="States\Logo.c" />
-    <ClCompile Include="States\TwoPlayer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Attack\Attack.h" />
@@ -38,7 +37,6 @@
     <ClInclude Include="UI\GameUI.h" />
     <ClInclude Include="UI\UI.h" />
     <ClInclude Include="States\Logo.h" />
-    <ClInclude Include="States\TwoPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$Resources\Kick.wav" />

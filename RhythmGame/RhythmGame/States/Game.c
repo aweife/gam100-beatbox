@@ -13,6 +13,11 @@
 
 #define DELAY_AFTER_GAME_ENDS 5000
 
+#define PLAYERONE 0 // For index in array
+#define PLAYERTWO 1
+
+// Game state
+static GAMETYPE gameType;
 static int reqExit = 0;
 
 // For pressing spacebar once
@@ -30,17 +35,21 @@ sprite pauseButton;
 /* Internal */
 void _CheckGameEnd();
 void _PauseGame(bool pause);
+void _ProcessPlayerControls();
 
-void Game_EnterState()
+void Game_EnterState(GAMETYPE type)
 {
-	// Random
+	// Check if one player or two player
+	gameType = type;
+
+	// Usuals
 	Random_Init();
 	Map_Init();
 	Enemy_Init();
-	Attack_Init();
 
-	// Special init
-	Player_Init();
+	// Player specific
+	Player_Init(type);
+	Attack_Init();
 	GameUI_Init();
 
 	// Play bgm for audio
@@ -97,41 +106,10 @@ void Game_ProcessInput()
 	}
 	else // Play game
 	{
-		if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_UP))
-			Player_SetVel(TOPLEFT, SpeedUp);
-		else if (GetAsyncKeyState(VK_RIGHT) && GetAsyncKeyState(VK_UP))
-			Player_SetVel(TOPRIGHT, SpeedUp);
-		else if (GetAsyncKeyState(VK_RIGHT) && GetAsyncKeyState(VK_DOWN))
-			Player_SetVel(BOTTOMRIGHT, SpeedUp);
-		else if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_DOWN))
-			Player_SetVel(BOTTOMLEFT, SpeedUp);
-		else if (GetAsyncKeyState(VK_UP))
-			Player_SetVel(UP, SpeedUp);
-		else if (GetAsyncKeyState(VK_RIGHT))
-			Player_SetVel(RIGHT, SpeedUp);
-		else if (GetAsyncKeyState(VK_DOWN))
-			Player_SetVel(DOWN, SpeedUp);
-		else if (GetAsyncKeyState(VK_LEFT))
-			Player_SetVel(LEFT, SpeedUp);
-		else
-		{
-			if (Player_GetDirection() != STAY)
-			{
-				Player_SetVel(Player_GetDirection(), SlowDown);
-				if (Player_GetEaseFactor() <= 0)
-					Player_SetVel(STAY, SlowDown);
-			}
-		}
+		// Controls for game
+		_ProcessPlayerControls();
 
-		// Press spacebar once to dash
-		if (GetAsyncKeyState(VK_SPACE) && !spaceDown)
-		{
-			spaceDown = true;
-			Player_Dash();
-		}
-		else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
-
-		// Press esc once to pause
+		// Pause
 		if (GetAsyncKeyState(VK_ESCAPE) && !escDown)
 		{
 			escDown = true;
@@ -153,14 +131,15 @@ void Game_Update()
 	// If game has not ended
 	if (stageOneEnded) return;
 
-	if (gamePaused)
-	{
+	// Map shake, we dont want pause when the border is offset
+	Map_Update();
 
-	}
-	else
+	if (!gamePaused)
 	{
-		Player_Update();
-		Map_Update();
+		Player_Update(PLAYERONE);
+		if (gameType == TWOPLAYER)
+			Player_Update(PLAYERTWO);
+
 		GameUI_Update();
 		Audio_Update();
 
@@ -168,6 +147,7 @@ void Game_Update()
 		Enemy_Update();
 		Attack_Update();
 
+		// To see if song ended
 		_CheckGameEnd();
 	}
 }
@@ -186,7 +166,9 @@ void Game_Render()
 	Map_Render();
 	Attack_Render();
 	Enemy_Render();
-	Player_Render();
+	Player_Render(PLAYERONE);
+	if (gameType == TWOPLAYER)
+		Player_Render(PLAYERTWO);
 }
 
 void Game_Exit()
@@ -197,6 +179,11 @@ void Game_Exit()
 int Game_IsRunning()
 {
 	return (reqExit == 0);
+}
+
+GAMETYPE Game_GetGameType()
+{
+	return gameType;
 }
 
 void _CheckGameEnd()
@@ -217,4 +204,85 @@ void _PauseGame(bool pause)
 {
 	gamePaused = pause;
 	Audio_Pause(pause);
+}
+
+void _ProcessPlayerControls()
+{
+	// Press spacebar once to dash
+	if (GetAsyncKeyState(VK_SPACE) && !spaceDown)
+	{
+		spaceDown = true;
+
+		// If two player, WASD gets space for dash
+		Player_Dash(gameType == TWOPLAYER);
+	}
+	else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
+
+	// One player's controls
+	if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_UP))
+		Player_SetVel(TOPLEFT, SpeedUp, PLAYERONE);
+	else if (GetAsyncKeyState(VK_RIGHT) && GetAsyncKeyState(VK_UP))
+		Player_SetVel(TOPRIGHT, SpeedUp, PLAYERONE);
+	else if (GetAsyncKeyState(VK_RIGHT) && GetAsyncKeyState(VK_DOWN))
+		Player_SetVel(BOTTOMRIGHT, SpeedUp, PLAYERONE);
+	else if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_DOWN))
+		Player_SetVel(BOTTOMLEFT, SpeedUp, PLAYERONE);
+	else if (GetAsyncKeyState(VK_UP))
+		Player_SetVel(UP, SpeedUp, PLAYERONE);
+	else if (GetAsyncKeyState(VK_RIGHT))
+		Player_SetVel(RIGHT, SpeedUp, PLAYERONE);
+	else if (GetAsyncKeyState(VK_DOWN))
+		Player_SetVel(DOWN, SpeedUp, PLAYERONE);
+	else if (GetAsyncKeyState(VK_LEFT))
+		Player_SetVel(LEFT, SpeedUp, PLAYERONE);
+	else
+	{
+		if (Player_GetDirection(PLAYERONE) != STAY)
+		{
+			Player_SetVel(Player_GetDirection(PLAYERONE), SlowDown, PLAYERONE);
+			if (Player_GetEaseFactor(PLAYERONE) <= 0)
+				Player_SetVel(STAY, SlowDown, PLAYERONE);
+		}
+	}
+
+	// Two players' controls
+	if (gameType == TWOPLAYER)
+	{
+		// Press enter once to dash for player one
+		if (GetAsyncKeyState(VK_RETURN) && !enterDown)
+		{
+			enterDown = true;
+			Player_Dash(PLAYERONE);
+		}
+		else if (!GetAsyncKeyState(VK_RETURN)) enterDown = false;
+
+		// Player two controls
+		// 0x41 = A, 0x44 = D, 0x53 = S, 0x57 = W
+		// the arguement 1 is
+		if (GetAsyncKeyState(0x41) && GetAsyncKeyState(0x57))
+			Player_SetVel(TOPLEFT, SpeedUp, PLAYERTWO);
+		else if (GetAsyncKeyState(0x44) && GetAsyncKeyState(0x57))
+			Player_SetVel(TOPRIGHT, SpeedUp, PLAYERTWO);
+		else if (GetAsyncKeyState(0x44) && GetAsyncKeyState(0x53))
+			Player_SetVel(BOTTOMRIGHT, SpeedUp, PLAYERTWO);
+		else if (GetAsyncKeyState(0x41) && GetAsyncKeyState(0x53))
+			Player_SetVel(BOTTOMLEFT, SpeedUp, PLAYERTWO);
+		else if (GetAsyncKeyState(0x57))
+			Player_SetVel(UP, SpeedUp, PLAYERTWO);
+		else if (GetAsyncKeyState(0x44))
+			Player_SetVel(RIGHT, SpeedUp, PLAYERTWO);
+		else if (GetAsyncKeyState(0x53))
+			Player_SetVel(DOWN, SpeedUp, PLAYERTWO);
+		else if (GetAsyncKeyState(0x41))
+			Player_SetVel(LEFT, SpeedUp, PLAYERTWO);
+		else
+		{
+			if (Player_GetDirection(PLAYERTWO) != STAY)
+			{
+				Player_SetVel(Player_GetDirection(PLAYERTWO), SlowDown, PLAYERTWO);
+				if (Player_GetEaseFactor(PLAYERTWO) <= 0.0)
+					Player_SetVel(STAY, SlowDown, PLAYERTWO);
+			}
+		}
+	}
 }

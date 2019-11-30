@@ -5,6 +5,7 @@
 #include "../Player/Player.h"
 #include "../Console/Console.h"
 #include "../Audio/AudioEngine.h"
+#include "../States/Game.h"
 #include <stdlib.h>
 #include <math.h>
 
@@ -409,15 +410,18 @@ void _CheckProjectileCollision()
 		}
 
 		// Check against player 
-		if (pArray[i].position.x >= Player_GetPlayer()->startPosition.x &&
-			pArray[i].position.x <= Player_GetPlayer()->endPosition.x &&
-			pArray[i].position.y >= Player_GetPlayer()->startPosition.y &&
-			pArray[i].position.y <= Player_GetPlayer()->endPosition.y)
+		for (int j = 0; j <= Game_GetGameType(); j++)
 		{
-			pArray[i].active = false;
-			pArray[i].position.x = -3;
-			pArray[i].position.y = -3;
-			Player_Damage();
+			if (pArray[i].position.x >= Player_GetPlayer(j)->startPosition.x &&
+				pArray[i].position.x <= Player_GetPlayer(j)->endPosition.x &&
+				pArray[i].position.y >= Player_GetPlayer(j)->startPosition.y &&
+				pArray[i].position.y <= Player_GetPlayer(j)->endPosition.y)
+			{
+				pArray[i].active = false;
+				pArray[i].position.x = -3;
+				pArray[i].position.y = -3;
+				Player_Damage(j);
+			}
 		}
 	}
 
@@ -522,32 +526,35 @@ void _CheckLaserCollision()
 		}
 
 		// Check against player
-		if (lArray[i].direction == DOWN || lArray[i].direction == RIGHT)
+		for (int j = 0; j <= Game_GetGameType(); j++)
 		{
-			if (lArray[i].startPosition.x < Player_GetPlayer()->endPosition.x &&
-				lArray[i].endPositionCheck.x > Player_GetPlayer()->startPosition.x &&
-				lArray[i].startPosition.y < Player_GetPlayer()->endPosition.y &&
-				lArray[i].endPositionCheck.y > Player_GetPlayer()->startPosition.y)
+			if (lArray[i].direction == DOWN || lArray[i].direction == RIGHT)
 			{
-				if (Player_GetState() == NORMAL)
+				if (lArray[i].startPosition.x < Player_GetPlayer(j)->endPosition.x &&
+					lArray[i].endPositionCheck.x > Player_GetPlayer(j)->startPosition.x &&
+					lArray[i].startPosition.y < Player_GetPlayer(j)->endPosition.y &&
+					lArray[i].endPositionCheck.y > Player_GetPlayer(j)->startPosition.y)
 				{
-					Player_Damage();
-					_ClearLaser(i);
+					if (Player_GetState(j) == NORMAL)
+					{
+						Player_Damage(j);
+						_ClearLaser(i);
+					}
 				}
 			}
+			else if (lArray[i].direction == UP || lArray[i].direction == LEFT)
+				if (lArray[i].endPosition.x < Player_GetPlayer(j)->endPosition.x &&
+					lArray[i].startPositionCheck.x > Player_GetPlayer(j)->startPosition.x &&
+					lArray[i].endPosition.y < Player_GetPlayer(j)->endPosition.y &&
+					lArray[i].startPositionCheck.y > Player_GetPlayer(j)->startPosition.y)
+				{
+					if (Player_GetState(j) == NORMAL)
+					{
+						Player_Damage(j);
+						_ClearLaser(i);
+					}
+				}
 		}
-		else if (lArray[i].direction == UP || lArray[i].direction == LEFT)
-			if (lArray[i].endPosition.x < Player_GetPlayer()->endPosition.x &&
-				lArray[i].startPositionCheck.x > Player_GetPlayer()->startPosition.x &&
-				lArray[i].endPosition.y < Player_GetPlayer()->endPosition.y &&
-				lArray[i].startPositionCheck.y > Player_GetPlayer()->startPosition.y)
-			{
-				if (Player_GetState() == NORMAL)
-				{
-					Player_Damage();
-					_ClearLaser(i);
-				}
-			}
 	}
 }
 
@@ -571,13 +578,28 @@ void _MoveNote()
 		// If projectile not in use, don't update it
 		if (!nArray[i].active) continue;
 
-		if (nArray[i].startPosition.x < Player_GetPlayer()->startPosition.x)
+		int targetX, targetY;
+
+		// If two player, go to their center
+		if (Game_GetGameType() == TWOPLAYER)
+		{
+			targetX = (Player_GetPlayer(0)->startPosition.x + Player_GetPlayer(1)->startPosition.x) / 2;
+			targetY = (Player_GetPlayer(0)->startPosition.y + Player_GetPlayer(1)->startPosition.y) / 2;
+		}
+		else // Follow player
+		{
+			targetX = Player_GetPlayer(0)->startPosition.x;
+			targetY = Player_GetPlayer(0)->startPosition.y;
+		}
+
+		// Follow player
+		if (nArray[i].startPosition.x < targetX)
 			nArray[i].startPosition.eulerX += NOTE_MOVESPEED * Clock_GetDeltaTime();
-		if (nArray[i].startPosition.x > Player_GetPlayer()->startPosition.x)
+		if (nArray[i].startPosition.x > targetX)
 			nArray[i].startPosition.eulerX -= NOTE_MOVESPEED * Clock_GetDeltaTime();
-		if (nArray[i].startPosition.y < Player_GetPlayer()->startPosition.y)
+		if (nArray[i].startPosition.y < targetY)
 			nArray[i].startPosition.eulerY += NOTE_MOVESPEED * Clock_GetDeltaTime();
-		if (nArray[i].startPosition.y > Player_GetPlayer()->startPosition.y)
+		if (nArray[i].startPosition.y > targetY)
 			nArray[i].startPosition.eulerY -= NOTE_MOVESPEED * Clock_GetDeltaTime();
 
 		nArray[i].startPosition.x = (int)(nArray[i].startPosition.eulerX);
@@ -596,29 +618,32 @@ void _CheckNoteCollision()
 	{
 		if (!nArray[i].active) continue;
 
-		if (nArray[i].startPosition.x < Player_GetPlayer()->endPosition.x &&
-			nArray[i].endPosition.x > Player_GetPlayer()->startPosition.x &&
-			nArray[i].startPosition.y < Player_GetPlayer()->endPosition.y &&
-			nArray[i].endPosition.y > Player_GetPlayer()->startPosition.y)
+		for (int j = 0; j <= Game_GetGameType(); j++)
 		{
-			nArray[i].active = false;
-			nArray[i].startPosition.x = -3;
-			nArray[i].startPosition.y = -3;
-
-			// Do time slow
-			switch (nArray[i].noteType)
+			if (nArray[i].startPosition.x < Player_GetPlayer(j)->endPosition.x &&
+				nArray[i].endPosition.x > Player_GetPlayer(j)->startPosition.x &&
+				nArray[i].startPosition.y < Player_GetPlayer(j)->endPosition.y &&
+				nArray[i].endPosition.y > Player_GetPlayer(j)->startPosition.y)
 			{
-			default:
-				_SlowTime(NOTE_SLOW_1);
-				break;
-			case MEDIUM:
-				_SlowTime(NOTE_SLOW_2);
-				break;
-			case BIG:
-				_SlowTime(NOTE_SLOW_3);
-				break;
-			}
+				nArray[i].active = false;
+				nArray[i].startPosition.x = -3;
+				nArray[i].startPosition.y = -3;
 
+				// Do time slow
+				switch (nArray[i].noteType)
+				{
+				default:
+					_SlowTime(NOTE_SLOW_1);
+					break;
+				case MEDIUM:
+					_SlowTime(NOTE_SLOW_2);
+					break;
+				case BIG:
+					_SlowTime(NOTE_SLOW_3);
+					break;
+				}
+
+			}
 		}
 	}
 }
