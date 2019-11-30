@@ -84,5 +84,8 @@
     <Text Include="$Resources\DashDialogue.txt" />
     <Text Include="%24Resources\SpaceKey1.txt" />
     <Text Include="$Resources\SpaceKey2.txt" />
+    <Text Include="$Resources\EnemyDialogue.txt" />
+    <Text Include="%24Resources\EnemySpotted1.txt" />
+    <Text Include="$Resources\EnemySpotted2.txt" />
   </ItemGroup>
 </Project>

@@ -23,38 +23,47 @@
 // For Gameplay Page
 #define TUTORIAL_DIALOGUE_OFFSETX 70
 #define TUTORIAL_DIALOGUE_OFFSETY 45
+//ENEMYX - 30 && ENEMY Y - 5
+#define TUTORIAL_ENEMY_POSITIONX 60
+#define TUTORIAL_ENEMY_POSITIONY 35
 
 
 //*********************************************************************************
 //								LOCAL VARIABLES
 //*********************************************************************************
 
-// Intro: Brief Description of Game
-// Dialogue1: Move Player Demo
-// Dialogue2: Dash Attack Player Demo
-// Dialogue3: Dodge Enemy Demo
-// Dialogue4: Attack Enemy Demo (Not done)
-// Dialogue5: End Tutorial
-// Dialogue6: Move on to real game after all this!
-
 //Sprites of Pixel Art
 sprite Instruction;
 sprite MoveDialogue;
 sprite DashDialogue;
+sprite EnemyDialogue;
 
 //Sprites with Pixel Animation
+//Beatman
 sprite leftBeatmanState1;
 sprite rightBeatmanState1;
 sprite leftBeatmanState2;
 sprite rightBeatmanState2;
+
+//Enter Key
 sprite EnterState1;
 sprite EnterState2;
+
+//BeatHead
 sprite BeatheadState1;
 sprite BeatheadState2;
+
+//Arrow Keys
 sprite ArrowKeysState1;
 sprite ArrowKeysState2;
+
+//Space Key
 sprite SpaceKeyState1;
 sprite SpaceKeyState2;
+
+//Enemy Warning
+sprite EnemyWarningState1;
+sprite EnemyWarningState2;
 
 //Controls State of Tutorial
 static int currentIntro = 0;
@@ -70,6 +79,7 @@ static bool animateEnter = false;
 static bool animateBeatHead = false;
 static bool animateArrowKeys = false;
 static bool animateSpaceKey = false;
+static bool animateWarning = false;
 
 //Controls Duration of States
 static double tutorialDuration = 0.0;
@@ -151,16 +161,21 @@ void Tutorial_Render()
 		}
 		// For 10 seconds
 		else if (tutorialDuration > 20000.0 && tutorialDuration <= 30000.0) {
-			//Text_RenderWords(&Dialogue3, 0, 0);
 			if (!spawnEnemy)
-			Enemy_Init();
-			spawnEnemy = true;
+			{
+				Enemy_Init();
+				spawnEnemy = true;
+			}
+			Text_Render(&EnemyDialogue, 0, 0);
+			_RenderWarningAnimation();
 			Enemy_Render();
 			Attack_Render();
 		}
-		else if (tutorialDuration > 30000.0) {
-			if (!startGame)
-				
+		else if (tutorialDuration > 30000.0 && tutorialDuration <= 40000.0) {
+
+		}
+		else if (tutorialDuration > 40000.0) {
+			if (!startGame)	
 			startGame = true;
 			//Text_RenderWords(&Dialogue5, 0, 0);
 		}
@@ -179,18 +194,6 @@ void Tutorial_EnterState()
 	Map_Init();
 	Player_Init();
 	Attack_Init();
-
-	// Tutorial on moving player
-
-
-	// Tutorial on dashing attack
-
-
-	// Tutorial on Dodging Enemy
-
-
-	// End Tutorial
-
 }
 
 void Tutorial_ExitState()
@@ -266,6 +269,18 @@ void GameplaySprite_Init()
 	SpaceKeyState2 = Text_CreateSprite();
 	Text_Init(&SpaceKeyState2, "..//RhythmGame//$Resources//SpaceKey2.txt");
 	Text_Move(&SpaceKeyState2, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2) + 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 3);
+
+	EnemyDialogue = Text_CreateSprite();
+	Text_Init(&EnemyDialogue, "..//RhythmGame//$Resources//EnemyDialogue.txt");
+	Text_Move(&EnemyDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 35, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 5);
+
+	EnemyWarningState1 = Text_CreateSprite();
+	Text_Init(&EnemyWarningState1, "..//RhythmGame//$Resources//EnemySpotted1.txt");
+	Text_Move(&EnemyWarningState1, (GAME_WIDTH / 2) - TUTORIAL_ENEMY_POSITIONX, (GAME_HEIGHT / 2) - TUTORIAL_ENEMY_POSITIONY);
+
+	EnemyWarningState2 = Text_CreateSprite();
+	Text_Init(&EnemyWarningState2, "..//RhythmGame//$Resources//EnemySpotted2.txt");
+	Text_Move(&EnemyWarningState2, (GAME_WIDTH / 2) - TUTORIAL_ENEMY_POSITIONX, (GAME_HEIGHT / 2) - TUTORIAL_ENEMY_POSITIONY);
 }
 
 void _RenderBeatmanAnimation()
@@ -339,6 +354,20 @@ void _RenderSpaceKeyAnimation()
 	if (animateSpaceKey == true)
 	{
 		Text_Render(&SpaceKeyState1, 0, 0);
+	}
+}
+
+void _RenderWarningAnimation()
+{
+	animateSpaceKey = !Audio_GetSpectrum(0);
+	if (animateSpaceKey == false)
+	{
+		Text_Render(&EnemyWarningState2, 0, 0);
+	}
+
+	if (animateSpaceKey == true)
+	{
+		Text_Render(&EnemyWarningState1, 0, 0);
 	}
 }
 
