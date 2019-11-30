@@ -8,6 +8,9 @@
 
 #define HEART_SPRITE_WIDTH 7
 #define HEART_SPRITE_HEIGHT 6
+#define HEART_ROWS 2
+#define HEART_SPRITES 2
+#define HEARTS_PER_ROW 5
 
 #define MAX_SCORE_DIGITS 10
 #define NUMBER_SPACING 4
@@ -74,14 +77,14 @@ void GameUI_DecreaseHealth(int damage, int which)
 	}
 	else
 	{
-		if (health[which].count <= 1)
+		if (health[which+1].count <= 1)
 		{
-			if (health[which + 1].count <= 1)
+			if (health[which].count <= 1)
 				StateMachine_ChangeState(State_GameOver);
-			else health[which + 1].count--;
+			else health[which].count--;
 		}
 		else
-			health[which].count--;
+			health[which+1].count--;
 	}
 }
 
@@ -101,23 +104,26 @@ void GameUI_AddScore(int amt)
 
 void _InitHealth()
 {
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < HEART_ROWS; i++)
 	{
 		// Set health
-		health[i].count = 10;
+		health[i].count = HEART_ROWS * HEARTS_PER_ROW;
 
 		// Set health origin
 		health[i].origin.x = GAMEUI_OFFSET;
 		health[i].origin.y = MAP_OFFSET + (HEART_SPRITE_HEIGHT * i);
 
 		// Create sprites
-		for (int j = 0; j < 5; j++)
-			for (int k = 0; k < 2; k++)
+		for (int j = 0; j < HEARTS_PER_ROW; j++)
+			for (int k = 0; k < HEART_SPRITES; k++)
 			{
 				health[i].hearts[j][k].visible = true;
 				health[i].hearts[j][k].heartSprite = Text_CreateSprite();
 				Text_InitArray(&health[i].hearts[j][k].heartSprite, "..//RhythmGame//$Resources//health2.txt", k);
-				Text_Move(&health[i].hearts[j][k].heartSprite, health[i].origin.x + (HEART_SPRITE_WIDTH * 2 * j)+(HEART_SPRITE_WIDTH * k), health[i].origin.y + (HEART_SPRITE_HEIGHT * i));
+				Text_Move(&health[i].hearts[j][k].heartSprite, health[i].origin.x +
+					(HEART_SPRITE_WIDTH * HEART_SPRITES * j) +
+					(HEART_SPRITE_WIDTH * k), health[i].origin.y +
+					(HEART_SPRITE_HEIGHT * i));
 			}
 	}
 }
@@ -161,11 +167,10 @@ void _RenderHealth()
 {
 	if (uiMode == ONEPLAYER)
 	{
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < HEART_ROWS; i++)
 			for (int j = 0; j < health[i].count; j++)
-				for (int k = 0; k < 2; k++)
-					if (health[i].hearts[j][k].visible)
-						Text_Render(&health[i].hearts[j][k].heartSprite, 0, 0);
+				if (health[i].hearts[0][j].visible)
+					Text_Render(&health[i].hearts[0][j].heartSprite, 0, 0);
 	}
 	else
 	{

@@ -1,26 +1,24 @@
 0
   rrr  
  rrrrr 
-rrwwwrr
-rrwrrrr
-rrrrrrr
-rrwrrrr
- rrrrrr
-  rrrrr
-   rrrr
-    rrr
-     rr
-      R
+rwwwrr
+rwrrrr
+rrrrrr
+rwrrrr
+ rrrrr
+  rrrr
+   rrr
+    rr
+     r
 1
-  rRR
- rrrRR
-rrrrrRR
-rrrrrRR
-rrrrrRR
-rrrrrRR
-rrrrRR
-rrrRR
-rrRR
-rRR
-RR
+  rR
+ rrrR
+rrrrrR
+rrrrrR
+rrrrrR
+rrrrrR
+rrrrR
+rrrR
+rrR
+rR
 R
