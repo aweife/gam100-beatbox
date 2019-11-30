@@ -34,9 +34,12 @@
 
 //Sprites of Pixel Art
 sprite Instruction;
+//Dialogue Entries
 sprite MoveDialogue;
 sprite DashDialogue;
 sprite EnemyDialogue;
+sprite NotesDialogue;
+sprite EndTutorialDialogue;
 
 //Sprites with Pixel Animation
 //Beatman
@@ -141,7 +144,7 @@ void Tutorial_Render()
 		Player_Render();
 		_RenderBeatHeadAnimation();
 
-		// For 10 seconds
+		// Moves on after 10 seconds
 		if (tutorialDuration >= 0.0 && tutorialDuration <= 10000.0)
 		{
 			if (!startTutorial)
@@ -154,30 +157,39 @@ void Tutorial_Render()
 			Text_Render(&MoveDialogue, 0, 0);
 			_RenderArrowKeysAnimation();
 		}
-		// For 10 seconds
+		// Moves on after 10 seconds
 		else if (tutorialDuration > 10000.0 && tutorialDuration <= 20000.0) {
 			Text_Render(&DashDialogue, 0, 0);
 			_RenderSpaceKeyAnimation();
 		}
-		// For 10 seconds
-		else if (tutorialDuration > 20000.0 && tutorialDuration <= 30000.0) {
+		// Moves on after 20 seconds
+		else if (tutorialDuration > 20000.0 && tutorialDuration <= 40000.0) {
+
 			if (!spawnEnemy)
 			{
 				Enemy_Init();
 				spawnEnemy = true;
 			}
-			Text_Render(&EnemyDialogue, 0, 0);
-			_RenderWarningAnimation();
+
+			if (tutorialDuration > 20000.0 && tutorialDuration <= 30000.0)
+			{
+				Text_Render(&EnemyDialogue, 0, 0);
+				_RenderWarningAnimation();
+			}
+
+			if (tutorialDuration > 30000.0 && tutorialDuration <= 40000.0)
+			{
+				Text_Render(&NotesDialogue, 0, 0);
+			}
+
 			Enemy_Render();
 			Attack_Render();
 		}
-		else if (tutorialDuration > 30000.0 && tutorialDuration <= 40000.0) {
-
-		}
+		// Moves on after 10 seconds
 		else if (tutorialDuration > 40000.0) {
 			if (!startGame)	
 			startGame = true;
-			//Text_RenderWords(&Dialogue5, 0, 0);
+			Text_Render(&EndTutorialDialogue, 0, 0);
 		}
 	}
 }
@@ -240,11 +252,11 @@ void GameplaySprite_Init()
 {
 	BeatheadState1 = Text_CreateSprite();
 	Text_Init(&BeatheadState1, "..//RhythmGame//$Resources//beathead1.txt");
-	Text_Move(&BeatheadState1, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
+	Text_Move(&BeatheadState1, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX - 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
 
 	BeatheadState2 = Text_CreateSprite();
 	Text_Init(&BeatheadState2, "..//RhythmGame//$Resources//beathead2.txt");
-	Text_Move(&BeatheadState2, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
+	Text_Move(&BeatheadState2, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX - 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
 
 	MoveDialogue = Text_CreateSprite();
 	Text_Init(&MoveDialogue, "..//RhythmGame//$Resources//MoveDialogue.txt");
@@ -281,6 +293,14 @@ void GameplaySprite_Init()
 	EnemyWarningState2 = Text_CreateSprite();
 	Text_Init(&EnemyWarningState2, "..//RhythmGame//$Resources//EnemySpotted2.txt");
 	Text_Move(&EnemyWarningState2, (GAME_WIDTH / 2) - TUTORIAL_ENEMY_POSITIONX, (GAME_HEIGHT / 2) - TUTORIAL_ENEMY_POSITIONY);
+
+	NotesDialogue = Text_CreateSprite();
+	Text_Init(&NotesDialogue, "..//RhythmGame//$Resources//NotesDialogue.txt");
+	Text_Move(&NotesDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 25, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
+
+	EndTutorialDialogue = Text_CreateSprite();
+	Text_Init(&EndTutorialDialogue, "..//RhythmGame//$Resources//EndTutorialDialogue.txt");
+	Text_Move(&EndTutorialDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 30, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
 }
 
 void _RenderBeatmanAnimation()

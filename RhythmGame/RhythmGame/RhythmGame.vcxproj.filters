@@ -87,5 +87,7 @@
     <Text Include="$Resources\EnemyDialogue.txt" />
     <Text Include="%24Resources\EnemySpotted1.txt" />
     <Text Include="$Resources\EnemySpotted2.txt" />
+    <Text Include="$Resources\NotesDialogue.txt" />
+    <Text Include="$Resources\EndTutorialDialogue.txt" />
   </ItemGroup>
 </Project>
