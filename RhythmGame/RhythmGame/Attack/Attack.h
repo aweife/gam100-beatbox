@@ -30,6 +30,7 @@ typedef struct Projectile {
 	DIRECTION direction;
 	sprite projectileSprite;
 	projectileSpeed speed;
+	int which;
 } Projectile;
 
 typedef struct Laser {
@@ -56,6 +57,6 @@ typedef struct Note {
 extern void Attack_Init();
 extern void Attack_Update();
 extern void Attack_Render();
-extern void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, projectileSpeed speed);
+extern void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, projectileSpeed speed, int which);
 extern void Attack_SpawnNote(Vector2d spawnPosition, SCORESTATE type);
 extern void Attack_Cleanup();

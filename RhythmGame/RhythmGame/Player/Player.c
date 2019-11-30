@@ -7,8 +7,9 @@
 #include "../UI/GameUI.h"
 #include "../Audio/AudioEngine.h"
 #include "../Attack/Attack.h"
+#include "../States/Game.h"
 
-#define DEBUG_AABB 1
+#define DEBUG_AABB 0
 #define COLLISION_OFFSET 1
 
 #define PLAYER_BASE_MOVESPEED 0.06
@@ -20,6 +21,7 @@
 #define PROJECTILE_SPEED 0.1
 
 static Player player[2] = { 0 };
+static bool godMode = 0;
 
 // TIMERS
 static double attackTimer;
@@ -34,8 +36,18 @@ void _AutoAttack();
 
 void Player_Init(GAMETYPE type)
 {
+	int numberOfPlayers = 1;
+	if (type == TUT)
+		godMode = true;
+	else
+		godMode = false;
+
+	if (type == TWOPLAYER)
+		numberOfPlayers = 2;
+
+
 	// Init one or two players
-	for (int i = 0; i <= type; i++)
+	for (int i = 0; i < numberOfPlayers; i++)
 	{
 		player[i].direction = STAY;
 		player[i].state = Normal;
@@ -61,20 +73,23 @@ void Player_Init(GAMETYPE type)
 	}
 
 	// Set their starting positions X
-	if (type == ONEPLAYER)
-		player[0].startPosition.eulerX = player[0].startPosition.x = 95;
-	else
+	if (type == TWOPLAYER)
 	{
 		player[0].startPosition.eulerX = player[0].startPosition.x = 170;
 		player[1].startPosition.eulerX = player[1].startPosition.x = 20;
 	}
+	else
+		player[0].startPosition.eulerX = player[0].startPosition.x = 95;
+
+	if(type == TUT)
+		player[0].startPosition.eulerY = player[0].startPosition.y = 100;
 }
 
 void Player_Update(int which)
 {
 	// Check against the border
 	_CheckBorder(which);
-	_AutoAttack(which);
+	_AutoAttack();
 
 	_MovePlayer(which);
 	_UpdateState(which);
@@ -155,8 +170,9 @@ void Player_Damage(int which)
 
 	player[which].invulTimer = PLAYER_INVUL_DURATION;
 	player[which].state = Damaged;
-	Map_Shake(RIGHT, 80.0, MAP_SHAKE_X);
-	GameUI_DecreaseHealth(1, which);
+	Map_Shake(RIGHT, 60.0, MAP_SHAKE_X);
+	if (!godMode)
+		GameUI_DecreaseHealth(Game_GetGameType() ? 1 : 2, which);
 }
 
 Player *Player_GetPlayer(int which)
@@ -263,7 +279,8 @@ void _AutoAttack()
 	{
 		attackTimer = PLAYER_ATTACKSPEED;
 		projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED };
-		Attack_Spawn(PLAYER, player[0].startPosition, UP, speed);
-		Attack_Spawn(PLAYER, player[1].startPosition, UP, speed);
+		Attack_Spawn(PLAYER, player[0].startPosition, UP, speed, 0);
+		if (Game_GetGameType() == TWOPLAYER)
+			Attack_Spawn(PLAYER, player[1].startPosition, UP, speed, 1);
 	}
 }

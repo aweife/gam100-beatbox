@@ -15,10 +15,8 @@
 // ENEMY AI
 #define START_OF_GAME_DELAY 2000.0
 #define ENEMY_BASE_MOVESPEED 0.01
-#define ENEMY_FAST_MOVESPEED 0.05
 #define PROJECTILE_SPAWN_SPEED 150.0
-#define PROJECTILE_SPEED 0.03
-#define PROJECTILE_SPEED_FAST 0.08
+#define PROJECTILE_SPEED 0.04
 #define LASER_SPAWN_SPEED 200.0
 
 // SCORING
@@ -27,9 +25,9 @@
 #define HEALTHBAR_OFFSET_X -2
 #define HEALTHBAR_OFFSET_Y -4
 #define HEALTH_FEEDBACK 50.0
-#define SMALL_PROGRESS Random_Range(15,25)
-#define MEDIUM_PROGRESS Random_Range(10,20)
-#define BIG_PROGRESS Random_Range(5,15)
+#define SMALL_PROGRESS Game_GetGameType() ? Random_Range(10,15):Random_Range(15,25)
+#define MEDIUM_PROGRESS  Game_GetGameType() ? Random_Range(5,10):Random_Range(10,20)
+#define BIG_PROGRESS  Game_GetGameType() ? Random_Range(1,10):Random_Range(5,15)
 #define SMALL_SCORE 1
 #define MEDIUM_SCORE 10
 #define BIG_SCORE 100
@@ -38,10 +36,14 @@
 // The skull enemy
 Enemy skullEnemy = { 0 };
 static double startTimer = 0;
+static bool enableLaser;
 
 // Attack speed
 static double laserSpawnTimer = 0;
 static double projectileSpawnTimer = 0;
+static double projSpeed;
+static double moveSpeed;
+static double projSpawnSpeed;
 
 // Health
 static int progress = 0;
@@ -53,7 +55,7 @@ void _DecideNextPosition(int position);
 void _EnemyAttack();
 void _RenderHealthBar();
 
-void Enemy_Init()
+void Enemy_Init(GAMETYPE type)
 {
 	// Initialise skull enemy
 	skullEnemy.startPosition.x = 90;
@@ -70,10 +72,23 @@ void Enemy_Init()
 	startTimer = START_OF_GAME_DELAY;
 	projectileSpawnTimer = START_OF_GAME_DELAY;
 	laserSpawnTimer = START_OF_GAME_DELAY;
+	projSpeed = PROJECTILE_SPEED;
+	moveSpeed = ENEMY_BASE_MOVESPEED;
+	projSpawnSpeed = PROJECTILE_SPAWN_SPEED;
 
 	// Score
 	progress = 0;
 	skullEnemy.scoreState = SMALL;
+
+	// For tutorial, tone down enemy
+	enableLaser = true;
+	if (type == TUT)
+	{
+		enableLaser = false;
+		projSpeed /= 4.0;
+		moveSpeed /= 2.0;
+		projSpawnSpeed *= 3.0;
+	}
 }
 
 void Enemy_Update()
@@ -83,7 +98,7 @@ void Enemy_Update()
 		startTimer -= Clock_GetDeltaTime();
 	else if (startTimer <= 0.0)
 	{
-		skullEnemy.velocity = (Audio_GetSpectrum(0)) ? ENEMY_FAST_MOVESPEED : ENEMY_BASE_MOVESPEED;
+		skullEnemy.velocity = (Audio_GetSpectrum(0)) ? moveSpeed * 5 : moveSpeed;
 		_MoveToPosition(skullEnemy.velocity);
 	}
 
@@ -125,7 +140,7 @@ Enemy *Enemy_GetEnemy()
 	return &skullEnemy;
 }
 
-void Enemy_Damage()
+void Enemy_Damage(int which)
 {
 	if (skullEnemy.state == DAMAGED) return;
 
@@ -133,7 +148,7 @@ void Enemy_Damage()
 	{
 	case SMALL:
 		progress += SMALL_PROGRESS;
-		GameUI_AddScore(SMALL_SCORE);
+		GameUI_AddScore(SMALL_SCORE, which);
 		if (progress >= 100)
 		{
 			progress = 0;
@@ -144,7 +159,7 @@ void Enemy_Damage()
 		break;
 	case MEDIUM:
 		progress += MEDIUM_PROGRESS;
-		GameUI_AddScore(MEDIUM_SCORE);
+		GameUI_AddScore(MEDIUM_SCORE, which);
 		if (progress >= 100)
 		{
 			progress = 0;
@@ -155,7 +170,7 @@ void Enemy_Damage()
 		break;
 	case BIG:
 		progress += BIG_PROGRESS;
-		GameUI_AddScore(BIG_SCORE);
+		GameUI_AddScore(BIG_SCORE, which);
 		if (progress >= 100)
 		{
 			progress = 0;
@@ -268,17 +283,17 @@ void _EnemyAttack()
 
 	if (laserSpawnTimer <= 0.0)
 	{
-		if (Audio_GetSpectrum(3))
+		if (enableLaser && Audio_GetSpectrum(3))
 		{
-			Attack_Spawn(LASER, skullEnemy.startPosition, Random_Range(5, 8), (projectileSpeed) { 0, 0 });
+			Attack_Spawn(LASER, skullEnemy.startPosition, Random_Range(5, 8), (projectileSpeed) { 0, 0 }, 0);
 			laserSpawnTimer = LASER_SPAWN_SPEED;
 		}
 
 		if (Audio_GetSpectrum(1))
 		{
-			projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED_FAST };
-			Attack_Spawn(PROJECTILE, skullEnemy.startPosition, Random_Range(1, 8), speed);
-			projectileSpawnTimer = PROJECTILE_SPAWN_SPEED;
+			projectileSpeed speed = { projSpeed,projSpeed * 3.0 };
+			Attack_Spawn(PROJECTILE, skullEnemy.startPosition, Random_Range(1, 8), speed, 0);
+			projectileSpawnTimer = projSpawnSpeed;
 		}
 	}
 }

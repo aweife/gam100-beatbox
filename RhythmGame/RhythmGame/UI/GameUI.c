@@ -5,11 +5,19 @@
 #include "../Text/TextReader.h"
 #include "../Global.h"
 
-#define HEART_SPRITE_WIDTH 10
-#define HEART_SPRITE_HEIGHT 8
+// Hearts
+#define HEART_SPRITE_WIDTH 5
+#define HEART_SPRITE_HEIGHT 5
+#define HEART_SPACING 11
+#define HEART_ROWS 2
+#define HEART_SPRITES 2
+#define HEARTS_PER_ROW 5
 
+// Score
 #define MAX_SCORE_DIGITS 10
 #define NUMBER_SPACING 4
+#define SCORE_ROWS 2 
+#define SCORE_HEIGHT 10
 
 typedef struct Hearts {
 	bool visible;
@@ -19,7 +27,7 @@ typedef struct Hearts {
 typedef struct HealthUI {
 	int count;
 	Vector2d origin;
-	Hearts hearts[2][5];
+	Hearts hearts[5][2];
 } HealthUI;
 
 typedef struct Digits {
@@ -35,26 +43,25 @@ typedef struct ScoreUI {
 } ScoreUI;
 
 static sprite numbers[10] = { 0 };
-static HealthUI health = { 0 };
-static ScoreUI score;
+static HealthUI health[2] = { 0 };
+static ScoreUI score[2] = { 0 };
+
+// Ui mode
+GAMETYPE uiMode;
 
 void _InitNumbers();
 void _InitHealth();
 void _InitScore();
-void _AlignScore();
+void _AlignScore(ScoreUI *score);
 void _RenderHealth();
 void _RenderScore();
 
-void GameUI_Init()
+void GameUI_Init(GAMETYPE type)
 {
+	uiMode = type;
 	_InitNumbers();
 	_InitHealth();
 	_InitScore();
-}
-
-void GameUI_Update()
-{
-
 }
 
 void GameUI_Render()
@@ -63,45 +70,88 @@ void GameUI_Render()
 	_RenderScore();
 }
 
-void GameUI_DecreaseHealth(int damage)
+void GameUI_DecreaseHealth(int damage, int which)
 {
-	if (health.count <= 1)
-		StateMachine_ChangeState(State_GameOver);
+	if (uiMode == TWOPLAYER)
+	{
+		if (health[!which].count <= 1)
+			StateMachine_ChangeState(State_GameOver);
+		else
+			health[!which].count -= damage;
+	}
 	else
-		health.count--;
+	{
+		if (health[which + 1].count <= 1)
+		{
+			if (health[which].count <= 1)
+				StateMachine_ChangeState(State_GameOver);
+			else health[which].count -= damage;
+		}
+		else
+			health[which + 1].count -= damage;
+	}
 }
 
-void GameUI_AddScore(int amt)
+void GameUI_AddScore(int amt, int which)
 {
-	score.count += amt;
+	score[which].count += amt;
 
-	for (int i = 0, digit = score.count; digit > 0; i++, digit /= 10)
+	for (int i = 0, digit = score[which].count; digit > 0; i++, digit /= 10)
 	{
-		score.digits[i].numberSprite = numbers[digit % 10];
-		score.digits[i].color = WHITE;
+		score[which].digits[i].numberSprite = numbers[digit % 10];
+		score[which].digits[i].color = uiMode == ONEPLAYER ? WHITE : which ? GREEN : BLUE;
 	}
 
 	// Align again
-	_AlignScore();
+	_AlignScore(&score[which]);
 }
 
 void _InitHealth()
 {
-	// Set health
-	health.count = 10;
-
-	// Calculate origin position on screen
-	health.origin.x = GAMEUI_OFFSET;
-	health.origin.y = MAP_OFFSET;
-
-	// Init hearts
-	for (int i = 0; i < health.count / 5; i++)
+	for (int i = 0; i < HEART_ROWS; i++)
 	{
-		for (int j = 0; j < health.count / 2; j++)
+		// Set health
+		health[i].count = HEART_ROWS * HEARTS_PER_ROW;
+
+		// Set health origin
+		health[i].origin.x = GAMEUI_OFFSET;
+		health[i].origin.y = MAP_OFFSET + (HEART_SPRITE_HEIGHT * i);
+
+		// Create sprites
+		for (int j = 0; j < HEARTS_PER_ROW; j++)
+			for (int k = 0; k < HEART_SPRITES; k++)
+			{
+				health[i].hearts[j][k].visible = true;
+				health[i].hearts[j][k].heartSprite = Text_CreateSprite();
+				Text_InitArray(&health[i].hearts[j][k].heartSprite, "..//RhythmGame//$Resources//health2.txt", k);
+				Text_Move(&health[i].hearts[j][k].heartSprite, health[i].origin.x +
+					(HEART_SPACING * j) +
+					(HEART_SPRITE_WIDTH * k), health[i].origin.y +
+					(HEART_SPRITE_HEIGHT * i));
+			}
+
+		// Change color if two players
+		// Player one color
+		if (uiMode == TWOPLAYER)
 		{
-			health.hearts[i][j].visible = true;
-			Text_Init(&health.hearts[i][j].heartSprite, "..//RhythmGame//$Resources//Health2.txt");
-			Text_Move(&health.hearts[i][j].heartSprite, health.origin.x + (HEART_SPRITE_WIDTH * j), health.origin.y + (HEART_SPRITE_HEIGHT * i));
+			CONSOLECOLOR red = GREEN, darkred = DARKGREEN;
+			for (int i = 0; i < HEARTS_PER_ROW; i++)
+				for (int j = 0; j < HEART_SPRITES; j++)
+					for (int k = 0, count = health[0].hearts[i][j].heartSprite.charCount; k < count; k++)
+						if (health[0].hearts[i][j].heartSprite.spriteI[k].printchar == 'r')
+							health[0].hearts[i][j].heartSprite.spriteI[k].printColor = red;
+						else if (health[0].hearts[i][j].heartSprite.spriteI[k].printchar == 'R')
+							health[0].hearts[i][j].heartSprite.spriteI[k].printColor = darkred;
+
+			// Player two color
+			red = BLUE; darkred = DARKBLUE;
+			for (int i = 0; i < HEARTS_PER_ROW; i++)
+				for (int j = 0; j < HEART_SPRITES; j++)
+					for (int k = 0, count = health[1].hearts[i][j].heartSprite.charCount; k < count; k++)
+						if (health[1].hearts[i][j].heartSprite.spriteI[k].printchar == 'r')
+							health[1].hearts[i][j].heartSprite.spriteI[k].printColor = red;
+						else if (health[1].hearts[i][j].heartSprite.spriteI[k].printchar == 'R')
+							health[1].hearts[i][j].heartSprite.spriteI[k].printColor = darkred;
 		}
 	}
 }
@@ -109,20 +159,39 @@ void _InitHealth()
 void _InitScore()
 {
 	// Init score
-	score.count = 0;
+	score[0].count = 0;
 
 	// Init position on screen
-	score.origin.x = GAME_WIDTH - GAMEUI_OFFSET - NUMBER_SPACING - 1;
-	score.origin.y = MAP_OFFSET;
+	score[0].origin.x = GAME_WIDTH - GAMEUI_OFFSET - NUMBER_SPACING - 1;
+	score[0].origin.y = MAP_OFFSET + SCORE_HEIGHT;
 
 	for (int i = 0; i < MAX_SCORE_DIGITS; i++)
 	{
-		score.digits[i].visible = true;
-		score.digits[i].numberSprite = numbers[0];
-		score.digits[i].color = GRAY;
+		score[0].digits[i].visible = true;
+		score[0].digits[i].numberSprite = numbers[0];
+		score[0].digits[i].color = GRAY;
 	}
 
-	_AlignScore();
+	_AlignScore(&score[0]);
+
+	if (uiMode == TWOPLAYER)
+	{
+		// Init score
+		score[1].count = 0;
+
+		// Init position on screen
+		score[1].origin.x = GAME_WIDTH - GAMEUI_OFFSET - NUMBER_SPACING - 1;
+		score[1].origin.y = MAP_OFFSET;
+
+		for (int i = 0; i < MAX_SCORE_DIGITS; i++)
+		{
+			score[1].digits[i].visible = true;
+			score[1].digits[i].numberSprite = numbers[0];
+			score[1].digits[i].color = GRAY;
+		}
+
+		_AlignScore(&score[1]);
+	}
 }
 
 void _InitNumbers()
@@ -135,23 +204,30 @@ void _InitNumbers()
 	}
 }
 
-void _AlignScore()
+void _AlignScore(ScoreUI *score)
 {
 	for (int i = 0; i < MAX_SCORE_DIGITS; i++)
-		Text_Move(&score.digits[i].numberSprite, score.origin.x - (NUMBER_SPACING * i), score.origin.y);
+		Text_Move(&score->digits[i].numberSprite, score->origin.x - (NUMBER_SPACING * i), score->origin.y);
 }
 
 void _RenderHealth()
 {
-	// Then first row
-	for (int i = 0; i < health.count; i++)
-		if (health.hearts[0][i].visible)
-			Text_Render(&health.hearts[0][i].heartSprite, 0, 0);
+	for (int i = 0; i < HEART_ROWS; i++)
+		for (int j = 0; j < health[i].count; j++)
+			if (health[i].hearts[0][j].visible)
+				Text_Render(&health[i].hearts[0][j].heartSprite, 0, 0);
 }
 
 void _RenderScore()
 {
 	for (int i = 0; i < MAX_SCORE_DIGITS; i++)
-		if (score.digits[i].visible)
-			Text_RenderColor(&score.digits[i].numberSprite, score.digits[i].color, 0, 0);
+		if (score[0].digits[i].visible)
+			Text_RenderColor(&score[0].digits[i].numberSprite, score[0].digits[i].color, 0, 0);
+
+	if (uiMode == TWOPLAYER)
+	{
+		for (int i = 0; i < MAX_SCORE_DIGITS; i++)
+			if (score[1].digits[i].visible)
+				Text_RenderColor(&score[1].digits[i].numberSprite, score[1].digits[i].color, 0, 0);
+	}
 }

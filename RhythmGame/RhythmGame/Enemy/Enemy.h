@@ -3,6 +3,7 @@
 #include "../Global.h"
 #include "../Text/TextReader.h"
 #include <stdbool.h>
+#include "../States/Game.h"
 
 typedef enum ENEMYSTATE {
 	NORMAL,
@@ -26,8 +27,8 @@ typedef struct Enemy {
 } Enemy;
 
 
-extern void Enemy_Init();
+extern void Enemy_Init(GAMETYPE type);
 extern void Enemy_Update();
 extern void Enemy_Render();
 extern Enemy *Enemy_GetEnemy();
-extern void Enemy_Damage();
+extern void Enemy_Damage(int which);

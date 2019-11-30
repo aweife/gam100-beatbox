@@ -44,13 +44,13 @@ void Game_EnterState(GAMETYPE type)
 
 	// Usuals
 	Random_Init();
-	Map_Init();
-	Enemy_Init();
+	Map_Init(GAME_UI_OFFSET);
+	Attack_Init();
 
 	// Player specific
 	Player_Init(type);
-	Attack_Init();
-	GameUI_Init();
+	Enemy_Init(type);
+	GameUI_Init(type);
 
 	// Play bgm for audio
 	Audio_Load(STAGEONE);
@@ -140,7 +140,6 @@ void Game_Update()
 		if (gameType == TWOPLAYER)
 			Player_Update(PLAYERTWO);
 
-		GameUI_Update();
 		Audio_Update();
 
 		// Update together

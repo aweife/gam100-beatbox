@@ -8,6 +8,7 @@
 // Static boundary
 static Vector2d MapOrigin;
 static Vector2d MapEnd;
+static int uiOffset;
 
 // For map shake
 static double shakeDuration = 0;
@@ -23,8 +24,9 @@ void _CreateBackground(int offset, CONSOLECOLOR color);
 void _ShakeMap();
 void _ResetMap();
 
-void Map_Init()
+void Map_Init(int offset)
 {
+	uiOffset = offset;
 	// Init Map
 	_ResetMap();
 
@@ -162,7 +164,7 @@ void _ResetMap()
 {
 	// Initialise static boundary
 	MapOrigin.x = MAP_OFFSET + MAP_SHAKE_X;
-	MapOrigin.y = MAP_OFFSET + GAME_UI_OFFSET + MAP_SHAKE_Y;
+	MapOrigin.y = MAP_OFFSET + uiOffset + MAP_SHAKE_Y;
 	MapEnd.x = GAME_WIDTH - MAP_OFFSET - MAP_SHAKE_X;
 	MapEnd.y = GAME_HEIGHT - MAP_OFFSET - MAP_SHAKE_Y;
 }
