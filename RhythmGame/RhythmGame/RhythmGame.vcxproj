@@ -59,6 +59,9 @@
     <ClInclude Include="UI\UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="$Resources\Alphabets.txt" />
+    <Text Include="$Resources\Alphabets2.txt" />
+    <Text Include="$Resources\Alphabets3.txt" />
     <Text Include="$Resources\Beatbar.txt" />
     <Text Include="$Resources\DialogueDashAttack.txt" />
     <Text Include="$Resources\DialogueDodgeEnemy.txt" />

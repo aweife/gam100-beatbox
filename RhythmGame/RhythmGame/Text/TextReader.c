@@ -373,18 +373,26 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 
 		while (!feof(pFile))
 		{
+
+		
+
+
 			charcount = 0;
 			Xoffset = 0;
 			iteration = 0;
 
 			fgets(Charline, 200, pFile);
 
+
+
+
 			for (int i = 0; i < 200; i++)
 			{
 
 
-				if (isdigit(Charline[i]) && (Charline[i] - '0') == state)
+				if (isdigit(Charline[0]) && (Charline[0] - '0') == state)
 				{
+
 					rendertrue = 1;
 					jump = 1;
 					break;

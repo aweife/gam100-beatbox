@@ -1,0 +1,60 @@
+0
+X   X
+X  X 
+XXX  
+X  X 
+X   X
+1
+X    
+X    
+X    
+X    
+XXXXX
+2
+X   X
+XX XX
+X X X
+X   X
+X   X
+3
+X   X
+XX  X
+X X X
+X  XX
+X   X
+4
+XXXXX
+X   X
+X   X
+X   X
+XXXXX
+5
+XXXXX
+X   X
+XXXXX
+X    
+X    
+6
+XXXX 
+X  X 
+XX X 
+X XX 
+XXXXX
+7
+XXXXX
+X   X
+XXXXX
+X  X 
+X   X
+8
+XXXXX
+X    
+XXXXX
+    X
+XXXXX
+9
+XXXXX
+  X  
+  X  
+  X  
+  X  

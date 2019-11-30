@@ -1,0 +1,36 @@
+0
+X   X
+X   X
+X   X
+X   X
+XXXXX
+1
+X   X
+X   X
+X   X
+ X X 
+  X  
+2
+X   X
+X   X
+X X X
+XX XX
+X   X
+3
+X   X
+ X X 
+  X  
+ X X 
+X   X
+4
+X   X
+ X X 
+  X  
+  X  
+  X  
+5
+XXXXX
+   XX
+  X  
+XX   
+XXXXX
