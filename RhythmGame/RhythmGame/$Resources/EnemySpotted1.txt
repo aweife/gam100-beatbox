@@ -1,9 +1,0 @@
-DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-D                                                                                                                        D
-D DDDDDDD  DDD   D  DDDDDDD  DD   DD  D     D    DDDDDDD  DDDDDDD  DDDDDDD  DDDDDDD  DDDDDDD  DDDDDDD  DDDDDD   D  D  D  D
-D D        D  D  D  D        D D D D  D     D    D        D     D  D     D     D        D     D        D     D  D  D  D  D
-D DDDDDDD  D   D D  DDDDDDD  D  D  D  DDDDDDD    DDDDDDD  DDDDDDD  D     D     D        D     DDDDDDD  D     D  D  D  D  D
-D D        D    DD  D        D     D     D             D  D        D     D     D        D     D        D     D           D
-D DDDDDDD  D    DD  DDDDDDD  D     D     D       DDDDDDD  D        DDDDDDD     D        D     DDDDDDD  DDDDDD   D  D  D  D
-D                                                                                                                        D
-DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
