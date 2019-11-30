@@ -19,6 +19,9 @@ extern void Audio_Load(STAGE stage);
 // Unload sound so we dont use too much memory
 extern void Audio_Unload();
 
+// Pause the channels or not
+extern void Audio_Pause(bool pause);
+
 // Play and forget a SFX (set its volume 0-1)
 extern void Audio_PlayOneShot(int id, float volume);
 

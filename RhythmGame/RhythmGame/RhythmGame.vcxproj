@@ -33,6 +33,7 @@
     <ClCompile Include="States\GameOver.c" />
     <ClCompile Include="States\MainMenu.c" />
     <ClCompile Include="States\StateMachine.c" />
+    <ClCompile Include="States\TwoPlayer.c" />
     <ClCompile Include="Text\TextReader.c" />
     <ClCompile Include="UI\GameUI.c" />
     <ClCompile Include="UI\UI.c" />
@@ -52,6 +53,7 @@
     <ClInclude Include="States\GameOver.h" />
     <ClInclude Include="States\MainMenu.h" />
     <ClInclude Include="States\StateMachine.h" />
+    <ClInclude Include="States\TwoPlayer.h" />
     <ClInclude Include="Text\TextReader.h" />
     <ClInclude Include="UI\GameUI.h" />
     <ClInclude Include="UI\UI.h" />
@@ -75,6 +77,7 @@
     <Text Include="$Resources\laserspawn.txt" />
     <Text Include="$Resources\notes.txt" />
     <Text Include="$Resources\numbers.txt" />
+    <Text Include="$Resources\pause.txt" />
     <Text Include="$Resources\projectile2.txt" />
     <Text Include="$Resources\Robot.txt" />
     <Text Include="$Resources\TextLogo2.txt" />

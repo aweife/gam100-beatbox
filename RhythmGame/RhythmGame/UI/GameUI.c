@@ -91,7 +91,7 @@ void _InitHealth()
 	health.count = 10;
 
 	// Calculate origin position on screen
-	health.origin.x = MAP_OFFSET;
+	health.origin.x = GAMEUI_OFFSET;
 	health.origin.y = MAP_OFFSET;
 
 	// Init hearts
@@ -112,7 +112,7 @@ void _InitScore()
 	score.count = 0;
 
 	// Init position on screen
-	score.origin.x = GAME_WIDTH - MAP_OFFSET - NUMBER_SPACING - 1;
+	score.origin.x = GAME_WIDTH - GAMEUI_OFFSET - NUMBER_SPACING - 1;
 	score.origin.y = MAP_OFFSET;
 
 	for (int i = 0; i < MAX_SCORE_DIGITS; i++)

@@ -13,6 +13,7 @@
 #define COLLISION_OFFSET 7
 
 // ENEMY AI
+#define START_OF_GAME_DELAY 2000.0
 #define ENEMY_BASE_MOVESPEED 0.01
 #define ENEMY_FAST_MOVESPEED 0.05
 #define PROJECTILE_SPAWN_SPEED 150.0
@@ -36,6 +37,7 @@
 
 // The skull enemy
 Enemy skullEnemy = { 0 };
+static double startTimer = 0;
 
 // Attack speed
 static double laserSpawnTimer = 0;
@@ -62,24 +64,32 @@ void Enemy_Init()
 	skullEnemy.enemySprite = Text_CreateSprite();
 	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
 	Text_Move(&skullEnemy.enemySprite, skullEnemy.startPosition.x, skullEnemy.startPosition.y);
+	_MoveToPosition(0.0);
 
 	// Delay before first attack
-	projectileSpawnTimer = 3000.0;
-	laserSpawnTimer = 3000.0;
+	startTimer = START_OF_GAME_DELAY;
+	projectileSpawnTimer = START_OF_GAME_DELAY;
+	laserSpawnTimer = START_OF_GAME_DELAY;
 
 	// Score
 	progress = 0;
+	skullEnemy.scoreState = SMALL;
 }
 
 void Enemy_Update()
 {
 	// If the snare(0) hits, increase enemy speed
-	skullEnemy.velocity = (Audio_GetSpectrum(0)) ? ENEMY_FAST_MOVESPEED : ENEMY_BASE_MOVESPEED;
-	_MoveToPosition(skullEnemy.velocity);
+	if (startTimer > 0.0)
+		startTimer -= Clock_GetDeltaTime();
+	else if (startTimer <= 0.0)
+	{
+		skullEnemy.velocity = (Audio_GetSpectrum(0)) ? ENEMY_FAST_MOVESPEED : ENEMY_BASE_MOVESPEED;
+		_MoveToPosition(skullEnemy.velocity);
+	}
 
 	_EnemyAttack();
 
-	// Damaged recovery
+	// Damaged feedback recovery
 	if (damagedTimer > 0.0)
 		damagedTimer -= Clock_GetDeltaTime();
 	else if (damagedTimer <= 0.0)

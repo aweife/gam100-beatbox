@@ -1,5 +1,7 @@
 #pragma once
 
+#define GAMEUI_OFFSET 8
+
 extern void GameUI_Init();
 
 extern void GameUI_Update();

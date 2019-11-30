@@ -12,12 +12,12 @@
 #define COLLISION_OFFSET 2
 
 #define LASER_UPDATE_SPEED 4
-#define NOTE_MOVESPEED 0.02
+#define NOTE_MOVESPEED 0.007
 
-#define NOTE_SLOW_1 0.3
-#define NOTE_SLOW_2 0.15
-#define NOTE_SLOW_3 0.075
-#define NOTE_SLOW_TIME 3000.0
+#define NOTE_SLOW_1 0.6
+#define NOTE_SLOW_2 0.2
+#define NOTE_SLOW_3 0.06
+#define NOTE_SLOW_TIME 2500.0
 
 // Keep tracks of how many projectiles are currently in use
 // then we update all in-use projectiles

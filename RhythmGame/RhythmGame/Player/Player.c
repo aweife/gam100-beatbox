@@ -13,10 +13,10 @@
 
 #define PLAYER_BASE_MOVESPEED 0.06
 #define PLAYER_FAST_MOVESPEED 0.3
-#define PLAYER_INVUL_DURATION 1000.0
+#define PLAYER_INVUL_DURATION 1500.0
 #define PLAYER_INVUL_COOLDOWN 1000.0
-#define PLAYER_DASH_COOLDOWN 300.0
-#define PLAYER_ATTACKSPEED 300.0
+#define PLAYER_DASH_COOLDOWN 500.0
+#define PLAYER_ATTACKSPEED 250.0
 #define PROJECTILE_SPEED 0.1
 
 static Player player;
@@ -49,10 +49,8 @@ void Player_Init()
 {
 	player.direction = STAY;
 	player.startPosition.eulerX = player.startPosition.x = 95;
-	player.startPosition.eulerY = player.startPosition.y = 80;
+	player.startPosition.eulerY = player.startPosition.y = 125;
 	player.playerSprite = Text_CreateSprite();
-	player.state = Normal;
-
 	Text_Init(&player.playerSprite, "..//RhythmGame//$Resources//player.txt");
 
 	factor = 0.0;
@@ -67,6 +65,7 @@ void Player_Init()
 	dashCooldownTimer = 0.0;
 	speedUpTimer = 0.0;
 	invulTimer = 0.0;
+	player.state = Normal;
 }
 
 void Player_Update()
