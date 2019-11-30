@@ -80,6 +80,9 @@
     <Text Include="$Resources\projectile2.txt" />
     <Text Include="$Resources\Robot.txt" />
     <Text Include="$Resources\TextLogo2.txt" />
+    <Text Include="$Resources\trophyman1.txt" />
+    <Text Include="$Resources\trophyman2.txt" />
+    <Text Include="$Resources\trophyman3.txt" />
     <Text Include="%24Resources\laser.txt" />
     <Text Include="$Resources\Logo.txt" />
     <Text Include="$Resources\Logo2.txt" />
