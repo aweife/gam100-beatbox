@@ -22,6 +22,11 @@ int count = 0;
 int rendertrue = 0;
 int jump = 0;
 
+/* Internal */
+int _CountCharsArray(char *path, int state);
+int _CountChars(char *path);
+void _Readandstoretext(sprite *s, const char *path);
+void _ReadandstoretextArray(spriteInfo *spriteI, const char *path, int state);
 
 void Text_Init(sprite *s, char *path)
 {
@@ -108,8 +113,6 @@ int _CountCharsArray(char *path,int state)
 
 }
 
-
-
 int _CountChars(char * path)
 {
 	totalcharcount = 0;
@@ -173,6 +176,17 @@ void Text_Render(sprite *s, int offsetX, int offsetY)
 			break;
 	}
 	Console_SetRenderBuffer_CharColor((s->spriteI[0].position.x) + s->origin.x, (s->spriteI[0].position.y + s->origin.y), ' ', (WORD)s->spriteI[0].printColor);
+}
+
+void Text_RenderColor(sprite *s, CONSOLECOLOR cc, int offsetX, int offsetY)
+{
+	for (int i = 0; i < s->charCount; i++)
+	{
+		Console_SetRenderBuffer_CharColor((s->spriteI[i].position.x + s->origin.x) + offsetX, (s->spriteI[i].position.y + s->origin.y) + offsetY, ' ', (WORD)cc);
+		if (s->spriteI[i].printchar == '\0')
+			break;
+	}
+	Console_SetRenderBuffer_CharColor((s->spriteI[0].position.x) + s->origin.x, (s->spriteI[0].position.y + s->origin.y), ' ', (WORD)cc);
 }
 
 void Text_RenderWords(sprite* s)
@@ -313,7 +327,7 @@ void _Readandstoretext(sprite *s, const char *path)
 					else if (Charline[i] == 'W')
 						s->spriteI[newcharcount + iteration].printColor = BLACK;
 					else if (Charline[i] == 'd')
-						s->spriteI[newcharcount + iteration].printColor = DARKGRAY;
+						s->spriteI[newcharcount + iteration].printColor = LIGHTGRAY;
 					else if (Charline[i] == 'D')
 						s->spriteI[newcharcount + iteration].printColor = GRAY;
 					else if (Charline[i] == 'B')
@@ -443,9 +457,9 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 					else if (Charline[i] == 'W')
 						 spriteI[newcharcount + iteration].printColor = BLACK;
 					else if (Charline[i] == 'd')
-						 spriteI[newcharcount + iteration].printColor = GRAY;
+						 spriteI[newcharcount + iteration].printColor = LIGHTGRAY;
 					else if (Charline[i] == 'D')
-						 spriteI[newcharcount + iteration].printColor = DARKGRAY;
+						 spriteI[newcharcount + iteration].printColor = GRAY;
 					else if (Charline[i] == 'B')
 						 spriteI[newcharcount + iteration].printColor = DARKBLUE;
 					else
