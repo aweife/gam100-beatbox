@@ -6,8 +6,9 @@
 #include "../Global.h"
 
 // Hearts
-#define HEART_SPRITE_WIDTH 7
-#define HEART_SPRITE_HEIGHT 6
+#define HEART_SPRITE_WIDTH 5
+#define HEART_SPRITE_HEIGHT 5
+#define HEART_SPACING 11
 #define HEART_ROWS 2
 #define HEART_SPRITES 2
 #define HEARTS_PER_ROW 5
@@ -124,7 +125,7 @@ void _InitHealth()
 				health[i].hearts[j][k].heartSprite = Text_CreateSprite();
 				Text_InitArray(&health[i].hearts[j][k].heartSprite, "..//RhythmGame//$Resources//health2.txt", k);
 				Text_Move(&health[i].hearts[j][k].heartSprite, health[i].origin.x +
-					(HEART_SPRITE_WIDTH * HEART_SPRITES * j) +
+					(HEART_SPACING * j) +
 					(HEART_SPRITE_WIDTH * k), health[i].origin.y +
 					(HEART_SPRITE_HEIGHT * i));
 			}
