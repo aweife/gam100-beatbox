@@ -79,6 +79,12 @@ void Audio_Unload()
 			FMOD_Sound_Release(tracks[i].sound);
 }
 
+void Audio_Pause(bool pause)
+{
+	for (int i = 0; i < MAX_NUMBER_OF_TRACKS; i++)
+		FMOD_Channel_SetPaused(tracks[i].channel, pause);
+}
+
 void Audio_PlayOneShot(int id, float volume)
 {
 	// Play the track paused

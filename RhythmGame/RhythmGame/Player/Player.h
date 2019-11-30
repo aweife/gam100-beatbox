@@ -3,26 +3,22 @@
 #include "../Global.h"
 #include "../Text/TextReader.h"
 
-#define BOXSIZE 3
-
-typedef enum PLAYERSTATE {
-	Normal,
-	ExDash,
-	Dash,
-	Invul,
-}PLAYERSTATE;
-
 typedef enum EASEMOVEMENT {
 	SpeedUp = 0,
 	SlowDown = 1,
 	Default = 2,
 }EASEMOVEMENT;
 
+typedef enum PLAYERSTATE {
+	Normal,
+	Invul,
+	Damaged,
+}PLAYERSTATE;
+
 typedef struct Player {
 	Vector2d startPosition;
 	Vector2d endPosition;
 	int direction;
-	int health;
 	sprite playerSprite;
 	PLAYERSTATE state;
 }Player;
@@ -51,11 +47,8 @@ extern double Player_GetEaseFactor();
 // Returns direction of player
 extern int Player_GetDirection();
 
-// Returns health of player
-extern int Player_GetHealth();
-
 // Returns sprite of player
-extern sprite *Player_GetPlayerSprite();
+extern Player *Player_GetPlayer();
 
 // Returns the attack state of player
 extern PLAYERSTATE Player_GetState();

@@ -18,6 +18,7 @@
     <ClCompile Include="UI\GameUI.c" />
     <ClCompile Include="UI\UI.c" />
     <ClCompile Include="States\Logo.c" />
+    <ClCompile Include="States\TwoPlayer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Attack\Attack.h" />
@@ -37,11 +38,21 @@
     <ClInclude Include="UI\GameUI.h" />
     <ClInclude Include="UI\UI.h" />
     <ClInclude Include="States\Logo.h" />
+    <ClInclude Include="States\TwoPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$Resources\Kick.wav" />
     <Media Include="$Resources\Melody.wav" />
     <Media Include="$Resources\Snare.wav" />
+    <Media Include="$Resources\Cluster1.wav" />
+    <Media Include="$Resources\KickMenu.wav" />
+    <Media Include="$Resources\Laser1.wav" />
+    <Media Include="$Resources\Melody1.wav" />
+    <Media Include="$Resources\MelodyMenu.wav" />
+    <Media Include="$Resources\Normal1.wav" />
+    <Media Include="$Resources\Snare1.wav" />
+    <Media Include="$Resources\SnareMenu.wav" />
+    <Media Include="$Resources\Warning1.wav" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="$Resources\Beatbar.txt" />
@@ -57,6 +68,24 @@
     <Text Include="$Resources\projectile.txt" />
     <Text Include="%24Resources\laser.txt" />
     <Text Include="$Resources\projectile2.txt" />
+    <Text Include="$Resources\DialogueDashAttack.txt" />
+    <Text Include="$Resources\DialogueDodgeEnemy.txt" />
+    <Text Include="$Resources\DialogueEndTutorial.txt" />
+    <Text Include="$Resources\DialogueMovePlayer.txt" />
+    <Text Include="$Resources\DialogueMoveToGame.txt" />
+    <Text Include="$Resources\digipenlogo.txt" />
+    <Text Include="$Resources\Eye_Level.txt" />
+    <Text Include="$Resources\Eye_Play.txt" />
+    <Text Include="$Resources\Eye_Quit.txt" />
+    <Text Include="$Resources\eyeball.txt" />
+    <Text Include="$Resources\Intro1.txt" />
+    <Text Include="$Resources\Intro2.txt" />
+    <Text Include="$Resources\laserspawn.txt" />
+    <Text Include="$Resources\Robot.txt" />
+    <Text Include="$Resources\TextLogo2.txt" />
+    <Text Include="$Resources\numbers.txt" />
+    <Text Include="$Resources\notes.txt" />
+    <Text Include="$Resources\pause.txt" />
     <Text Include="$Resources\MainMenu\LeftArrow.txt" />
     <Text Include="$Resources\MainMenu\RightArrow.txt" />
   </ItemGroup>
