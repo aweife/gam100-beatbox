@@ -2,7 +2,7 @@
 * \file			Console.h
 * \brief		A Wrapper to windows.h, to simplify a Console application usage
 * \author		Yannick Gerber
-* \version		1.0
+* \version		1.2
 * \date			2019
 * 
 *	The Console library Wraps around the windows library to expose comprehensive
@@ -13,12 +13,43 @@
 * \copyright	Copyright (c) 2019 DigiPen Institute of Technology. Reproduction 
 				or disclosure of this file or its contents without the prior 
 				written consent of DigiPen Institute of Technology is prohibited.
+*
+* \Revisions	1.2 - Added Palette Color handling
+*					- Added ways to modify a character foreground and background colors
+*					- Added More Options for Font selection
+*					- Removed the API test function to remove warnings
+*					- Fixed the SetConsoleTitle on UNICODE enabled systems
+*					- Added a String rendering that accept variadic arguments
+*					- Fixed a issue with the buffer access that would lead to a 
+*					crash when requesting an out of index address
+*					
+*				1.1 - Fixed a windows size inconsistency issue
+*				
+*				1.0 - Initial commit
 **********************************************************************************/
 #ifndef CONSOLE_H
 #define CONSOLE_H
-
-#include <stdbool.h>
 #include <Windows.h>
+#include <stdbool.h>
+
+
+/**
+ * \brief	Initializes the Library, needs to be called first
+* \note	A color is an unsigned long, 4 bytes, ARGB
+* \note - A : Alpha(not used)
+* \note - R : Red
+* \note - G : Green
+* \note - B : Blue
+* \note	examples : 0x00FFFFFF is White(R = 255, G = 255, B = 255)
+* \note			  0x00000000 is Black(R = 0, G = 0, B = 0)
+* \note			  0x00FF0000 is Red(R = 255, G = 0, B = 0)
+* \note			  0x0000FF00 is Green(R = 0, G = 255, B = 0)
+* \note			  0x0000FF00 is Blue(R = 0, G = 255, B = 0)
+*/
+typedef struct
+{
+	unsigned long color[16];
+} ConsoleColorPalette;
 
 //*********************************************************************************
 //						CONSOLE INITIALIZATION
@@ -44,6 +75,15 @@ void Console_SetTitle(const char* title);
  * \note	Uses the Terminal Font, in 8x8 resolution
  */
 void Console_SetSquareFont();
+
+
+/**
+ * \brief	Set the font to the Terminal font with specified Width and Height
+ *
+ * \note	Valid Width and height : 4x6, 6x8, 8x8, 16x8, 5x12, 7x12, 8x12, 16x12, 12x16, 10x18
+ *			Other combinations will not work
+ */
+void Console_SetTerminalFont(int width, int height);
 
 
 /**
@@ -194,11 +234,80 @@ void Console_CleanUp();
  * \note	The character will be displayed on your screen only after a Console_SwapRenderBuffer() call
  */
 void Console_SetRenderBuffer_Char(int x, int y, char c);
-void Console_SetRenderBuffer_CharColor(int x, int y, char c, WORD attributes);
 
 
 /**
- * \brief	Display a Character at the specified coordinate in the Back Buffer
+ * \brief	Copies the Console Color palette information to the specified Palette pointer
+ * \param	p Console color palette, an array of 16 Color
+ *
+ * \note	A color is an unsigned long, 4 bytes, ARGB
+ */
+void Console_GetColorPalette(ConsoleColorPalette* p);
+
+/**
+ * \brief	Copies the specified Palette color to the Console 
+ * \param	p Console color palette, an array of 16 Color
+ *
+ * \note	A color is an unsigned long, 4 bytes, ARGB
+ */
+void Console_SetColorPalette(ConsoleColorPalette* p);
+
+/**
+ * \brief	Sets a Cell at the specified coordinate in the Back Buffer
+ * \param	x Columns
+ * \param	y Row
+ * \param	c Character
+ * \param	fgColor Foreground color, color index of the palette
+ * \param	bgColor Background color, color index of the palette
+ *
+ * \note	Example: Console_SetRenderBuffer_Cell(20,15,'A', 3, 10);
+ * \note	will display A in the coordinate 20, 15 cell, with the character color being the 3rd in the
+ * \note	current color palette, and the 10th color as a background color
+ * \note	The character will be displayed on your screen only after a Console_SwapRenderBuffer() call
+ */
+void Console_SetRenderBuffer_Cell(int x, int y, char c, unsigned short fgColor, unsigned short bgColor);
+
+/**
+ * \brief	Sets a Cell at the specified coordinate in the Back Buffer
+ * \param	x Columns
+ * \param	y Row
+ * \param	c Character
+ *
+ * \note	Example: Console_SetRenderBuffer_CellChar(20,15,'A');
+ * \note	will display A in the coordinate 20, 15 cell
+ * \note	The character will be displayed on your screen only after a Console_SwapRenderBuffer() call
+ */
+void Console_SetRenderBuffer_CellChar(int x, int y, char c);
+
+/**
+ * \brief	Sets a Cell Color at the specified coordinate in the Back Buffer
+ * \param	x Columns
+ * \param	y Row
+ * \param	color Color indexes
+ *
+ * \note	Example: Console_SetRenderBuffer_CellChar(20,15, 0xAF);
+ * \note	will change the color in the coordinate 20, 15 cell to foreground F and background A index
+ * \note	of the color palette
+ * \note	The character will be displayed on your screen only after a Console_SwapRenderBuffer() call
+ */
+void Console_SetRenderBuffer_CellColor(int x, int y, unsigned short color);
+
+/**
+ * \brief	Sets a Cell Color at the specified coordinate in the Back Buffer
+ * \param	x Columns
+ * \param	y Row
+ * \param	fgColor Foreground Color
+ * \param	bgColor Background Color
+ *
+ * \note	Example: Console_SetRenderBuffer_CellChar(20,15, 7, 8);
+ * \note	will change the color in the coordinate 20, 15 cell to foreground 7 and background 8 index
+ * \note	of the color palette
+ * \note	The character will be displayed on your screen only after a Console_SwapRenderBuffer() call
+ */
+void Console_SetRenderBuffer_CellColors(int x, int y, unsigned short fgColor, unsigned short bgColor);
+
+/**
+ * \brief	Display a String at the specified coordinate in the Back Buffer
  * \param	x Columns
  * \param	y Row
  * \param	s String to display
@@ -208,6 +317,18 @@ void Console_SetRenderBuffer_CharColor(int x, int y, char c, WORD attributes);
  */
 void Console_SetRenderBuffer_String(int x, int y, const char* s);
 
+
+/**
+ * \brief	Display a formatted string at the specified coordinate in the Back Buffer
+ * \param	x Columns
+ * \param	y Row
+ * \param	format String format to display
+ * \param	... arguments to use in the formatting
+ *
+ * \note	Example: Console_SetRenderBuffer_Printf(20,15,"Decimal Number is %d, Floating is %f", d, f);
+ * \note	The String will be displayed on your screen only after a Console_SwapRenderBuffer() call
+ */
+void Console_SetRenderBuffer_Printf(int x, int y, const char* format, ...);
 
 /**
  * \brief	Clears the Back buffer
@@ -224,5 +345,17 @@ void Console_ClearRenderBuffer();
  * \note	Should be called at the end of your Rendering system, as your final procedure to bring the render to screen
  */
 void Console_SwapRenderBuffer();
+
+/**
+ * \brief	Callback prototype for a Render Post Process effect
+ */
+typedef void (*PostProcessFunctor)(CHAR_INFO*, int);
+
+/**
+ * \brief	To be called at anytime during your rendering to 
+ *
+ * \note	This will call the function passed in parameter, with the renderbuffer pointer and capacity
+ */
+void Console_RenderBuffer_PostProcess(PostProcessFunctor fct);
 
 #endif // CONSOLE_H

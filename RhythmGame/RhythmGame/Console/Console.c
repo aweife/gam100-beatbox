@@ -1,8 +1,9 @@
+#include <windows.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
-
+#include <stdarg.h>
 #include "Console.h"
 
 //*********************************************************************************
@@ -14,7 +15,9 @@ static bool			sConsoleInitialized		= false;
 static float		sConsoleDisplayRatio	= 4.f / 3.f;
 static COORD		sConsoleSize;
 static CHAR_INFO*	sRenderBuffer			= 0x00;
-static int			sRenderBufferSize		= 0;
+static unsigned int	sRenderBufferSize		= 0;		// Size in Memory
+static int			sRenderBufferCapacity	= 0;		// Size in CHAR_INFO elements
+// TODO : Add the index to test in the display instead of size
 
 static const COORD ORIGIN = { 0,0 };
 
@@ -44,6 +47,7 @@ void Console_FreeRenderBuffer()
 	free(sRenderBuffer);
 	sRenderBuffer = 0;
 	sRenderBufferSize = 0;
+	sRenderBufferCapacity = 0;
 }
 
 void Console_CreateRenderBuffer()
@@ -51,7 +55,8 @@ void Console_CreateRenderBuffer()
 	if (sRenderBuffer != 0)
 		Console_FreeRenderBuffer();
 
-	sRenderBufferSize = Console_GetHeight() * Console_GetWidth() * sizeof(CHAR_INFO);
+	sRenderBufferCapacity = Console_GetHeight() * Console_GetWidth();
+	sRenderBufferSize = sRenderBufferCapacity * sizeof(CHAR_INFO);
 
 	sRenderBuffer = malloc(sRenderBufferSize);
 }
@@ -71,14 +76,13 @@ void Console_SwapRenderBuffer()
 
 	// Copy the local rendering buffer to the ConsoleHandle Buffer
 	SMALL_RECT writeRegion = { 0,0,sConsoleSize.X, sConsoleSize.Y };
-
 	if (!WriteConsoleOutputA(sConsoleHandle, sRenderBuffer, sConsoleSize, ORIGIN, &writeRegion) )
 	{
 		DWORD error = GetLastError();
 		assert(1);
 	}
 }
-//Hi I am Nico Wong
+
 void Console_SetRenderBuffer_Char(int x, int y, char c)
 {
 #ifdef _DEBUG
@@ -87,7 +91,7 @@ void Console_SetRenderBuffer_Char(int x, int y, char c)
 
 	const int index = x + y * sConsoleSize.X;
 
-	if ((index >= sRenderBufferSize) || (index < 0))
+	if ((index >= sRenderBufferCapacity) || (index < 0))
 		return;
 
 	sRenderBuffer[index].Char.AsciiChar = c;
@@ -95,7 +99,8 @@ void Console_SetRenderBuffer_Char(int x, int y, char c)
 	// FOREGROUND_RED | FOREGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_INTENSITY;
 }
 
-void Console_SetRenderBuffer_CharColor(int x, int y, char c, WORD attributes)
+
+void Console_SetRenderBuffer_Cell(int x, int y, char c, unsigned short fgColor, unsigned short bgColor)
 {
 #ifdef _DEBUG
 	Console_HandleValidity_Assert();
@@ -103,12 +108,87 @@ void Console_SetRenderBuffer_CharColor(int x, int y, char c, WORD attributes)
 
 	const int index = x + y * sConsoleSize.X;
 
-	if ((index >= sRenderBufferSize) || (index < 0))
+	if ((index >= sRenderBufferCapacity) || (index < 0))
 		return;
 
-  	sRenderBuffer[index].Char.AsciiChar = c;
-	sRenderBuffer[index].Attributes = attributes;
-	// FOREGROUND_RED | FOREGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_INTENSITY;
+	sRenderBuffer[index].Char.AsciiChar = c;
+	sRenderBuffer[index].Attributes = fgColor | (bgColor << 4);
+}
+
+void Console_SetRenderBuffer_CellChar(int x, int y, char c)
+{
+#ifdef _DEBUG
+	Console_HandleValidity_Assert();
+#endif
+
+	const int index = x + y * sConsoleSize.X;
+
+	if ((index >= sRenderBufferCapacity) || (index < 0))
+		return;
+
+	sRenderBuffer[index].Char.AsciiChar = c;
+}
+
+void Console_SetRenderBuffer_CellColor(int x, int y, unsigned short color)
+{
+#ifdef _DEBUG
+	Console_HandleValidity_Assert();
+#endif
+
+	const int index = x + y * sConsoleSize.X;
+
+	if ((index >= sRenderBufferCapacity) || (index < 0))
+		return;
+
+	sRenderBuffer[index].Attributes = color;
+}
+
+void Console_SetRenderBuffer_CellColors(int x, int y, unsigned short fgColor, unsigned short bgColor)
+{
+	Console_SetRenderBuffer_CellColor(x, y, fgColor | (bgColor << 4));
+}
+
+
+void Console_GetColorPalette(ConsoleColorPalette* p)
+{
+	CONSOLE_SCREEN_BUFFER_INFOEX   screenBufferInfoEX;
+	screenBufferInfoEX.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+	GetConsoleScreenBufferInfoEx(sConsoleHandle, &screenBufferInfoEX);
+
+	for (int i = 0; i < 16; ++i)
+		p->color[i] = screenBufferInfoEX.ColorTable[i];
+}
+
+
+void Console_SetColorPalette(ConsoleColorPalette* p)
+{
+	CONSOLE_SCREEN_BUFFER_INFOEX   screenBufferInfoEX;
+	screenBufferInfoEX.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+	GetConsoleScreenBufferInfoEx(sConsoleHandle, &screenBufferInfoEX);
+
+	for (int i = 0; i < 16; ++i)
+		screenBufferInfoEX.ColorTable[i] = p->color[i];
+
+	SetConsoleScreenBufferInfoEx(sConsoleHandle, &screenBufferInfoEX);
+
+	const SMALL_RECT windowSize = { 0, 0, sConsoleSize.X - 1, sConsoleSize.Y - 1 };
+	SetConsoleWindowInfo(sConsoleHandle, 1, &windowSize);
+}
+
+
+void Console_SetRenderBuffer_Attribute(int x, int y, unsigned short a)
+{
+#ifdef _DEBUG
+	Console_HandleValidity_Assert();
+#endif
+
+	const int index = x + y * sConsoleSize.X;
+
+	if ((index >= sRenderBufferCapacity) || (index < 0))
+		return;
+
+	sRenderBuffer[index].Attributes = a;
+	// FOREGROUND_RED | FOREGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_INTENSITY;	
 }
 
 void Console_SetRenderBuffer_String(int x, int y, const char* s)
@@ -116,17 +196,35 @@ void Console_SetRenderBuffer_String(int x, int y, const char* s)
 #ifdef _DEBUG
 	Console_HandleValidity_Assert();
 #endif
-	const int size = strlen(s);
+	const size_t size = strlen(s);
 	int index = x + y * sConsoleSize.X;
 	for (int i = 0; i < size; ++i)
 	{
-		if ((index >= sRenderBufferSize) || (index < 0))
+		if ((index >= sRenderBufferCapacity) || (index < 0))
 			return;
 
 		sRenderBuffer[index].Char.AsciiChar = s[i];
-		sRenderBuffer[index].Attributes = FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN;
+		//sRenderBuffer[index].Attributes = FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN;
 		++index;
 	}
+}
+
+void Console_SetRenderBuffer_Printf(int x, int y, const char* format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	char buffer[512];
+
+	vsprintf_s(buffer, 512, format, args);
+	Console_SetRenderBuffer_String(x, y, buffer);
+
+	va_end(args);
+}
+
+
+void Console_RenderBuffer_PostProcess(PostProcessFunctor fct)
+{
+	fct(sRenderBuffer, sRenderBufferCapacity);
 }
 
 //*********************************************************************************
@@ -158,11 +256,25 @@ void Console_SetSquareFont()
 	CONSOLE_FONT_INFOEX fontInfo = { 0 };
 	fontInfo.cbSize = sizeof(fontInfo);
 	wcscpy_s(fontInfo.FaceName, _countof(fontInfo.FaceName), L"Terminal");
-	fontInfo.dwFontSize.X = 4;
-	fontInfo.dwFontSize.Y = 4;
+	fontInfo.dwFontSize.X = 8;
+	fontInfo.dwFontSize.Y = 8;
 	fontInfo.FontWeight = FW_NORMAL;
 	sConsoleDisplayRatio = fontInfo.dwFontSize.X / (float)fontInfo.dwFontSize.Y;
 	
+	SetCurrentConsoleFontEx(sConsoleHandle, FALSE, &fontInfo);
+}
+
+
+void Console_SetTerminalFont(int width, int height)
+{
+	CONSOLE_FONT_INFOEX fontInfo = { 0 };
+	fontInfo.cbSize = sizeof(fontInfo);
+	wcscpy_s(fontInfo.FaceName, _countof(fontInfo.FaceName), L"Terminal");
+	fontInfo.dwFontSize.X = width;
+	fontInfo.dwFontSize.Y = height;
+	fontInfo.FontWeight = FW_NORMAL;
+	sConsoleDisplayRatio = fontInfo.dwFontSize.X / (float)fontInfo.dwFontSize.Y;
+
 	SetCurrentConsoleFontEx(sConsoleHandle, FALSE, &fontInfo);
 }
 
@@ -173,12 +285,18 @@ float Console_GetDisplayRatio()
 
 void Console_SetTitle(const char* title)
 {
+
+#ifdef UNICODE
 	// Lazy conversion from ANSI to Unicode, Limited to 100 character
-	// use dynamic memory allocation and not a fixed array to remove the 100 character limitation
+// use dynamic memory allocation and not a fixed array to remove the 100 character limitation
 	wchar_t  lTitle[100];
 	swprintf_s(lTitle, 100, L"%hs", title);
 
 	SetConsoleTitle(lTitle);
+#else
+	SetConsoleTitle(title);
+#endif // !UNICODE
+
 }
 
 void Console_SetSize(int x, int y)
@@ -384,45 +502,6 @@ void Console_ClearArea(int x, int y, int width, int height)
 	for (int j = y; j < y + height; ++j)
 		Console_Printf(x, j, buffer);
 }
-
-void Console_TestAPI()
-{
-	Console_SetTitle("Test API");
-	printf_s("Hello World!\n");
-	getchar();
-
-	Console_SetFullScreen();
-	Console_SetCursorVisibility(0);
-	getchar();
-
-	Console_Clear();
-	getchar();
-
-	Console_SetCursorPos(50, 25);
-	printf_s("Hello Digipen !~ ");
-
-	Console_SetRenderBuffer_Char(60, 27, 'A');
-	Console_SetRenderBuffer_Char(5, 27, 'B');
-
-	printf_s("How is it going ?! ");
-
-	Console_SetCursorPos(0, 28);
-	printf_s("Screen size: %d x %d !\n", Console_GetWidth(), Console_GetHeight());
-	getchar();
-
-	Console_SetWindowedMode(100,20, true);
-	printf_s("Screen size: %d x %d !\n", Console_GetWidth(), Console_GetHeight());
-	getchar();
-
-	Console_SetSize(120, 50);
-	printf_s("Screen size: %d x %d !\n", Console_GetWidth(), Console_GetHeight());
-	getchar();
-
-	Console_SetWindowedFullScreen();
-	printf_s("Screen size: %d x %d !\n", Console_GetWidth(), Console_GetHeight());
-	getchar();
-}
-
 
 //*********************************************************************************
 //									CLEAN UP
