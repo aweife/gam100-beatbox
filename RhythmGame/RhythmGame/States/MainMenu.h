@@ -5,9 +5,12 @@
 typedef enum MenuState
 {
 	PLAY = 0,
-	LEVEL = 1,
-	QUIT = 2,
-	REPEAT = 3,
+	PLAY2P = 1,
+	LEVEL = 2,
+	HISCORE = 3,
+	CREDIT = 4,
+	QUIT = 5,
+	REPEAT = 6,
 };
 
 extern void MainMenu_EnterState();

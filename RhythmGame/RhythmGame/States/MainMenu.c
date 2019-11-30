@@ -11,9 +11,12 @@
 sprite diamond1;
 sprite diamond2;
 sprite diamond3;
-sprite playButton;
-sprite levelButton;
-sprite quitButton;
+sprite Button_PLAY;
+sprite Button_2P;
+sprite Button_LEVEL;
+sprite Button_HISCORE;
+sprite Button_CREDIT;
+sprite Button_QUIT;
 sprite leftArrow;
 sprite rightArrow;
 
@@ -45,20 +48,28 @@ static int spriteColor = 0;
 void MainMenu_EnterState()
 {
 	diamond1 = Text_CreateSprite();
-	Text_Init(&diamond1, "..//RhythmGame//$Resources//MainMenu//Diamond1.txt");
 	diamond2 = Text_CreateSprite();
-	Text_Init(&diamond2, "..//RhythmGame//$Resources//MainMenu//Diamond2.txt");
 	diamond3 = Text_CreateSprite();
+	Text_Init(&diamond1, "..//RhythmGame//$Resources//MainMenu//Diamond1.txt");
+	Text_Init(&diamond2, "..//RhythmGame//$Resources//MainMenu//Diamond2.txt");
 	Text_Init(&diamond3, "..//RhythmGame//$Resources//MainMenu//Diamond3.txt");
-	playButton = Text_CreateSprite();
-	Text_Init(&playButton, "..//RhythmGame//$Resources//MainMenu//PlayButton.txt");
-	levelButton = Text_CreateSprite();
-	Text_Init(&levelButton, "..//RhythmGame//$Resources//MainMenu//LevelButton.txt");
-	quitButton = Text_CreateSprite();
-	Text_Init(&quitButton, "..//RhythmGame//$Resources//MainMenu//QuitButton.txt");
+
+	Button_PLAY = Text_CreateSprite();
+	Button_2P = Text_CreateSprite();
+	Button_LEVEL = Text_CreateSprite();
+	Button_HISCORE = Text_CreateSprite();
+	Button_CREDIT = Text_CreateSprite();
+	Button_QUIT = Text_CreateSprite();	
+	Text_Init(&Button_PLAY, "..//RhythmGame//$Resources//MainMenu//Button_PLAY.txt");
+	Text_Init(&Button_2P, "..//RhythmGame//$Resources//MainMenu//Button_2P.txt");
+	Text_Init(&Button_LEVEL, "..//RhythmGame//$Resources//MainMenu//Button_LEVEL.txt");
+	Text_Init(&Button_HISCORE, "..//RhythmGame//$Resources//MainMenu//Button_HISCORE.txt");
+	Text_Init(&Button_CREDIT, "..//RhythmGame//$Resources//MainMenu//Button_CREDIT.txt");
+	Text_Init(&Button_QUIT, "..//RhythmGame//$Resources//MainMenu//Button_QUIT.txt");
+
 	leftArrow = Text_CreateSprite();
-	Text_Init(&leftArrow, "..//RhythmGame//$Resources//MainMenu//LeftArrow.txt");
 	rightArrow = Text_CreateSprite();
+	Text_Init(&leftArrow, "..//RhythmGame//$Resources//MainMenu//LeftArrow.txt");
 	Text_Init(&rightArrow, "..//RhythmGame//$Resources//MainMenu//RightArrow.txt");
 
 	Text_Move(&leftArrow, 12, 75);
@@ -203,17 +214,23 @@ void _colorSwitch()
 {
 	switch (spriteColorCount)
 	{
-	case 1:
-		spriteColor = DARKGREEN;
+	case PLAY:
+		spriteColor = DARKMAGENTA; // M
 		break;
-	case 2:
-		spriteColor = DARKBLUE;
+	case PLAY2P:
+		spriteColor = DARKCYAN; // C
 		break;
-	case 3:
-		spriteColor = GREEN;
+	case LEVEL:
+		spriteColor = DARKGREEN; // G
 		break;
-	default:
-		spriteColor = DARKMAGENTA;
+	case HISCORE:
+		spriteColor = DARKGRAY; // D
+		break;
+	case CREDIT:
+		spriteColor = DARKYELLOW; // Y
+		break;
+	case QUIT:
+		spriteColor = DARKBLUE; // B
 		break;
 	}
 }
@@ -223,16 +240,28 @@ void _renderChoice(int choice)
 	switch (choice)
 	{
 	case PLAY:
-		Text_Move(&playButton, 61, 75);
-		Text_Render(&playButton, 0, 0);
+		Text_Move(&Button_PLAY, 61, 75);
+		Text_Render(&Button_PLAY, 0, 0);
+		break;
+	case PLAY2P:
+		Text_Move(&Button_2P, 61, 75);
+		Text_Render(&Button_2P, 0, 0);
 		break;
 	case LEVEL:
-		Text_Move(&levelButton, 61, 75);
-		Text_Render(&levelButton, 0, 0);
+		Text_Move(&Button_LEVEL, 61, 75);
+		Text_Render(&Button_LEVEL, 0, 0);
+		break;
+	case HISCORE:
+		Text_Move(&Button_HISCORE, 61, 75);
+		Text_Render(&Button_HISCORE, 0, 0);
+		break;
+	case CREDIT:
+		Text_Move(&Button_CREDIT, 61, 75);
+		Text_Render(&Button_CREDIT, 0, 0);
 		break;
 	case QUIT:
-		Text_Move(&quitButton, 61, 75);
-		Text_Render(&quitButton, 0, 0);
+		Text_Move(&Button_QUIT, 61, 75);
+		Text_Render(&Button_QUIT, 0, 0);
 		break;
 	}
 }
