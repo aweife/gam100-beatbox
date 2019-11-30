@@ -25,10 +25,15 @@ static int keyDown = 1;
 
 static double beatTimer = 0.0;
 static int beatFlag = 0;
-static int toggle = 0;
+static int titleFlag = 0;
+static double toggleTimer1 = 0;
+static double toggleTimer2 = 0;
 
 static double arrowTimer = 0.0;
 static int shakeDirection = 0;
+
+static double titleTimer = 0.0;
+static int titleShake = 4;
 
 static int spriteAni = 0;
 static int spriteColorCount = 1;
@@ -127,13 +132,16 @@ void MainMenu_ProcessInput()
 //*********************************************************************************
 void MainMenu_Update()
 {
-	if (Audio_GetSpectrum(0) && toggle == 0)
+	if (Audio_GetSpectrum(0) && toggleTimer1 <= 0)
 	{
 		beatFlag = 1;
-		toggle = 1;
+		toggleTimer1 = 200;
 	}
+
+	if ((Audio_GetSpectrum(1) || Audio_GetSpectrum(2)) && toggleTimer2 <= 0)
+		titleFlag = 1;
 	else
-		toggle = 0;
+		titleFlag = 0;
 
 	if (beatFlag == 1)
 		_moveToBeat();
@@ -150,7 +158,8 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
-	Text_Render(&title, 0, 0);
+	if (titleFlag == 1)
+		_renderTitle();
 	_renderArrow();
 	_renderBeat();
 	_renderChoice(choice);
@@ -210,6 +219,15 @@ void _updateTimer()
 
 	if (arrowTimer >= 0.0)
 		arrowTimer -= Clock_GetDeltaTime();
+
+	if (titleTimer >= 0.0)
+		titleTimer -= Clock_GetDeltaTime();
+
+	if (toggleTimer1 >= 0.0)
+		toggleTimer1 -= Clock_GetDeltaTime();
+
+	if (toggleTimer2 >= 0.0)
+		toggleTimer2 -= Clock_GetDeltaTime();
 }
 
 void _colorSwitch()
@@ -287,5 +305,20 @@ void _renderArrow()
 			rightArrowX = 4;
 		else if (shakeDirection == LEFT)
 			leftArrowX = -4;
+	}
+}
+
+void _renderTitle()
+{
+	if (titleTimer <= 0)
+	{
+		titleShake = (titleShake == 4) ? -4 : 4;
+		Text_Render(&title, titleShake, 0);
+		titleTimer = 250.0;
+	}
+	else
+	{
+		Text_Render(&title, 0, 0);
+		titleFlag = 0;
 	}
 }

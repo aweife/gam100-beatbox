@@ -26,3 +26,4 @@ extern void _updateTimer();
 extern void _colorSwitch();
 extern void _renderBeat();
 extern void _renderArrow();
+extern void _renderTitle();
