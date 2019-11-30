@@ -84,5 +84,7 @@
     <Text Include="$Resources\numbers.txt" />
     <Text Include="$Resources\notes.txt" />
     <Text Include="$Resources\pause.txt" />
+    <Text Include="$Resources\MainMenu\LeftArrow.txt" />
+    <Text Include="$Resources\MainMenu\RightArrow.txt" />
   </ItemGroup>
 </Project>
