@@ -1,7 +1,26 @@
-   R   R  
-  RRR RwR 
-  RRRRwRR
-  RRRRRRR 
-   RRRRR  
-    RRR   
-     R    
+0
+  rrr  
+ rrrrr 
+rrwwwrr
+rrwrrrr
+rrrrrrr
+rrwrrrr
+ rrrrrr
+  rrrrr
+   rrrr
+    rrr
+     rr
+      R
+1
+  rRR
+ rrrRR
+rrrrrRR
+rrrrrRR
+rrrrrRR
+rrrrrRR
+rrrrRR
+rrrRR
+rrRR
+rRR
+RR
+R

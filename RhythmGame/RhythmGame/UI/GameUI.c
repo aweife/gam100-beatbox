@@ -5,8 +5,9 @@
 #include "../Text/TextReader.h"
 #include "../Global.h"
 
-#define HEART_SPRITE_WIDTH 10
-#define HEART_SPRITE_HEIGHT 8
+
+#define HEART_SPRITE_WIDTH 7
+#define HEART_SPRITE_HEIGHT 6
 
 #define MAX_SCORE_DIGITS 10
 #define NUMBER_SPACING 4
@@ -19,7 +20,7 @@ typedef struct Hearts {
 typedef struct HealthUI {
 	int count;
 	Vector2d origin;
-	Hearts hearts[2][5];
+	Hearts hearts[5][2];
 } HealthUI;
 
 typedef struct Digits {
@@ -35,8 +36,11 @@ typedef struct ScoreUI {
 } ScoreUI;
 
 static sprite numbers[10] = { 0 };
-static HealthUI health = { 0 };
+static HealthUI health[2] = { 0 };
 static ScoreUI score;
+
+// Ui mode
+GAMETYPE uiMode;
 
 void _InitNumbers();
 void _InitHealth();
@@ -45,16 +49,12 @@ void _AlignScore();
 void _RenderHealth();
 void _RenderScore();
 
-void GameUI_Init()
+void GameUI_Init(GAMETYPE type)
 {
+	uiMode = type;
 	_InitNumbers();
 	_InitHealth();
 	_InitScore();
-}
-
-void GameUI_Update()
-{
-
 }
 
 void GameUI_Render()
@@ -63,12 +63,26 @@ void GameUI_Render()
 	_RenderScore();
 }
 
-void GameUI_DecreaseHealth(int damage)
+void GameUI_DecreaseHealth(int damage, int which)
 {
-	if (health.count <= 1)
-		StateMachine_ChangeState(State_GameOver);
+	if (uiMode == TWOPLAYER)
+	{
+		if (health[which].count <= 1)
+			StateMachine_ChangeState(State_GameOver);
+		else
+			health[which].count--;
+	}
 	else
-		health.count--;
+	{
+		if (health[which].count <= 1)
+		{
+			if (health[which + 1].count <= 1)
+				StateMachine_ChangeState(State_GameOver);
+			else health[which + 1].count--;
+		}
+		else
+			health[which].count--;
+	}
 }
 
 void GameUI_AddScore(int amt)
@@ -87,22 +101,24 @@ void GameUI_AddScore(int amt)
 
 void _InitHealth()
 {
-	// Set health
-	health.count = 10;
-
-	// Calculate origin position on screen
-	health.origin.x = GAMEUI_OFFSET;
-	health.origin.y = MAP_OFFSET;
-
-	// Init hearts
-	for (int i = 0; i < health.count / 5; i++)
+	for (int i = 0; i < 2; i++)
 	{
-		for (int j = 0; j < health.count / 2; j++)
-		{
-			health.hearts[i][j].visible = true;
-			Text_Init(&health.hearts[i][j].heartSprite, "..//RhythmGame//$Resources//Health2.txt");
-			Text_Move(&health.hearts[i][j].heartSprite, health.origin.x + (HEART_SPRITE_WIDTH * j), health.origin.y + (HEART_SPRITE_HEIGHT * i));
-		}
+		// Set health
+		health[i].count = 10;
+
+		// Set health origin
+		health[i].origin.x = GAMEUI_OFFSET;
+		health[i].origin.y = MAP_OFFSET + (HEART_SPRITE_HEIGHT * i);
+
+		// Create sprites
+		for (int j = 0; j < 5; j++)
+			for (int k = 0; k < 2; k++)
+			{
+				health[i].hearts[j][k].visible = true;
+				health[i].hearts[j][k].heartSprite = Text_CreateSprite();
+				Text_InitArray(&health[i].hearts[j][k].heartSprite, "..//RhythmGame//$Resources//health2.txt", k);
+				Text_Move(&health[i].hearts[j][k].heartSprite, health[i].origin.x + (HEART_SPRITE_WIDTH * 2 * j)+(HEART_SPRITE_WIDTH * k), health[i].origin.y + (HEART_SPRITE_HEIGHT * i));
+			}
 	}
 }
 
@@ -143,10 +159,18 @@ void _AlignScore()
 
 void _RenderHealth()
 {
-	// Then first row
-	for (int i = 0; i < health.count; i++)
-		if (health.hearts[0][i].visible)
-			Text_Render(&health.hearts[0][i].heartSprite, 0, 0);
+	if (uiMode == ONEPLAYER)
+	{
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < health[i].count; j++)
+				for (int k = 0; k < 2; k++)
+					if (health[i].hearts[j][k].visible)
+						Text_Render(&health[i].hearts[j][k].heartSprite, 0, 0);
+	}
+	else
+	{
+		CONSOLECOLOR red, darkred;
+	}
 }
 
 void _RenderScore()
