@@ -10,6 +10,7 @@
 #include "../Global.h"
 #include "../Console/Console.h"
 
+// MAIN MENU SPRITES
 sprite diamond1, diamond2, diamond3;
 sprite Button_PLAY;
 sprite Button_2P;
@@ -20,7 +21,26 @@ sprite Button_QUIT;
 sprite leftArrow, rightArrow;
 sprite title;
 
+// CREDIT SPRITES
+sprite Role_GAMEPLAY;
+sprite Role_AUDIO;
+sprite Role_LEVEL;
+sprite Name_FIKRUL;
+sprite Name_NICO;
+sprite Name_TED;
+sprite Name_GUANHIN;
+
 extern void _renderBackground(int offset, CONSOLECOLOR color);
+extern void _renderChoice();
+extern void _confirmChoice();
+extern void _moveToBeat();
+extern void _updateTimer();
+extern void _colorSwitch();
+extern void _renderBeat();
+extern void _renderArrow();
+extern void _renderTitle();
+
+extern void _renderCredit();
 
 static int i = 0;
 
@@ -81,6 +101,31 @@ void MainMenu_EnterState()
 
 	title = Text_CreateSprite();
 	Text_Init(&title, "..//RhythmGame//$Resources//MainMenu//Title1.txt");
+
+	// CREDIT SPRITES INIT
+	Role_GAMEPLAY = Text_CreateSprite();
+	Text_Init(&Role_GAMEPLAY, "..//RhythmGame//$Resources//Credit//Role_GAMEPLAY.txt");
+	Role_AUDIO = Text_CreateSprite();
+	Text_Init(&Role_AUDIO, "..//RhythmGame//$Resources//Credit//Role_AUDIO.txt");
+	Role_LEVEL = Text_CreateSprite();
+	Text_Init(&Role_LEVEL, "..//RhythmGame//$Resources//Credit//Role_LEVEL.txt");
+	Name_FIKRUL = Text_CreateSprite();
+	Text_Init(&Name_FIKRUL, "..//RhythmGame//$Resources//Credit//Name_FIKRUL.txt");
+	Name_NICO = Text_CreateSprite();
+	Text_Init(&Name_NICO, "..//RhythmGame//$Resources//Credit//Name_NICO.txt");
+	Name_TED = Text_CreateSprite();
+	Text_Init(&Name_TED, "..//RhythmGame//$Resources//Credit//Name_TED.txt");
+	Name_GUANHIN = Text_CreateSprite();
+	Text_Init(&Name_GUANHIN, "..//RhythmGame//$Resources//Credit//Name_GUANHIN.txt");
+
+	// CREDIT SPRITES UPDATE
+	Text_Move(&Role_GAMEPLAY, 10, 40);
+	Text_Move(&Role_AUDIO, 10, 80);
+	Text_Move(&Role_LEVEL, 10, 110);
+	Text_Move(&Name_FIKRUL, 40, 55);
+	Text_Move(&Name_NICO, 40, 65);
+	Text_Move(&Name_TED, 40, 95);
+	Text_Move(&Name_GUANHIN, 40, 125);
 
 	Text_Move(&leftArrow, 12, 75);
 	Text_Move(&rightArrow, 154, 75);
@@ -169,20 +214,38 @@ void MainMenu_Render()
 
 	if (titleFlag == 1)
 		_renderTitle();
-	_renderArrow();
-	_renderBeat();
-	_renderChoice(choice);
+	if (choice != CREDITSCREEN)
+	{
+		_renderArrow();
+		_renderBeat();
+		_renderChoice(choice);
+	}
+	else
+		_renderCredit();
+	
 }
 
 //*********************************************************************************
 //									FUNCTIONS
 //*********************************************************************************
-void _confirmChoice(int choice)
+void _confirmChoice()
 {
 	switch (choice)
 	{
 	case PLAY:
+		StateMachine_ChangeMode(ONEPLAYER);
 		StateMachine_ChangeState(State_Game);
+		break;
+	case PLAY2P:
+		StateMachine_ChangeMode(TWOPLAYER);
+		StateMachine_ChangeState(State_Game);
+		break;
+	case LEVEL:
+		break;
+	case HISCORE:
+		break;
+	case CREDIT:
+		choice = CREDITSCREEN;
 		break;
 	}
 }
@@ -264,7 +327,7 @@ void _colorSwitch()
 	}
 }
 
-void _renderChoice(int choice)
+void _renderChoice()
 {
 	switch (choice)
 	{
@@ -291,6 +354,9 @@ void _renderChoice(int choice)
 	case QUIT:
 		Text_Move(&Button_QUIT, 61, 75);
 		Text_Render(&Button_QUIT, 0, 0);
+		break;
+	case CREDITSCREEN:
+		_renderCredit();
 		break;
 	}
 }
@@ -337,4 +403,15 @@ void _renderBackground(int offset, CONSOLECOLOR color)
 	for (int i = 0; i < GAME_WIDTH - offset; i += 4)
 		for (int j = 0; j < GAME_HEIGHT - offset; j += 4)
 			Console_SetRenderBuffer_CharColor(i + offset, j + offset, '.', color);
+}
+
+void _renderCredit()
+{
+	Text_Render(&Role_GAMEPLAY, 0, 0);
+	Text_Render(&Role_AUDIO, 0, 0);
+	Text_Render(&Role_LEVEL, 0, 0);
+	Text_Render(&Name_FIKRUL, 0, 0);
+	Text_Render(&Name_NICO, 0, 0);
+	Text_Render(&Name_TED, 0, 0);
+	Text_Render(&Name_GUANHIN, 0, 0);
 }

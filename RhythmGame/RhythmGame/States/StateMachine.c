@@ -8,6 +8,7 @@
 
 static GameState currentState = State_Default;
 static GameState reqState = State_Default;
+static int gameMode = 0;
 
 void StateMachine_Start()
 {
@@ -29,7 +30,7 @@ void StateMachine_Start()
 		case State_Logo: Logo_EnterState(); break;
 		case State_MainMenu: MainMenu_EnterState(); break;
 		//case State_Tutorial: Tutorial_EnterState(); break;
-		case State_Game: Game_EnterState(TWOPLAYER); break;
+		case State_Game: Game_EnterState(gameMode); break;
 		case State_GameOver: GameOver_EnterState(); break;
 		}
 	}
@@ -78,4 +79,9 @@ void StateMachine_Render()
 	}
 
 	Console_SwapRenderBuffer();
+}
+
+void StateMachine_ChangeMode(int newMode)
+{
+	gameMode = newMode;
 }

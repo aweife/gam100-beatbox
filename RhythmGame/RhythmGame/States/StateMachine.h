@@ -16,3 +16,4 @@ extern void StateMachine_ChangeState(GameState newstate);
 extern void StateMachine_ProcessInput();
 extern void StateMachine_Update();
 extern void StateMachine_Render();
+extern void StateMachine_ChangeMode(int newMode);
