@@ -13,12 +13,16 @@
 #include <Windows.h>
 #include <stdbool.h>
 
+// For Instruction Page
 #define TUTORIAL_TEXT_OFFSET 50
 #define TUTORIAL_BEATMAN_OFFSET 40
 #define TUTORIAL_INSTRUCTION_OFFSET 90
-//#define TUTORIAL_DIALOGUE_OFFSET 70
 #define TUTORIAL_ENTER_OFFSET 35
 #define TUTORIAL_MIRROR_OFFSET 145
+
+// For Gameplay Page
+#define TUTORIAL_DIALOGUE_OFFSETX 70
+#define TUTORIAL_DIALOGUE_OFFSETY 45
 
 
 //*********************************************************************************
@@ -34,13 +38,23 @@
 // Dialogue6: Move on to real game after all this!
 
 //Sprites of Pixel Art
+sprite Instruction;
+sprite MoveDialogue;
+sprite DashDialogue;
+
+//Sprites with Pixel Animation
 sprite leftBeatmanState1;
 sprite rightBeatmanState1;
 sprite leftBeatmanState2;
 sprite rightBeatmanState2;
-sprite Instruction;
 sprite EnterState1;
 sprite EnterState2;
+sprite BeatheadState1;
+sprite BeatheadState2;
+sprite ArrowKeysState1;
+sprite ArrowKeysState2;
+sprite SpaceKeyState1;
+sprite SpaceKeyState2;
 
 //Controls State of Tutorial
 static int currentIntro = 0;
@@ -53,6 +67,9 @@ static bool startGame = false;
 static bool spawnEnemy = false;
 static bool animateBeatman = false;
 static bool animateEnter = false;
+static bool animateBeatHead = false;
+static bool animateArrowKeys = false;
+static bool animateSpaceKey = false;
 
 //Controls Duration of States
 static double tutorialDuration = 0.0;
@@ -76,7 +93,10 @@ void Tutorial_ProcessInput()
 		RETURN_DOWN = false;
 	}
 
-	_MovePlayer();
+	if (currentIntro == 1)
+	{
+		_MovePlayer();
+	}
 }
 
 //*********************************************************************************
@@ -109,23 +129,31 @@ void Tutorial_Render()
 	{
 		Map_Render();
 		Player_Render();
+		_RenderBeatHeadAnimation();
 
 		// For 10 seconds
 		if (tutorialDuration >= 0.0 && tutorialDuration <= 10000.0)
 		{
 			if (!startTutorial)
+			{
+				Audio_Unload();
+				Audio_Load(TUTORIAL);
 				Audio_PlayBGM(TUTORIAL);
-			startTutorial = true;
-			//Text_RenderWords(&Dialogue1, 0, 0);
+				startTutorial = true;
+			}
+			Text_Render(&MoveDialogue, 0, 0);
+			_RenderArrowKeysAnimation();
 		}
 		// For 10 seconds
 		else if (tutorialDuration > 10000.0 && tutorialDuration <= 20000.0) {
-			//Text_RenderWords(&Dialogue2, 0, 0);
+			Text_Render(&DashDialogue, 0, 0);
+			_RenderSpaceKeyAnimation();
 		}
+		// For 10 seconds
 		else if (tutorialDuration > 20000.0 && tutorialDuration <= 30000.0) {
 			//Text_RenderWords(&Dialogue3, 0, 0);
 			if (!spawnEnemy)
-				Enemy_Init();
+			Enemy_Init();
 			spawnEnemy = true;
 			Enemy_Render();
 			Attack_Render();
@@ -146,7 +174,8 @@ void Tutorial_EnterState()
 {
 	Audio_Load(TUTORIAL);
 	Audio_PlayBGM(TUTORIAL);
-	TutorialSprite_Init();
+	InstructionSprite_Init();
+	GameplaySprite_Init();
 	Map_Init();
 	Player_Init();
 	Attack_Init();
@@ -173,7 +202,7 @@ void Tutorial_ExitState()
 //						      INTERNAL FUNCTIONS
 //*********************************************************************************
 
-void TutorialSprite_Init()
+void InstructionSprite_Init()
 {
 	leftBeatmanState1 = Text_CreateSprite();
 	Text_Init(&leftBeatmanState1, "..//RhythmGame//$Resources//beatman1.txt");
@@ -204,6 +233,41 @@ void TutorialSprite_Init()
 	Text_Move(&EnterState2, (GAME_WIDTH / 4), (GAME_HEIGHT / 2) + TUTORIAL_ENTER_OFFSET);
 }
 
+void GameplaySprite_Init()
+{
+	BeatheadState1 = Text_CreateSprite();
+	Text_Init(&BeatheadState1, "..//RhythmGame//$Resources//beathead1.txt");
+	Text_Move(&BeatheadState1, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
+
+	BeatheadState2 = Text_CreateSprite();
+	Text_Init(&BeatheadState2, "..//RhythmGame//$Resources//beathead2.txt");
+	Text_Move(&BeatheadState2, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
+
+	MoveDialogue = Text_CreateSprite();
+	Text_Init(&MoveDialogue, "..//RhythmGame//$Resources//MoveDialogue.txt");
+	Text_Move(&MoveDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 25, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 5);
+
+	ArrowKeysState1 = Text_CreateSprite();
+	Text_Init(&ArrowKeysState1, "..//RhythmGame//$Resources//ArrowKeys1.txt");
+	Text_Move(&ArrowKeysState1, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2), (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY - 5);
+
+	ArrowKeysState2 = Text_CreateSprite();
+	Text_Init(&ArrowKeysState2, "..//RhythmGame//$Resources//ArrowKeys2.txt");
+	Text_Move(&ArrowKeysState2, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2) + 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY - 4);
+
+	DashDialogue = Text_CreateSprite();
+	Text_Init(&DashDialogue, "..//RhythmGame//$Resources//DashDialogue.txt");
+	Text_Move(&DashDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 25, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 5);
+
+	SpaceKeyState1 = Text_CreateSprite();
+	Text_Init(&SpaceKeyState1, "..//RhythmGame//$Resources//SpaceKey1.txt");
+	Text_Move(&SpaceKeyState1, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2), (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
+
+	SpaceKeyState2 = Text_CreateSprite();
+	Text_Init(&SpaceKeyState2, "..//RhythmGame//$Resources//SpaceKey2.txt");
+	Text_Move(&SpaceKeyState2, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2) + 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 3);
+}
+
 void _RenderBeatmanAnimation()
 {
 	animateBeatman = !Audio_GetSpectrum(1);
@@ -222,6 +286,20 @@ void _RenderBeatmanAnimation()
 	}
 }
 
+void _RenderBeatHeadAnimation()
+{
+	animateBeatHead = !Audio_GetSpectrum(0);
+	if (animateBeatHead == false)
+	{
+		Text_Render(&BeatheadState2, 0, 0);
+	}
+
+	if (animateBeatHead == true)
+	{
+		Text_Render(&BeatheadState1, 0, 0);
+	}
+}
+
 void _RenderEnterAnimation()
 {
 	animateEnter = !Audio_GetSpectrum(0);
@@ -233,6 +311,34 @@ void _RenderEnterAnimation()
 	if (animateEnter == true)
 	{
 		Text_Render(&EnterState1, 0, 0);
+	}
+}
+
+void _RenderArrowKeysAnimation()
+{
+	animateArrowKeys = !Audio_GetSpectrum(0);
+	if (animateArrowKeys == false)
+	{
+		Text_Render(&ArrowKeysState2, 0, 0);
+	}
+
+	if (animateArrowKeys == true)
+	{
+		Text_Render(&ArrowKeysState1, 0, 0);
+	}
+}
+
+void _RenderSpaceKeyAnimation()
+{
+	animateSpaceKey = !Audio_GetSpectrum(0);
+	if (animateSpaceKey == false)
+	{
+		Text_Render(&SpaceKeyState2, 0, 0);
+	}
+
+	if (animateSpaceKey == true)
+	{
+		Text_Render(&SpaceKeyState1, 0, 0);
 	}
 }
 

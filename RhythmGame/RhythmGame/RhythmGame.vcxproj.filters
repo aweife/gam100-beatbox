@@ -58,10 +58,6 @@
     <Text Include="$Resources\player.txt" />
     <Text Include="$Resources\projectile.txt" />
     <Text Include="$Resources\laser.txt" />
-    <Text Include="$Resources\ArrowKeyDown.txt" />
-    <Text Include="$Resources\ArrowKeyLeft.txt" />
-    <Text Include="$Resources\ArrowKeyRight.txt" />
-    <Text Include="$Resources\ArrowKeyUp.txt" />
     <Text Include="$Resources\Dialogue1_MovePlayer.txt" />
     <Text Include="$Resources\Dialogue2_DashAttack1.txt" />
     <Text Include="$Resources\Dialogue2_DontSpam.txt" />
@@ -76,11 +72,17 @@
     <Text Include="$Resources\Instruction1_Point3.txt" />
     <Text Include="$Resources\Instruction2_DashAttack.txt" />
     <Text Include="$Resources\Instruction2_Move.txt" />
-    <Text Include="$Resources\Space.txt" />
     <Text Include="$Resources\beatman1.txt" />
     <Text Include="$Resources\beatman2.txt" />
-    <Text Include="%24Resources\beatman3.txt" />
     <Text Include="%24Resources\Instruction_Enter1.txt" />
     <Text Include="$Resources\Instruction_Enter2.txt" />
+    <Text Include="$Resources\beathead1.txt" />
+    <Text Include="$Resources\beathead2.txt" />
+    <Text Include="$Resources\MoveDialogue.txt" />
+    <Text Include="%24Resources\ArrowKeys1.txt" />
+    <Text Include="$Resources\ArrowKeys2.txt" />
+    <Text Include="$Resources\DashDialogue.txt" />
+    <Text Include="%24Resources\SpaceKey1.txt" />
+    <Text Include="$Resources\SpaceKey2.txt" />
   </ItemGroup>
 </Project>
