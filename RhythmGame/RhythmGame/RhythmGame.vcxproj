@@ -24,6 +24,7 @@
     <ClCompile Include="Clock\Clock.cpp" />
     <ClCompile Include="Console\Console.c" />
     <ClCompile Include="Enemy\Enemy.c" />
+    <ClCompile Include="States\Highscore.c" />
     <ClCompile Include="States\Logo.c" />
     <ClCompile Include="Main.c" />
     <ClCompile Include="Map\Map.c" />
@@ -44,6 +45,7 @@
     <ClInclude Include="Console\Console.h" />
     <ClInclude Include="Enemy\Enemy.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="States\Highscore.h" />
     <ClInclude Include="States\Logo.h" />
     <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Player\Player.h" />
