@@ -18,6 +18,8 @@
     <ClCompile Include="Text\TextReader.c" />
     <ClCompile Include="UI\GameUI.c" />
     <ClCompile Include="UI\UI.c" />
+    <ClCompile Include="States\Logo.c" />
+    <ClCompile Include="Tutorial\Tutorial.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Attack\Attack.h" />
@@ -37,6 +39,8 @@
     <ClInclude Include="Text\TextReader.h" />
     <ClInclude Include="UI\GameUI.h" />
     <ClInclude Include="UI\UI.h" />
+    <ClInclude Include="States\Logo.h" />
+    <ClInclude Include="Tutorial\Tutorial.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$Resources\Cluster1.wav" />

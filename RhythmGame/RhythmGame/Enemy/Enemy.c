@@ -8,7 +8,6 @@
 #include "../Random/Random.h"
 #include "../UI/GameUI.h"
 #include <math.h>
-#include "../States/Game.h"
 
 #define DEBUG_AABB 0
 #define COLLISION_OFFSET 7
@@ -16,10 +15,8 @@
 // ENEMY AI
 #define START_OF_GAME_DELAY 2000.0
 #define ENEMY_BASE_MOVESPEED 0.01
-#define ENEMY_FAST_MOVESPEED 0.05
 #define PROJECTILE_SPAWN_SPEED 150.0
-#define PROJECTILE_SPEED 0.03
-#define PROJECTILE_SPEED_FAST 0.08
+#define PROJECTILE_SPEED 0.04
 #define LASER_SPAWN_SPEED 200.0
 
 // SCORING
@@ -39,10 +36,14 @@
 // The skull enemy
 Enemy skullEnemy = { 0 };
 static double startTimer = 0;
+static bool enableLaser;
 
 // Attack speed
 static double laserSpawnTimer = 0;
 static double projectileSpawnTimer = 0;
+static double projSpeed;
+static double moveSpeed;
+static double projSpawnSpeed;
 
 // Health
 static int progress = 0;
@@ -54,7 +55,7 @@ void _DecideNextPosition(int position);
 void _EnemyAttack();
 void _RenderHealthBar();
 
-void Enemy_Init()
+void Enemy_Init(GAMETYPE type)
 {
 	// Initialise skull enemy
 	skullEnemy.startPosition.x = 90;
@@ -71,10 +72,23 @@ void Enemy_Init()
 	startTimer = START_OF_GAME_DELAY;
 	projectileSpawnTimer = START_OF_GAME_DELAY;
 	laserSpawnTimer = START_OF_GAME_DELAY;
+	projSpeed = PROJECTILE_SPEED;
+	moveSpeed = ENEMY_BASE_MOVESPEED;
+	projSpawnSpeed = PROJECTILE_SPAWN_SPEED;
 
 	// Score
 	progress = 0;
 	skullEnemy.scoreState = SMALL;
+
+	// For tutorial, tone down enemy
+	enableLaser = true;
+	if (type == TUT)
+	{
+		enableLaser = false;
+		projSpeed /= 4.0;
+		moveSpeed /= 2.0;
+		projSpawnSpeed *= 3.0;
+	}
 }
 
 void Enemy_Update()
@@ -84,7 +98,7 @@ void Enemy_Update()
 		startTimer -= Clock_GetDeltaTime();
 	else if (startTimer <= 0.0)
 	{
-		skullEnemy.velocity = (Audio_GetSpectrum(0)) ? ENEMY_FAST_MOVESPEED : ENEMY_BASE_MOVESPEED;
+		skullEnemy.velocity = (Audio_GetSpectrum(0)) ? moveSpeed * 5 : moveSpeed;
 		_MoveToPosition(skullEnemy.velocity);
 	}
 
@@ -269,17 +283,17 @@ void _EnemyAttack()
 
 	if (laserSpawnTimer <= 0.0)
 	{
-		if (Audio_GetSpectrum(3))
+		if (enableLaser && Audio_GetSpectrum(3))
 		{
-			Attack_Spawn(LASER, skullEnemy.startPosition, Random_Range(5, 8), (projectileSpeed) { 0, 0 },0);
+			Attack_Spawn(LASER, skullEnemy.startPosition, Random_Range(5, 8), (projectileSpeed) { 0, 0 }, 0);
 			laserSpawnTimer = LASER_SPAWN_SPEED;
 		}
 
 		if (Audio_GetSpectrum(1))
 		{
-			projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED_FAST };
-			Attack_Spawn(PROJECTILE, skullEnemy.startPosition, Random_Range(1, 8), speed,0);
-			projectileSpawnTimer = PROJECTILE_SPAWN_SPEED;
+			projectileSpeed speed = { projSpeed,projSpeed * 3.0 };
+			Attack_Spawn(PROJECTILE, skullEnemy.startPosition, Random_Range(1, 8), speed, 0);
+			projectileSpawnTimer = projSpawnSpeed;
 		}
 	}
 }

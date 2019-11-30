@@ -4,6 +4,7 @@ typedef enum GAMETYPE
 {
 	ONEPLAYER,
 	TWOPLAYER,
+	TUT,
 } GAMETYPE;
 
 extern void Game_EnterState(GAMETYPE type);

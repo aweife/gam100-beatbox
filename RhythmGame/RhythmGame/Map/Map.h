@@ -7,7 +7,7 @@
 #define MAP_SHAKE_Y 3
 #define GAME_UI_OFFSET 20
 // Initialise the static boundary
-extern void Map_Init();
+extern void Map_Init(int offset);
 
 // Call this to render all boundaries
 extern void Map_Render();

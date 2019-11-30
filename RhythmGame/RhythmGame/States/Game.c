@@ -44,12 +44,12 @@ void Game_EnterState(GAMETYPE type)
 
 	// Usuals
 	Random_Init();
-	Map_Init();
-	Enemy_Init();
+	Map_Init(GAME_UI_OFFSET);
+	Attack_Init();
 
 	// Player specific
 	Player_Init(type);
-	Attack_Init();
+	Enemy_Init(type);
 	GameUI_Init(type);
 
 	// Play bgm for audio
