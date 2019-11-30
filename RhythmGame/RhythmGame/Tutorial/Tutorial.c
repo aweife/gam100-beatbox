@@ -114,6 +114,7 @@ void Tutorial_ProcessInput()
 		Map_Init();
 	}
 	else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
+		// Changes to Main Game
 		StateMachine_ChangeState(State_Game);
 	}
 	else if (!GetAsyncKeyState(VK_RETURN)) {
@@ -156,31 +157,37 @@ void Tutorial_Update()
 		state = STATE_PLAYERDASH;
 	}
 	// Moves on after 20 seconds
-	else if (tutorialDuration > 20000.0 && tutorialDuration <= 30000.0) {
+	else if (tutorialDuration > 20000.0 && tutorialDuration <= 40000.0) {
 		state = STATE_ENEMY;
-		spawnEnemy = true;
-		attackEnemy = true;
 
-		if (spawnEnemy = true)
+		if (!spawnEnemy)
 		{
 			Enemy_Init();
-			Enemy_Update();
+			spawnEnemy = true;
 		}
 
-		if (attackEnemy = true)
+		Enemy_Update();
+
+		if (!attackEnemy)
 		{
 			Attack_Init();
-			Attack_Update();
+			attackEnemy = true;
 		}
-	}
-	else if (tutorialDuration > 30000.0 && tutorialDuration <= 40000.0) {
-		state = STATE_NOTES;
+
+		Attack_Update();
+
+		if (tutorialDuration > 30000.0 && tutorialDuration <= 40000.0)
+		{
+			state = STATE_NOTES;
+		}
+
 	}
 	// Moves on after 10 seconds
-	else if (tutorialDuration > 50000.0) {
+	else if (tutorialDuration > 40000.0) {
 		state = STATE_END; 
 		spawnEnemy = false;
 		attackEnemy = false;
+
 		if (!startGame)
 		{
 			startGame = true;
