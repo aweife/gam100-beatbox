@@ -7,6 +7,7 @@
 #include "../UI/GameUI.h"
 #include "../Audio/AudioEngine.h"
 #include "../Attack/Attack.h"
+#include "../States/Game.h"
 
 #define DEBUG_AABB 1
 #define COLLISION_OFFSET 1
@@ -74,7 +75,7 @@ void Player_Update(int which)
 {
 	// Check against the border
 	_CheckBorder(which);
-	_AutoAttack(which);
+	_AutoAttack();
 
 	_MovePlayer(which);
 	_UpdateState(which);
@@ -155,8 +156,8 @@ void Player_Damage(int which)
 
 	player[which].invulTimer = PLAYER_INVUL_DURATION;
 	player[which].state = Damaged;
-	Map_Shake(RIGHT, 80.0, MAP_SHAKE_X);
-	GameUI_DecreaseHealth(1, which);
+	Map_Shake(RIGHT, 60.0, MAP_SHAKE_X);
+	GameUI_DecreaseHealth(Game_GetGameType() ? 1 : 2, which);
 }
 
 Player *Player_GetPlayer(int which)
@@ -263,7 +264,8 @@ void _AutoAttack()
 	{
 		attackTimer = PLAYER_ATTACKSPEED;
 		projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED };
-		Attack_Spawn(PLAYER, player[0].startPosition, UP, speed);
-		Attack_Spawn(PLAYER, player[1].startPosition, UP, speed);
+		Attack_Spawn(PLAYER, player[0].startPosition, UP, speed, 0);
+		if(Game_GetGameType() == TWOPLAYER)
+			Attack_Spawn(PLAYER, player[1].startPosition, UP, speed, 1);
 	}
 }

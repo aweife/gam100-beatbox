@@ -14,4 +14,4 @@ extern void GameUI_Render();
 void GameUI_DecreaseHealth(int damage, int which);
 
 // Call to increase score
-void GameUI_AddScore(int amt);
+void GameUI_AddScore(int amt, int which);

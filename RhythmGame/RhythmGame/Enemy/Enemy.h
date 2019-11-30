@@ -30,4 +30,4 @@ extern void Enemy_Init();
 extern void Enemy_Update();
 extern void Enemy_Render();
 extern Enemy *Enemy_GetEnemy();
-extern void Enemy_Damage();
+extern void Enemy_Damage(int which);

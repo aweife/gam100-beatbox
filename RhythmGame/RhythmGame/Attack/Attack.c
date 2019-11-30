@@ -153,7 +153,15 @@ void Attack_Render() // put in game.c
 	//Print out projectile
 	for (int i = 0; i < NUMBER_OF_PLAYER_PROJECTILE; i++)
 		if (plArray[i].active)
+		{
+			for (int j = 0; j < 3; j++)
+				if (plArray[i].projectileSprite.spriteI[j].printchar == 'C')
+					plArray[i].projectileSprite.spriteI[j].printColor = plArray[i].which ?  DARKGREEN : DARKCYAN;
+				else if(plArray[i].projectileSprite.spriteI[j].printchar == 'c')
+					plArray[i].projectileSprite.spriteI[j].printColor = plArray[i].which ? GREEN : CYAN;
+				
 			Text_Render(&plArray[i].projectileSprite, 0, 0);
+		}
 
 	// Print out laser
 	for (int i = 0; i < NUMBER_OF_LASER; i++)
@@ -252,7 +260,7 @@ void Attack_Cleanup()
 	free(plArray);
 }
 
-void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, projectileSpeed speed)
+void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, projectileSpeed speed, int which)
 {
 	switch (type)
 	{
@@ -273,9 +281,11 @@ void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, 
 			// Find a projectile that is not in use
 			if (plArray[i].active) continue;
 			plArray[i].position = spawnPosition;
+			plArray[i].position.y -= which*2;
 			plArray[i].direction = direction;
 			plArray[i].speed = speed;
 			plArray[i].active = true;
+			plArray[i].which = which;
 			return;
 		}
 	case LASER:
@@ -447,7 +457,7 @@ void _CheckProjectileCollision()
 			plArray[i].active = false;
 			plArray[i].position.x = -3;
 			plArray[i].position.y = -3;
-			Enemy_Damage();
+			Enemy_Damage(plArray[i].which);
 		}
 	}
 }

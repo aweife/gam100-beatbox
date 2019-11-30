@@ -8,6 +8,7 @@
 #include "../Random/Random.h"
 #include "../UI/GameUI.h"
 #include <math.h>
+#include "../States/Game.h"
 
 #define DEBUG_AABB 0
 #define COLLISION_OFFSET 7
@@ -27,9 +28,9 @@
 #define HEALTHBAR_OFFSET_X -2
 #define HEALTHBAR_OFFSET_Y -4
 #define HEALTH_FEEDBACK 50.0
-#define SMALL_PROGRESS Random_Range(15,25)
-#define MEDIUM_PROGRESS Random_Range(10,20)
-#define BIG_PROGRESS Random_Range(5,15)
+#define SMALL_PROGRESS Game_GetGameType() ? Random_Range(10,15):Random_Range(15,25)
+#define MEDIUM_PROGRESS  Game_GetGameType() ? Random_Range(5,10):Random_Range(10,20)
+#define BIG_PROGRESS  Game_GetGameType() ? Random_Range(1,10):Random_Range(5,15)
 #define SMALL_SCORE 1
 #define MEDIUM_SCORE 10
 #define BIG_SCORE 100
@@ -125,7 +126,7 @@ Enemy *Enemy_GetEnemy()
 	return &skullEnemy;
 }
 
-void Enemy_Damage()
+void Enemy_Damage(int which)
 {
 	if (skullEnemy.state == DAMAGED) return;
 
@@ -133,7 +134,7 @@ void Enemy_Damage()
 	{
 	case SMALL:
 		progress += SMALL_PROGRESS;
-		GameUI_AddScore(SMALL_SCORE);
+		GameUI_AddScore(SMALL_SCORE, which);
 		if (progress >= 100)
 		{
 			progress = 0;
@@ -144,7 +145,7 @@ void Enemy_Damage()
 		break;
 	case MEDIUM:
 		progress += MEDIUM_PROGRESS;
-		GameUI_AddScore(MEDIUM_SCORE);
+		GameUI_AddScore(MEDIUM_SCORE, which);
 		if (progress >= 100)
 		{
 			progress = 0;
@@ -155,7 +156,7 @@ void Enemy_Damage()
 		break;
 	case BIG:
 		progress += BIG_PROGRESS;
-		GameUI_AddScore(BIG_SCORE);
+		GameUI_AddScore(BIG_SCORE, which);
 		if (progress >= 100)
 		{
 			progress = 0;
@@ -270,14 +271,14 @@ void _EnemyAttack()
 	{
 		if (Audio_GetSpectrum(3))
 		{
-			Attack_Spawn(LASER, skullEnemy.startPosition, Random_Range(5, 8), (projectileSpeed) { 0, 0 });
+			Attack_Spawn(LASER, skullEnemy.startPosition, Random_Range(5, 8), (projectileSpeed) { 0, 0 },0);
 			laserSpawnTimer = LASER_SPAWN_SPEED;
 		}
 
 		if (Audio_GetSpectrum(1))
 		{
 			projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED_FAST };
-			Attack_Spawn(PROJECTILE, skullEnemy.startPosition, Random_Range(1, 8), speed);
+			Attack_Spawn(PROJECTILE, skullEnemy.startPosition, Random_Range(1, 8), speed,0);
 			projectileSpawnTimer = PROJECTILE_SPAWN_SPEED;
 		}
 	}

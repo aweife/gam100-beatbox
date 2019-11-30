@@ -29,7 +29,7 @@ void StateMachine_Start()
 		case State_Logo: Logo_EnterState(); break;
 		case State_MainMenu: MainMenu_EnterState(); break;
 		//case State_Tutorial: Tutorial_EnterState(); break;
-		case State_Game: Game_EnterState(ONEPLAYER); break;
+		case State_Game: Game_EnterState(TWOPLAYER); break;
 		case State_GameOver: GameOver_EnterState(); break;
 		}
 	}

@@ -1,24 +1,24 @@
 0
-  rrr  
- rrrrr 
-rwwwrr
-rwrrrr
-rrrrrr
-rwrrrr
- rrrrr
-  rrrr
-   rrr
-    rr
-     r
+  www
+ wrrrw
+wrrrrrw
+rrrrrrrr
+Rrrrrrrr
+ RRrrrr
+  RRrrr
+   RRrrrr
+    RRRR
+     RR
+      R
 1
-  rR
- rrrR
-rrrrrR
-rrrrrR
-rrrrrR
-rrrrrR
-rrrrR
-rrrR
-rrR
-rR
+  www
+ wrrrw
+wrrrrrw
+ rrrrrr
+ rrrrrR
+rrrrRR
+rrrRR
+  RR
+ RR
+RR
 R
