@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include "StateMachine.h"
 #include "Game.h"
+#include "../Global.h"
 #include "../Text/TextReader.h"
 #include "../Console/Console.h"
 
@@ -10,6 +11,7 @@
 //								LOCAL VARIABLES
 //*********************************************************************************
 
+sprite CryingBeatmanState1;
 
 //*********************************************************************************
 //									INPUT
@@ -35,15 +37,7 @@ void GameOver_Update()
 //*********************************************************************************
 void GameOver_Render()
 {
-	Console_SetRenderBuffer_String(16, 16, " _____________________________________________________");
-	Console_SetRenderBuffer_String(16, 17, "   _____                         ____                 ");
-	Console_SetRenderBuffer_String(16, 18, "  / ____|                       / __ \\                ");
-	Console_SetRenderBuffer_String(16, 19, " | |  __  __ _ _ __ ___   ___  | |  | |_   _____ _ __ ");
-	Console_SetRenderBuffer_String(16, 20, " | | |_ |/ _` | '_ ` _ \\ / _ \\ | |  | \\ \\ / / _ \\ '__|");
-	Console_SetRenderBuffer_String(16, 21, " | |__| | (_| | | | | | |  __/ | |__| |\\ V /  __/ |   ");
-	Console_SetRenderBuffer_String(16, 22, "  \\_____|\\__,_|_| |_| |_|\\___|  \\____/  \\_/ \\___|_|   ");
-	Console_SetRenderBuffer_String(16, 23, " _____________________________________________________");
-	Console_SetRenderBuffer_String(28, 30, "Press Esc to exit game");
+	Text_Render(&CryingBeatmanState1, 0, 0);
 }
 
 
@@ -55,6 +49,9 @@ void GameOver_Render()
 //*********************************************************************************
 void GameOver_EnterState()
 {
+	CryingBeatmanState1 = Text_CreateSprite();
+	Text_Init(&CryingBeatmanState1, "..//RhythmGame//$Resources//CryingBeatman1.txt");
+	Text_Move(&CryingBeatmanState1, (GAME_WIDTH / 4), (GAME_HEIGHT / 2));
 }
 
 void GameOver_ExitState()
