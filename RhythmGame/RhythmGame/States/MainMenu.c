@@ -69,8 +69,8 @@ void MainMenu_EnterState()
 
 	leftArrow = Text_CreateSprite();
 	rightArrow = Text_CreateSprite();
-	Text_Init(&leftArrow, "..//RhythmGame//$Resources//MainMenu//LeftArrow.txt");
-	Text_Init(&rightArrow, "..//RhythmGame//$Resources//MainMenu//RightArrow.txt");
+	Text_Init(&leftArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_LEFT.txt");
+	Text_Init(&rightArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_RIGHT.txt");
 
 	Text_Move(&leftArrow, 12, 75);
 	Text_Move(&rightArrow, 154, 75);
