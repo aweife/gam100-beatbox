@@ -16,10 +16,10 @@ DDDDDDDDDDDDyyyyyyyyyyDDDDDDDDDDDD
 DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
  www                          www 
  www    wwwwwwwwwwwwwwwwww    www 
- www     w   DDwwwwDD   w     www 
- www    w   DD      DD   w    www 
- wwwwrrrww DD  wwww  DD wwrrrwwww 
- wwwwrrrwwDD   wwww   DDwwrrrwwww 
+ www     w   DDwwww   DDw     www 
+ www    w   DD       DD  w    www 
+ wwwwrrrww DD  wwww DD  wwrrrwwww 
+ wwwwrrrwwDD   wwwwDD   wwrrrwwww 
      rrrwwwwwwwwwwwwwwwwwwrrr     
         wwww          wwww        
         wwww          wwww        

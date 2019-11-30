@@ -23,7 +23,7 @@
 // For Gameplay Page
 #define TUTORIAL_DIALOGUE_OFFSETX 70
 #define TUTORIAL_DIALOGUE_OFFSETY 45
-//ENEMYX - 30 && ENEMY Y - 5
+//Enemy X Coord - 30 && Enemy Y Coord - 5
 #define TUTORIAL_ENEMY_POSITIONX 60
 #define TUTORIAL_ENEMY_POSITIONY 35
 
@@ -78,8 +78,8 @@ typedef enum TutorialStages
 	STATE_NOTES,
 	STATE_END,
 } TutorialStages;
-TutorialStages state;
 
+TutorialStages state;
 
 //Boolean Variables
 static bool spaceDown = false;
@@ -87,6 +87,7 @@ static bool RETURN_DOWN = true;
 static bool startTutorial = false;
 static bool startGame = false;
 static bool spawnEnemy = false;
+static bool attackEnemy = false;
 static bool animateBeatman = false;
 static bool animateEnter = false;
 static bool animateBeatHead = false;
@@ -103,11 +104,11 @@ static double animateDuration = 0.0;
 //*********************************************************************************
 void Tutorial_ProcessInput()
 {
-	if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && currentIntro == 0)
+	if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && state == STATE_INSTRUCTION)
 	{
 		RETURN_DOWN = true;
 		// Everything from here onwards will execute once
-		currentIntro = 1;
+		state = STATE_PLAYERMOVE;
 
 		Player_Init();
 		Map_Init();
@@ -119,7 +120,7 @@ void Tutorial_ProcessInput()
 		RETURN_DOWN = false;
 	}
 
-	if (currentIntro == 1)
+	if (state != STATE_INSTRUCTION)
 	{
 		_MovePlayer();
 	}
@@ -135,7 +136,7 @@ void Tutorial_Update()
 	if (state != STATE_INSTRUCTION)
 	{
 		tutorialDuration += Clock_GetDeltaTime();
-		Player_Update();
+		//Player_Update();
 		Map_Update();
 	}
 
@@ -149,41 +150,39 @@ void Tutorial_Update()
 			Audio_PlayBGM(TUTORIAL);
 			startTutorial = true;
 		}
-		
 	}
 	// Moves on after 10 seconds
 	else if (tutorialDuration > 10000.0 && tutorialDuration <= 20000.0) {
-		Text_Render(&DashDialogue, 0, 0);
-		_RenderSpaceKeyAnimation();
+		state = STATE_PLAYERDASH;
 	}
 	// Moves on after 20 seconds
-	else if (tutorialDuration > 20000.0 && tutorialDuration <= 40000.0) {
+	else if (tutorialDuration > 20000.0 && tutorialDuration <= 30000.0) {
+		state = STATE_ENEMY;
 
 		if (!spawnEnemy)
 		{
 			Enemy_Init();
+			Enemy_Update();
 			spawnEnemy = true;
 		}
 
-		if (tutorialDuration > 20000.0 && tutorialDuration <= 30000.0)
+		if (!attackEnemy)
 		{
-			Text_Render(&EnemyDialogue, 0, 0);
-			_RenderWarningAnimation();
+			Attack_Init();
+			Attack_Update();
+			attackEnemy = true;
 		}
-
-		if (tutorialDuration > 30000.0 && tutorialDuration <= 40000.0)
-		{
-			Text_Render(&NotesDialogue, 0, 0);
-		}
-
-		Enemy_Render();
-		Attack_Render();
+	}
+	else if (tutorialDuration > 30000.0 && tutorialDuration <= 40000.0) {
+		state = STATE_NOTES;
 	}
 	// Moves on after 10 seconds
-	else if (tutorialDuration > 40000.0) {
+	else if (tutorialDuration > 50000.0) {
+		state = STATE_END;
 		if (!startGame)
+		{
 			startGame = true;
-		Text_Render(&EndTutorialDialogue, 0, 0);
+		}
 	}
 }
 
@@ -206,6 +205,44 @@ void Tutorial_Render()
 		_RenderBeatHeadAnimation();
 		Text_Render(&MoveDialogue, 0, 0);
 		_RenderArrowKeysAnimation();
+	}
+
+	if (state == STATE_PLAYERDASH)
+	{
+		Map_Render();
+		Player_Render();
+		_RenderBeatHeadAnimation();
+		Text_Render(&DashDialogue, 0, 0);
+		_RenderSpaceKeyAnimation();
+	}
+
+	if (state == STATE_ENEMY)
+	{
+		Map_Render();
+		Player_Render();
+		_RenderBeatHeadAnimation();
+		Text_Render(&EnemyDialogue, 0, 0);
+		_RenderWarningAnimation();
+		Enemy_Render();
+		Attack_Render();
+	}
+
+	if (state == STATE_NOTES)
+	{
+		Map_Render();
+		Player_Render();
+		_RenderBeatHeadAnimation();
+		Text_Render(&NotesDialogue, 0, 0);
+		Enemy_Render();
+		Attack_Render();
+	}
+
+	if (state == STATE_END)
+	{
+		Map_Render();
+		Player_Render();
+		_RenderBeatHeadAnimation();
+		Text_Render(&EndTutorialDialogue, 0, 0);
 	}
 }
 
