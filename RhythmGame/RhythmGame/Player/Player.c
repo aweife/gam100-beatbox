@@ -72,12 +72,12 @@ void Player_Init(GAMETYPE type)
 
 void Player_Update(int which)
 {
-	_MovePlayer(which);
-	_UpdateState(which);
-
 	// Check against the border
 	_CheckBorder(which);
 	_AutoAttack(which);
+
+	_MovePlayer(which);
+	_UpdateState(which);
 }
 
 void Player_Render(int which)
@@ -210,33 +210,6 @@ void _CheckBorder(int which)
 		player[which].startPosition.eulerX = Map_GetEnd().x - 1 - player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.x - 1;
 	if (player[which].endPosition.y > Map_GetEnd().y - 2)
 		player[which].startPosition.eulerY = Map_GetEnd().y - 1 - player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.y;
-
-	// Prevent two player from overlaping each other
-	if (Game_GetGameType() == TWOPLAYER)
-	{
-		// If player 1/2 collided with the 2/1 player
-		if (player[which].startPosition.x < player[!which].endPosition.x &&
-			player[which].endPosition.x > player[!which].startPosition.x &&
-			player[which].startPosition.y < player[!which].endPosition.y &&
-			player[which].endPosition.y > player[!which].startPosition.y)
-		{
-			player[which].collided = true;
-			if (player[which].startPosition.x < player[!which].endPosition.x)
-			{
-				player[which].startPosition = player[!which].endPosition;
-				player[which].startPosition.x = player[!which].endPosition.x + 10;
-			}
-
-			//if (player[which].endPosition.x > player[!which].startPosition.x)
-			//	player[which].endPosition.x = player[!which].startPosition.x - 1;
-			//if (player[which].startPosition.y < player[!which].endPosition.y)
-			//	player[which].startPosition.y = player[!which].endPosition.y + 1;
-			//if (player[which].endPosition.y > player[!which].startPosition.y)
-			//	player[which].endPosition.y = player[!which].startPosition.y - 1;
-		}
-		else
-			player[which].collided = false;
-	}
 }
 
 void _MovePlayer(int which)

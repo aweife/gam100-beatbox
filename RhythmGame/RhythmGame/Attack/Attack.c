@@ -18,7 +18,7 @@
 #define NOTE_SLOW_1 0.6
 #define NOTE_SLOW_2 0.2
 #define NOTE_SLOW_3 0.06
-#define NOTE_SLOW_TIME 2500.0
+#define NOTE_SLOW_TIME 1500.0
 
 // Keep tracks of how many projectiles are currently in use
 // then we update all in-use projectiles
@@ -650,6 +650,7 @@ void _CheckNoteCollision()
 
 void _SlowTime(double factor)
 {
-	noteTimer = NOTE_SLOW_TIME;
-	slowFactor = factor;
+	noteTimer += NOTE_SLOW_TIME;
+	if (slowFactor > factor)
+		slowFactor = factor;
 }
