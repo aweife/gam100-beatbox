@@ -1,7 +1,7 @@
               ggggggggggg              
               ggggg ggggg              
+              gggg   gggg              
               ggg g g ggg              
-              gg gg gg gg              
               ggggg ggggg              
               ggggg ggggg              
               ggggggggggg              
@@ -10,7 +10,7 @@
 ggggggggggg   ggggggggggg   ggggggggggg
 ggg ggggggg   ggggg ggggg   ggggggg ggg
 gg gggggggg   ggggg ggggg   gggggggg gg
-g         g   gg gg gg gg   g         g
-gg gggggggg   ggg g g ggg   gggggggg gg
+g         g   ggg g g ggg   g         g
+gg gggggggg   gggg   gggg   gggggggg gg
 ggg ggggggg   ggggg ggggg   ggggggg ggg
 ggggggggggg   ggggggggggg   ggggggggggg
