@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include "StateMachine.h"
 #include "Game.h"
+#include "../Text/TextReader.h"
 #include "../Console/Console.h"
 
 
