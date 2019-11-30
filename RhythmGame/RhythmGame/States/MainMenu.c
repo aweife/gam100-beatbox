@@ -7,6 +7,8 @@
 #include"../UI/UI.h"
 #include "../Audio/AudioEngine.h"
 #include "../Map/Map.h"
+#include "../Global.h"
+#include "../Console/Console.h"
 
 sprite diamond1, diamond2, diamond3;
 sprite Button_PLAY;
@@ -17,6 +19,8 @@ sprite Button_CREDIT;
 sprite Button_QUIT;
 sprite leftArrow, rightArrow;
 sprite title;
+
+extern void _renderBackground(int offset, CONSOLECOLOR color);
 
 static int i = 0;
 
@@ -80,7 +84,7 @@ void MainMenu_EnterState()
 
 	Text_Move(&leftArrow, 12, 75);
 	Text_Move(&rightArrow, 154, 75);
-	Text_Move(&title, 25, 10);
+	Text_Move(&title, 27, 10);
 
 	Audio_Load(MAINMENU);
 	Audio_PlayBGM(MAINMENU);
@@ -158,6 +162,11 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
+	if (Audio_GetSpectrum(1))
+		_renderBackground(2, fYELLOW);
+	if (Audio_GetSpectrum(0))
+		_renderBackground(4, fDARKRED);
+
 	if (titleFlag == 1)
 		_renderTitle();
 	_renderArrow();
@@ -321,4 +330,11 @@ void _renderTitle()
 		Text_Render(&title, 0, 0);
 		titleFlag = 0;
 	}
+}
+
+void _renderBackground(int offset, CONSOLECOLOR color)
+{
+	for (int i = 0; i < GAME_WIDTH - offset; i += 4)
+		for (int j = 0; j < GAME_HEIGHT - offset; j += 4)
+			Console_SetRenderBuffer_CharColor(i + offset, j + offset, '.', color);
 }

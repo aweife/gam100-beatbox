@@ -22,7 +22,7 @@ int main(void)
 
 	if (DEBUG_AUDIO)
 	{
-		Console_SetWindowedMode(150, 50, true);
+		Console_SetWindowedMode(GAME_WIDTH, GAME_HEIGHT, true);
 		Audio_Load(STAGEONE);
 		Audio_PlayBGM(STAGEONE);
 	}
