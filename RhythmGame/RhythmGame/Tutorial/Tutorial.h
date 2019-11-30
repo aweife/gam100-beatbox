@@ -31,5 +31,5 @@ void _RenderSpaceKeyAnimation();
 //Renders the Anumation of Enemy Warning
 void _RenderWarningAnimation();
 
-//Enables Enemy to Move
+//Enable Player Movement
 static void _MovePlayer();

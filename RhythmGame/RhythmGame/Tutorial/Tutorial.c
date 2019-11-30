@@ -99,9 +99,9 @@ void Tutorial_ProcessInput()
 		// Everything from here onwards will execute once
 		currentIntro = 1;
 	}
-	/* else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
+	else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
 		StateMachine_ChangeState(State_Game);
-	}*/
+	}
 	else if (!GetAsyncKeyState(VK_RETURN)) {
 		RETURN_DOWN = false;
 	}
@@ -118,11 +118,13 @@ void Tutorial_ProcessInput()
 void Tutorial_Update()
 {
 	Audio_Update();
-	Player_Update();
 
 	if (currentIntro == 1)
 	{
 		tutorialDuration += Clock_GetDeltaTime();
+		Player_Update();
+		Attack_Update();
+		Enemy_Update();
 	}
 }
 
@@ -205,12 +207,14 @@ void Tutorial_EnterState()
 	GameplaySprite_Init();
 	Map_Init();
 	Player_Init();
+	Enemy_Init();
 	Attack_Init();
 }
 
 void Tutorial_ExitState()
 {
-
+	Audio_Unload();
+	Attack_Cleanup();
 }
 
 //*********************************************************************************
