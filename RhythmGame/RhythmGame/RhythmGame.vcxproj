@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="$Resources\Beatbar.txt" />
+    <Text Include="$Resources\CryingBeatman2.txt" />
     <Text Include="$Resources\DialogueDashAttack.txt" />
     <Text Include="$Resources\DialogueDodgeEnemy.txt" />
     <Text Include="$Resources\DialogueEndTutorial.txt" />

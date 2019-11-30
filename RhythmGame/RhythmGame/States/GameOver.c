@@ -5,6 +5,8 @@
 #include "../Global.h"
 #include "../Text/TextReader.h"
 #include "../Console/Console.h"
+#include "../Clock/Clock.h"
+#include <stdbool.h>
 
 
 //*********************************************************************************
@@ -12,6 +14,10 @@
 //*********************************************************************************
 
 sprite CryingBeatmanState1;
+sprite CryingBeatmanState2;
+
+static double animationDuration = 0.0;
+static bool animate = false;
 
 //*********************************************************************************
 //									INPUT
@@ -29,6 +35,17 @@ void GameOver_ProcessInput()
 //*********************************************************************************
 void GameOver_Update()
 {
+	animationDuration += Clock_GetDeltaTime();
+
+	if (animationDuration >= 0.0 && animationDuration <= 500.0)
+	{
+		animate = false;
+	}
+	else if (animationDuration >= 500.0 && animationDuration <= 1000.0)
+	{
+		animate = true;
+		animationDuration -= 1000.0;
+	}
 }
 
 
@@ -37,7 +54,15 @@ void GameOver_Update()
 //*********************************************************************************
 void GameOver_Render()
 {
-	Text_Render(&CryingBeatmanState1, 0, 0);
+	if (animate == false)
+	{
+		Text_Render(&CryingBeatmanState1, 0, 0);
+	}
+
+	if (animate == true)
+	{
+		Text_Render(&CryingBeatmanState2, 0, 0);
+	}
 }
 
 
@@ -52,6 +77,10 @@ void GameOver_EnterState()
 	CryingBeatmanState1 = Text_CreateSprite();
 	Text_Init(&CryingBeatmanState1, "..//RhythmGame//$Resources//CryingBeatman1.txt");
 	Text_Move(&CryingBeatmanState1, (GAME_WIDTH / 4), (GAME_HEIGHT / 2));
+
+	CryingBeatmanState2 = Text_CreateSprite();
+	Text_Init(&CryingBeatmanState2, "..//RhythmGame//$Resources//CryingBeatman2.txt");
+	Text_Move(&CryingBeatmanState2, (GAME_WIDTH / 4), (GAME_HEIGHT / 2));
 }
 
 void GameOver_ExitState()
