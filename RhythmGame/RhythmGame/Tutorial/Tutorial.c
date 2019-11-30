@@ -158,19 +158,19 @@ void Tutorial_Update()
 	// Moves on after 20 seconds
 	else if (tutorialDuration > 20000.0 && tutorialDuration <= 30000.0) {
 		state = STATE_ENEMY;
+		spawnEnemy = true;
+		attackEnemy = true;
 
-		if (!spawnEnemy)
+		if (spawnEnemy = true)
 		{
 			Enemy_Init();
 			Enemy_Update();
-			spawnEnemy = true;
 		}
 
-		if (!attackEnemy)
+		if (attackEnemy = true)
 		{
 			Attack_Init();
 			Attack_Update();
-			attackEnemy = true;
 		}
 	}
 	else if (tutorialDuration > 30000.0 && tutorialDuration <= 40000.0) {
@@ -178,7 +178,9 @@ void Tutorial_Update()
 	}
 	// Moves on after 10 seconds
 	else if (tutorialDuration > 50000.0) {
-		state = STATE_END;
+		state = STATE_END; 
+		spawnEnemy = false;
+		attackEnemy = false;
 		if (!startGame)
 		{
 			startGame = true;
