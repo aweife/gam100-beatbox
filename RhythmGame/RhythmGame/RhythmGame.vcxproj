@@ -76,6 +76,8 @@
     <Text Include="$Resources\notes.txt" />
     <Text Include="$Resources\numbers.txt" />
     <Text Include="$Resources\pause.txt" />
+    <Text Include="$Resources\MainMenu\LeftArrow.txt" />
+    <Text Include="$Resources\MainMenu\RightArrow.txt" />
     <Text Include="$Resources\projectile2.txt" />
     <Text Include="$Resources\projectilep2.txt" />
     <Text Include="$Resources\Robot.txt" />
