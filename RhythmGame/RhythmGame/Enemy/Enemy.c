@@ -38,6 +38,7 @@
 // The skull enemy
 Enemy skullEnemy = { 0 };
 static double startTimer = 0;
+static bool enableLaser;
 
 // Attack speed
 static double laserSpawnTimer = 0;
@@ -74,6 +75,8 @@ void Enemy_Init()
 	// Score
 	progress = 0;
 	skullEnemy.scoreState = SMALL;
+
+	enableLaser = false;
 }
 
 void Enemy_Update()
@@ -268,7 +271,7 @@ void _EnemyAttack()
 
 	if (laserSpawnTimer <= 0.0)
 	{
-		if (Audio_GetSpectrum(3))
+		if (enableLaser && Audio_GetSpectrum(3))
 		{
 			Attack_Spawn(LASER, skullEnemy.startPosition, Random_Range(5, 8), (projectileSpeed) { 0, 0 });
 			laserSpawnTimer = LASER_SPAWN_SPEED;

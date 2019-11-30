@@ -10,66 +10,448 @@
 #include "../Attack/Attack.h"
 #include "../Clock/Clock.h"
 #include "../Audio/AudioEngine.h"
-#include "../Beat/Beat.h"
 #include <Windows.h>
 #include <stdbool.h>
 
-#define TUTORIAL_SCREEN_OFFSET 60
-#define TUTORIAL_DIALOGUE_OFFSET 70
+// For Instruction Page
+#define TUTORIAL_TEXT_OFFSET 50
+#define TUTORIAL_BEATMAN_OFFSET 40
+#define TUTORIAL_INSTRUCTION_OFFSET 90
+#define TUTORIAL_ENTER_OFFSET 35
+#define TUTORIAL_MIRROR_OFFSET 145
+
+// For Gameplay Page
+#define TUTORIAL_DIALOGUE_OFFSETX 70
+#define TUTORIAL_DIALOGUE_OFFSETY 45
+//Enemy X Coord - 30 && Enemy Y Coord - 5
+#define TUTORIAL_ENEMY_POSITIONX 60
+#define TUTORIAL_ENEMY_POSITIONY 35
 
 
 //*********************************************************************************
 //								LOCAL VARIABLES
 //*********************************************************************************
 
-// Intro1: Brief Description of Game
-// Intro2: Main controls of the Game
-// Dialogue1: Move Player Demo
-// Dialogue2: Dash Attack Player Demo
-// Dialogue3: Dodge Enemy Demo
-// Dialogue4: Attack Enemy Demo (Not done)
-// Dialogue5: End Tutorial
-// Dialogue6: Move on to real game after all this!
+//Sprites of Pixel Art
+sprite Instruction;
+//Dialogue Entries
+sprite MoveDialogue;
+sprite DashDialogue;
+sprite EnemyDialogue;
+sprite NotesDialogue;
+sprite EndTutorialDialogue;
 
-sprite Intro1;
-sprite Intro2;
-sprite Dialogue1;
-sprite Dialogue2;
-sprite Dialogue3;
-sprite Dialogue5;
-sprite Dialogue6;
+//Sprites with Pixel Animation
+//Beatman
+sprite leftBeatmanState1;
+sprite rightBeatmanState1;
+sprite leftBeatmanState2;
+sprite rightBeatmanState2;
 
-static int currentIntro = 0;
-static int spaceDown = false;
+//Enter Key
+sprite EnterState1;
+sprite EnterState2;
+
+//BeatHead
+sprite BeatheadState1;
+sprite BeatheadState2;
+
+//Arrow Keys
+sprite ArrowKeysState1;
+sprite ArrowKeysState2;
+
+//Space Key
+sprite SpaceKeyState1;
+sprite SpaceKeyState2;
+
+//Enemy Warning
+sprite EnemyWarningState1;
+sprite EnemyWarningState2;
+
+//Controls State of Tutorial
+typedef enum TutorialStages
+{
+	STATE_INSTRUCTION,
+	STATE_PLAYERMOVE,
+	STATE_PLAYERDASH,
+	STATE_ENEMY,
+	STATE_NOTES,
+	STATE_END,
+} TutorialStages;
+
+TutorialStages state;
+
+//Boolean Variables.
+static bool spaceDown = false;
 static bool RETURN_DOWN = true;
 static bool startTutorial = false;
 static bool startGame = false;
 static bool spawnEnemy = false;
+static bool attackEnemy = false;
+static bool animateBeatman = false;
+static bool animateEnter = false;
+static bool animateBeatHead = false;
+static bool animateArrowKeys = false;
+static bool animateSpaceKey = false;
+static bool animateWarning = false;
+
+//Controls Duration of States
 static double tutorialDuration = 0.0;
+static double animateDuration = 0.0;
 
 //*********************************************************************************
 //									INPUT
 //*********************************************************************************
 void Tutorial_ProcessInput()
 {
-	if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && currentIntro == 0)
+	if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && state == STATE_INSTRUCTION)
 	{
 		RETURN_DOWN = true;
 		// Everything from here onwards will execute once
-		currentIntro = 1;
-	}
-	else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && currentIntro == 1) {
-		RETURN_DOWN = true;
-		// Everything from here onwards will execute once
-		currentIntro = 2;
+		state = STATE_PLAYERMOVE;
+
+		Player_Init();
+		Map_Init();
 	}
 	else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
+		// Changes to Main Game
 		StateMachine_ChangeState(State_Game);
 	}
 	else if (!GetAsyncKeyState(VK_RETURN)) {
 		RETURN_DOWN = false;
 	}
 
+	if (state != STATE_INSTRUCTION)
+	{
+		_MovePlayer();
+	}
+}
+
+//*********************************************************************************
+//									UPDATE
+//*********************************************************************************
+void Tutorial_Update()
+{
+	Audio_Update();
+
+	if (state != STATE_INSTRUCTION)
+	{
+		tutorialDuration += Clock_GetDeltaTime();
+		//Player_Update();
+		Map_Update();
+	}
+
+	// Moves on after 10 seconds
+	if (tutorialDuration >= 0.0 && tutorialDuration <= 10000.0)
+	{
+		if (!startTutorial)
+		{
+			Audio_Unload();
+			Audio_Load(TUTORIAL);
+			Audio_PlayBGM(TUTORIAL);
+			startTutorial = true;
+		}
+	}
+	// Moves on after 10 seconds
+	else if (tutorialDuration > 10000.0 && tutorialDuration <= 20000.0) {
+		state = STATE_PLAYERDASH;
+	}
+	// Moves on after 20 seconds
+	else if (tutorialDuration > 20000.0 && tutorialDuration <= 40000.0) {
+		state = STATE_ENEMY;
+
+		if (!spawnEnemy)
+		{
+			Enemy_Init();
+			spawnEnemy = true;
+		}
+
+		Enemy_Update();
+
+		if (!attackEnemy)
+		{
+			Attack_Init();
+			attackEnemy = true;
+		}
+
+		Attack_Update();
+
+		if (tutorialDuration > 30000.0 && tutorialDuration <= 40000.0)
+		{
+			state = STATE_NOTES;
+		}
+
+	}
+	// Moves on after 10 seconds
+	else if (tutorialDuration > 40000.0) {
+		state = STATE_END; 
+		spawnEnemy = false;
+		attackEnemy = false;
+
+		if (!startGame)
+		{
+			startGame = true;
+		}
+	}
+}
+
+//*********************************************************************************
+//									RENDER
+//*********************************************************************************
+void Tutorial_Render()
+{
+	if (state == STATE_INSTRUCTION)
+	{
+		Text_RenderRainbow(&Instruction, 0, 0);
+		_RenderBeatmanAnimation();
+		_RenderEnterAnimation();
+	}
+
+	if (state == STATE_PLAYERMOVE)
+	{
+		Map_Render();
+		Player_Render();
+		_RenderBeatHeadAnimation();
+		Text_Render(&MoveDialogue, 0, 0);
+		_RenderArrowKeysAnimation();
+	}
+
+	if (state == STATE_PLAYERDASH)
+	{
+		Map_Render();
+		Player_Render();
+		_RenderBeatHeadAnimation();
+		Text_Render(&DashDialogue, 0, 0);
+		_RenderSpaceKeyAnimation();
+	}
+
+	if (state == STATE_ENEMY)
+	{
+		Map_Render();
+		Player_Render();
+		_RenderBeatHeadAnimation();
+		Text_Render(&EnemyDialogue, 0, 0);
+		_RenderWarningAnimation();
+		Enemy_Render();
+		Attack_Render();
+	}
+
+	if (state == STATE_NOTES)
+	{
+		Map_Render();
+		Player_Render();
+		_RenderBeatHeadAnimation();
+		Text_Render(&NotesDialogue, 0, 0);
+		Enemy_Render();
+		Attack_Render();
+	}
+
+	if (state == STATE_END)
+	{
+		Map_Render();
+		Player_Render();
+		_RenderBeatHeadAnimation();
+		Text_Render(&EndTutorialDialogue, 0, 0);
+	}
+}
+
+//*********************************************************************************
+//								STATE MANAGEMENT
+//*********************************************************************************
+void Tutorial_EnterState()
+{
+	Audio_Load(TUTORIAL);
+	Audio_PlayBGM(TUTORIAL);
+	InstructionSprite_Init();
+	GameplaySprite_Init();
+}
+
+void Tutorial_ExitState()
+{
+	Audio_Unload();
+	Attack_Cleanup();
+}
+
+//*********************************************************************************
+//						      INTERNAL FUNCTIONS
+//*********************************************************************************
+
+void InstructionSprite_Init()
+{
+	leftBeatmanState1 = Text_CreateSprite();
+	Text_Init(&leftBeatmanState1, "..//RhythmGame//$Resources//beatman1.txt");
+	Text_Move(&leftBeatmanState1, (GAME_WIDTH / 4) - TUTORIAL_BEATMAN_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2) + 20);
+
+	rightBeatmanState1 = Text_CreateSprite();
+	Text_Init(&rightBeatmanState1, "..//RhythmGame//$Resources//beatman2.txt");
+	Text_Move(&rightBeatmanState1, (GAME_WIDTH / 4) - (TUTORIAL_BEATMAN_OFFSET - 2) + TUTORIAL_MIRROR_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2) + 15);
+
+	leftBeatmanState2 = Text_CreateSprite();
+	Text_Init(&leftBeatmanState2, "..//RhythmGame//$Resources//beatman1.txt");
+	Text_Move(&leftBeatmanState2, (GAME_WIDTH / 4) - (TUTORIAL_BEATMAN_OFFSET - 2) + TUTORIAL_MIRROR_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2) + 20);
+
+	rightBeatmanState2 = Text_CreateSprite();
+	Text_Init(&rightBeatmanState2, "..//RhythmGame//$Resources//beatman2.txt");
+	Text_Move(&rightBeatmanState2, (GAME_WIDTH / 4) - TUTORIAL_BEATMAN_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2) + 15);
+
+	Instruction = Text_CreateSprite();
+	Text_Init(&Instruction, "..//RhythmGame//$Resources//Instruction_Header.txt");
+	Text_Move(&Instruction, (GAME_WIDTH / 2) - TUTORIAL_INSTRUCTION_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_BEATMAN_OFFSET / 2) + 15);
+
+	EnterState1 = Text_CreateSprite();
+	Text_Init(&EnterState1, "..//RhythmGame//$Resources//Instruction_Enter1.txt");
+	Text_Move(&EnterState1, (GAME_WIDTH / 4), (GAME_HEIGHT / 2) + TUTORIAL_ENTER_OFFSET);
+
+	EnterState2 = Text_CreateSprite();
+	Text_Init(&EnterState2, "..//RhythmGame//$Resources//Instruction_Enter2.txt");
+	Text_Move(&EnterState2, (GAME_WIDTH / 4), (GAME_HEIGHT / 2) + TUTORIAL_ENTER_OFFSET);
+}
+
+void GameplaySprite_Init()
+{
+	BeatheadState1 = Text_CreateSprite();
+	Text_Init(&BeatheadState1, "..//RhythmGame//$Resources//beathead1.txt");
+	Text_Move(&BeatheadState1, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX - 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
+
+	BeatheadState2 = Text_CreateSprite();
+	Text_Init(&BeatheadState2, "..//RhythmGame//$Resources//beathead2.txt");
+	Text_Move(&BeatheadState2, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX - 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
+
+	MoveDialogue = Text_CreateSprite();
+	Text_Init(&MoveDialogue, "..//RhythmGame//$Resources//MoveDialogue.txt");
+	Text_Move(&MoveDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 25, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 5);
+
+	ArrowKeysState1 = Text_CreateSprite();
+	Text_Init(&ArrowKeysState1, "..//RhythmGame//$Resources//ArrowKeys1.txt");
+	Text_Move(&ArrowKeysState1, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2), (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY - 5);
+
+	ArrowKeysState2 = Text_CreateSprite();
+	Text_Init(&ArrowKeysState2, "..//RhythmGame//$Resources//ArrowKeys2.txt");
+	Text_Move(&ArrowKeysState2, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2) + 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY - 4);
+
+	DashDialogue = Text_CreateSprite();
+	Text_Init(&DashDialogue, "..//RhythmGame//$Resources//DashDialogue.txt");
+	Text_Move(&DashDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 25, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 5);
+
+	SpaceKeyState1 = Text_CreateSprite();
+	Text_Init(&SpaceKeyState1, "..//RhythmGame//$Resources//SpaceKey1.txt");
+	Text_Move(&SpaceKeyState1, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2), (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
+
+	SpaceKeyState2 = Text_CreateSprite();
+	Text_Init(&SpaceKeyState2, "..//RhythmGame//$Resources//SpaceKey2.txt");
+	Text_Move(&SpaceKeyState2, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2) + 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 3);
+
+	EnemyDialogue = Text_CreateSprite();
+	Text_Init(&EnemyDialogue, "..//RhythmGame//$Resources//EnemyDialogue.txt");
+	Text_Move(&EnemyDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 35, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 5);
+
+	EnemyWarningState1 = Text_CreateSprite();
+	Text_Init(&EnemyWarningState1, "..//RhythmGame//$Resources//EnemySpotted1.txt");
+	Text_Move(&EnemyWarningState1, (GAME_WIDTH / 2) - TUTORIAL_ENEMY_POSITIONX, (GAME_HEIGHT / 2) - TUTORIAL_ENEMY_POSITIONY);
+
+	EnemyWarningState2 = Text_CreateSprite();
+	Text_Init(&EnemyWarningState2, "..//RhythmGame//$Resources//EnemySpotted2.txt");
+	Text_Move(&EnemyWarningState2, (GAME_WIDTH / 2) - TUTORIAL_ENEMY_POSITIONX, (GAME_HEIGHT / 2) - TUTORIAL_ENEMY_POSITIONY);
+
+	NotesDialogue = Text_CreateSprite();
+	Text_Init(&NotesDialogue, "..//RhythmGame//$Resources//NotesDialogue.txt");
+	Text_Move(&NotesDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 25, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
+
+	EndTutorialDialogue = Text_CreateSprite();
+	Text_Init(&EndTutorialDialogue, "..//RhythmGame//$Resources//EndTutorialDialogue.txt");
+	Text_Move(&EndTutorialDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 30, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
+}
+
+void _RenderBeatmanAnimation()
+{
+	animateBeatman = !Audio_GetSpectrum(1);
+	if (animateBeatman == false)
+	{
+		Text_Render(&EnterState2, 0, 0);
+		Text_Render(&leftBeatmanState1, 0, 0);
+		Text_Render(&rightBeatmanState1, 0, 0);
+	}
+
+	if (animateBeatman == true)
+	{
+		Text_Render(&EnterState1, 0, 0);
+		Text_Render(&leftBeatmanState2, 0, 0);
+		Text_Render(&rightBeatmanState2, 0, 0);
+	}
+}
+
+void _RenderBeatHeadAnimation()
+{
+	animateBeatHead = !Audio_GetSpectrum(0);
+	if (animateBeatHead == false)
+	{
+		Text_Render(&BeatheadState2, 0, 0);
+	}
+
+	if (animateBeatHead == true)
+	{
+		Text_Render(&BeatheadState1, 0, 0);
+	}
+}
+
+void _RenderEnterAnimation()
+{
+	animateEnter = !Audio_GetSpectrum(0);
+	if (animateEnter == false)
+	{
+		Text_Render(&EnterState2, 0, 0);
+	}
+
+	if (animateEnter == true)
+	{
+		Text_Render(&EnterState1, 0, 0);
+	}
+}
+
+void _RenderArrowKeysAnimation()
+{
+	animateArrowKeys = !Audio_GetSpectrum(0);
+	if (animateArrowKeys == false)
+	{
+		Text_Render(&ArrowKeysState2, 0, 0);
+	}
+
+	if (animateArrowKeys == true)
+	{
+		Text_Render(&ArrowKeysState1, 0, 0);
+	}
+}
+
+void _RenderSpaceKeyAnimation()
+{
+	animateSpaceKey = !Audio_GetSpectrum(0);
+	if (animateSpaceKey == false)
+	{
+		Text_Render(&SpaceKeyState2, 0, 0);
+	}
+
+	if (animateSpaceKey == true)
+	{
+		Text_Render(&SpaceKeyState1, 0, 0);
+	}
+}
+
+void _RenderWarningAnimation()
+{
+	animateSpaceKey = !Audio_GetSpectrum(0);
+	if (animateSpaceKey == false)
+	{
+		Text_Render(&EnemyWarningState2, 0, 0);
+	}
+
+	if (animateSpaceKey == true)
+	{
+		Text_Render(&EnemyWarningState1, 0, 0);
+	}
+}
+
+static void _MovePlayer()
+{
 	// Allows player to move
 	if (GetAsyncKeyState(VK_LEFT) && GetAsyncKeyState(VK_UP))
 		Player_SetVel(TOPLEFT, SpeedUp);
@@ -103,125 +485,4 @@ void Tutorial_ProcessInput()
 		Player_Dash();
 	}
 	else if (!GetAsyncKeyState(VK_SPACE)) spaceDown = false;
-}
-
-//*********************************************************************************
-//									UPDATE
-//*********************************************************************************
-void Tutorial_Update()
-{
-	Clock_GameLoopStart();
-	Audio_Update();
-	Beat_Update();
-	Player_Update();
-
-
-	if (currentIntro == 2)
-	{
-		tutorialDuration += Clock_GetDeltaTime();
-	}
-}
-
-//*********************************************************************************
-//									RENDER
-//*********************************************************************************
-void Tutorial_Render()
-{
-	if (currentIntro == 0)
-	{
-		Text_RenderWords(&Intro1, 0, 0);
-	}
-
-	if (currentIntro == 1)
-	{
-		Text_RenderWords(&Intro2, 0, 0);
-	}
-
-	if (currentIntro == 2)
-	{
-		Map_Render();
-		Player_Render();
-
-		// For 20 seconds
-		if (tutorialDuration >= 0.0 && tutorialDuration <= 20000.0)
-		{
-			if (!startTutorial)
-				Audio_PlayBGMWithDelay(0.001, TUTORIAL);
-			startTutorial = true;
-			Text_RenderWords(&Dialogue1, 0, 0);
-		}
-		// For 15 seconds
-		else if (tutorialDuration > 20000.0 && tutorialDuration <= 35000.0) {
-			Text_RenderWords(&Dialogue2, 0, 0);
-		}
-		else if (tutorialDuration > 35000.0 && tutorialDuration <= 50000.0) {
-			Text_RenderWords(&Dialogue3, 0, 0);
-			if (!spawnEnemy)
-				Enemy_Init();
-			spawnEnemy = true;
-			Enemy_Render();
-			Attack_Render();
-		}
-		else if (tutorialDuration > 50000.0) {
-			if (!startGame)
-				
-			startGame = true;
-			Text_RenderWords(&Dialogue5, 0, 0);
-		}
-	}
-}
-
-//*********************************************************************************
-//								STATE MANAGEMENT
-//*********************************************************************************
-void Tutorial_EnterState()
-{
-	// Use heap
-
-	// Brief Description Of Game
-	Intro1 = Text_CreateSprite();
-	Text_Init(&Intro1, "..//RhythmGame//$Resources//Intro1.txt");
-	Text_Move(&Intro1, (GAME_WIDTH / 2) - TUTORIAL_SCREEN_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2));
-
-	// Main Controls of Game
-	Intro2 = Text_CreateSprite();
-	Text_Init(&Intro2, "..//RhythmGame//$Resources//Intro2.txt");
-	Text_Move(&Intro2, (GAME_WIDTH / 2) - TUTORIAL_SCREEN_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_SCREEN_OFFSET / 2));
-
-	// Demo to Move Player
-	Audio_Init();
-	Map_Init();
-	Beat_Init();
-	Player_Init();
-	Attack_Init();
-
-	// Tutorial on moving player
-	Dialogue1 = Text_CreateSprite();
-	Text_Init(&Dialogue1, "..//RhythmGame//$Resources//DialogueMovePlayer.txt");
-	Text_Move(&Dialogue1, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
-
-	// Tutorial on dashing attack
-	Dialogue2 = Text_CreateSprite();
-	Text_Init(&Dialogue2, "..//RhythmGame//$Resources//DialogueDashAttack.txt");
-	Text_Move(&Dialogue2, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
-
-	// Tutorial on Dodging Enemy
-	Dialogue3 = Text_CreateSprite();
-	Text_Init(&Dialogue3, "..//RhythmGame//$Resources//DialogueDodgeEnemy.txt");
-	Text_Move(&Dialogue3, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
-
-	// End Tutorial
-	Dialogue5 = Text_CreateSprite();
-	Text_Init(&Dialogue5, "..//RhythmGame//$Resources//DialogueEndTutorial.txt");
-	Text_Move(&Dialogue5, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
-
-	//// Move to Actual Game
-	//Dialogue6 = Text_CreateSprite();
-	//Text_Init(&Dialogue6, "..//RhythmGame//$Resources//DialogueMoveToGame.txt");
-	//Text_Move(&Dialogue6, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSET, (GAME_HEIGHT)-TUTORIAL_DIALOGUE_OFFSET / 1.5);
-}
-
-void Tutorial_ExitState()
-{
-
 }
