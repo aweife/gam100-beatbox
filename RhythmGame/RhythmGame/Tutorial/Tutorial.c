@@ -81,7 +81,7 @@ typedef enum TutorialStages
 
 TutorialStages state;
 
-//Boolean Variables
+//Boolean Variables.
 static bool spaceDown = false;
 static bool RETURN_DOWN = true;
 static bool startTutorial = false;
