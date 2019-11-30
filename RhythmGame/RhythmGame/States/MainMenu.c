@@ -18,6 +18,7 @@ sprite Button_LEVEL;
 sprite Button_HISCORE;
 sprite Button_CREDIT;
 sprite Button_QUIT;
+sprite Button_TUTORIAL;
 sprite leftArrow, rightArrow;
 sprite title;
 
@@ -87,12 +88,14 @@ void MainMenu_EnterState()
 	Button_HISCORE = Text_CreateSprite();
 	Button_CREDIT = Text_CreateSprite();
 	Button_QUIT = Text_CreateSprite();	
+	Button_TUTORIAL = Text_CreateSprite();
 	Text_Init(&Button_PLAY, "..//RhythmGame//$Resources//MainMenu//Button_PLAY.txt");
 	Text_Init(&Button_2P, "..//RhythmGame//$Resources//MainMenu//Button_2P.txt");
 	Text_Init(&Button_LEVEL, "..//RhythmGame//$Resources//MainMenu//Button_LEVEL.txt");
 	Text_Init(&Button_HISCORE, "..//RhythmGame//$Resources//MainMenu//Button_HISCORE.txt");
 	Text_Init(&Button_CREDIT, "..//RhythmGame//$Resources//MainMenu//Button_CREDIT.txt");
 	Text_Init(&Button_QUIT, "..//RhythmGame//$Resources//MainMenu//Button_QUIT.txt");
+	Text_Init(&Button_TUTORIAL, "..//RhythmGame//$Resources//MainMenu//Button_TUTORIAL.txt");
 
 	leftArrow = Text_CreateSprite();
 	rightArrow = Text_CreateSprite();
@@ -148,7 +151,7 @@ void MainMenu_ProcessInput()
 	if (GetAsyncKeyState(VK_ESCAPE))
 		Game_Exit();
 
-	if (GetAsyncKeyState(VK_RETURN))
+	if (GetAsyncKeyState(VK_RETURN) && keyDown == 0)
 		_confirmChoice(choice);
 
 	if (GetAsyncKeyState(VK_LEFT) && keyDown == 0)
@@ -165,7 +168,7 @@ void MainMenu_ProcessInput()
 		shakeDirection = RIGHT;
 	}
 
-	if (GetAsyncKeyState(VK_RIGHT) || GetAsyncKeyState(VK_LEFT))
+	if (GetAsyncKeyState(VK_RIGHT) || GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VK_RETURN))
 		keyDown = 1;
 	else
 		keyDown = 0;
@@ -241,11 +244,16 @@ void _confirmChoice()
 		StateMachine_ChangeState(State_Game);
 		break;
 	case LEVEL:
+		choice = LEVEL_TUTORIAL;
 		break;
 	case HISCORE:
 		break;
 	case CREDIT:
 		choice = CREDITSCREEN;
+		break;
+	case LEVEL_TUTORIAL:
+		StateMachine_ChangeMode(ONEPLAYER);
+		StateMachine_ChangeState(State_Tutorial);
 		break;
 	}
 }
@@ -324,6 +332,9 @@ void _colorSwitch()
 	case QUIT:
 		spriteColor = DARKBLUE;
 		break;
+	case LEVEL_TUTORIAL:
+		spriteColor = DARKMAGENTA;
+		break;
 	}
 }
 
@@ -357,6 +368,10 @@ void _renderChoice()
 		break;
 	case CREDITSCREEN:
 		_renderCredit();
+		break;
+	case LEVEL_TUTORIAL:
+		Text_Move(&Button_TUTORIAL, 61, 75);
+		Text_Render(&Button_TUTORIAL, 0, 0);
 		break;
 	}
 }

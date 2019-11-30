@@ -12,6 +12,8 @@ typedef enum MenuState
 	QUIT = 5,
 	REPEAT = 6,
 	CREDITSCREEN = 7,
+	LEVEL_TUTORIAL = 8,
+	LEVEL_LEVEL1 = 9,
 };
 
 extern void MainMenu_EnterState();
