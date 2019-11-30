@@ -8,17 +8,15 @@
 #include "../Audio/AudioEngine.h"
 #include "../Map/Map.h"
 
-sprite diamond1;
-sprite diamond2;
-sprite diamond3;
+sprite diamond1, diamond2, diamond3;
 sprite Button_PLAY;
 sprite Button_2P;
 sprite Button_LEVEL;
 sprite Button_HISCORE;
 sprite Button_CREDIT;
 sprite Button_QUIT;
-sprite leftArrow;
-sprite rightArrow;
+sprite leftArrow, rightArrow;
+sprite title;
 
 static int i = 0;
 
@@ -72,8 +70,12 @@ void MainMenu_EnterState()
 	Text_Init(&leftArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_LEFT.txt");
 	Text_Init(&rightArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_RIGHT.txt");
 
+	title = Text_CreateSprite();
+	Text_Init(&title, "..//RhythmGame//$Resources//MainMenu//Title1.txt");
+
 	Text_Move(&leftArrow, 12, 75);
 	Text_Move(&rightArrow, 154, 75);
+	Text_Move(&title, 25, 10);
 
 	Audio_Load(MAINMENU);
 	Audio_PlayBGM(MAINMENU);
@@ -148,10 +150,10 @@ void MainMenu_Update()
 //*********************************************************************************
 void MainMenu_Render()
 {
+	Text_Render(&title, 0, 0);
 	_renderArrow();
 	_renderBeat();
 	_renderChoice(choice);
-	
 }
 
 //*********************************************************************************
@@ -161,7 +163,7 @@ void _confirmChoice(int choice)
 {
 	switch (choice)
 	{
-	case 1:
+	case PLAY:
 		StateMachine_ChangeState(State_Game);
 		break;
 	}
@@ -215,22 +217,22 @@ void _colorSwitch()
 	switch (spriteColorCount)
 	{
 	case PLAY:
-		spriteColor = DARKMAGENTA; // M
+		spriteColor = DARKMAGENTA;
 		break;
 	case PLAY2P:
-		spriteColor = DARKCYAN; // C
+		spriteColor = DARKCYAN;
 		break;
 	case LEVEL:
-		spriteColor = DARKGREEN; // G
+		spriteColor = DARKGREEN;
 		break;
 	case HISCORE:
-		spriteColor = DARKGRAY; // D
+		spriteColor = GRAY;
 		break;
 	case CREDIT:
-		spriteColor = DARKYELLOW; // Y
+		spriteColor = DARKYELLOW;
 		break;
 	case QUIT:
-		spriteColor = DARKBLUE; // B
+		spriteColor = DARKBLUE;
 		break;
 	}
 }
