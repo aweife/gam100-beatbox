@@ -26,3 +26,4 @@ extern void MainMenu_Update();
 extern void MainMenu_Render();
 
 extern void _creditExitState();
+extern void Sprite_Unload();
