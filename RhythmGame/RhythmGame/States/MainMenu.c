@@ -12,6 +12,7 @@
 
 // MAIN MENU SPRITES
 sprite diamond1, diamond2, diamond3;
+sprite Button_ENTER;
 sprite Button_PLAY;
 sprite Button_2P;
 sprite Button_LEVEL;
@@ -45,7 +46,7 @@ extern void _renderCredit();
 
 static int i = 0;
 
-static int choice = PLAY;
+static int choice = PRESSENTER;
 static int keyDown = 1;
 
 static double beatTimer = 0.0;
@@ -82,6 +83,7 @@ void MainMenu_EnterState()
 	Text_Init(&diamond2, "..//RhythmGame//$Resources//MainMenu//Diamond2.txt");
 	Text_Init(&diamond3, "..//RhythmGame//$Resources//MainMenu//Diamond3.txt");
 
+	Button_ENTER = Text_CreateSprite();
 	Button_PLAY = Text_CreateSprite();
 	Button_2P = Text_CreateSprite();
 	Button_LEVEL = Text_CreateSprite();
@@ -89,6 +91,7 @@ void MainMenu_EnterState()
 	Button_CREDIT = Text_CreateSprite();
 	Button_QUIT = Text_CreateSprite();	
 	Button_TUTORIAL = Text_CreateSprite();
+	Text_Init(&Button_ENTER, "..//RhythmGame//$Resources//MainMenu//Button_ENTER.txt");
 	Text_Init(&Button_PLAY, "..//RhythmGame//$Resources//MainMenu//Button_PLAY.txt");
 	Text_Init(&Button_2P, "..//RhythmGame//$Resources//MainMenu//Button_2P.txt");
 	Text_Init(&Button_LEVEL, "..//RhythmGame//$Resources//MainMenu//Button_LEVEL.txt");
@@ -131,8 +134,8 @@ void MainMenu_EnterState()
 	Text_Move(&Name_GUANHIN, 40, 125);
 
 	Text_Move(&leftArrow, 12, 75);
-	Text_Move(&rightArrow, 154, 75);
-	Text_Move(&title, 27, 10);
+	Text_Move(&rightArrow, 170, 75);
+	Text_Move(&title, 30, 10);
 
 	Audio_Load(MAINMENU);
 	Audio_PlayBGM(MAINMENU);
@@ -173,9 +176,12 @@ void MainMenu_ProcessInput()
 	else
 		keyDown = 0;
 
+	if (choice == PRESSENTER + 1 || choice == PRESSENTER - 1)
+		choice = PRESSENTER;
+
 	if (choice == REPEAT)
 		choice = PLAY;
-	if (choice < PLAY)
+	if (choice == PLAY - 1)
 		choice = QUIT;
 }
 
@@ -217,14 +223,14 @@ void MainMenu_Render()
 
 	if (titleFlag == 1)
 		_renderTitle();
-	if (choice != CREDITSCREEN)
-	{
+
+	if (choice != PRESSENTER)
 		_renderArrow();
+
+	if (choice < CREDITSCREEN1)
 		_renderBeat();
-		_renderChoice(choice);
-	}
-	else
-		_renderCredit();
+
+	_renderChoice(choice);
 	
 }
 
@@ -235,6 +241,9 @@ void _confirmChoice()
 {
 	switch (choice)
 	{
+	case PRESSENTER:
+		choice = 0;
+		break;
 	case PLAY:
 		StateMachine_ChangeMode(ONEPLAYER);
 		StateMachine_ChangeState(State_Game);
@@ -249,11 +258,56 @@ void _confirmChoice()
 	case HISCORE:
 		break;
 	case CREDIT:
-		choice = CREDITSCREEN;
+		choice = CREDITSCREEN1;
 		break;
 	case LEVEL_TUTORIAL:
 		StateMachine_ChangeMode(ONEPLAYER);
 		StateMachine_ChangeState(State_Tutorial);
+		break;
+	}
+}
+
+void _renderChoice()
+{
+	switch (choice)
+	{
+	case PRESSENTER:
+		Text_Move(&Button_ENTER, 68, 75);
+		Text_Render(&Button_ENTER, 0, 0);
+		break;
+	case PLAY2P:
+		Text_Move(&Button_2P, 68, 75);
+		Text_Render(&Button_2P, 0, 0);
+		break;
+	case LEVEL:
+		Text_Move(&Button_LEVEL, 68, 75);
+		Text_Render(&Button_LEVEL, 0, 0);
+		break;
+	case HISCORE:
+		Text_Move(&Button_HISCORE, 68, 75);
+		Text_Render(&Button_HISCORE, 0, 0);
+		break;
+	case CREDIT:
+		Text_Move(&Button_CREDIT, 68, 75);
+		Text_Render(&Button_CREDIT, 0, 0);
+		break;
+	case QUIT:
+		Text_Move(&Button_QUIT, 68, 75);
+		Text_Render(&Button_QUIT, 0, 0);
+		break;
+	case CREDITSCREEN1:
+	case CREDITSCREEN2:
+	case CREDITSCREEN3:
+		_renderCredit();
+		break;
+	case LEVEL_TUTORIAL:
+		Text_Move(&Button_TUTORIAL, 68, 75);
+		Text_Render(&Button_TUTORIAL, 0, 0);
+		break;
+	default:
+		Text_Move(&Button_PLAY, 68, 75);
+		Text_Render(&Button_PLAY, 0, 0);
+		choice = 0;
 		break;
 	}
 }
@@ -278,15 +332,15 @@ void _renderBeat()
 	switch (spriteAni)
 	{
 	case 2:
-		Text_Move(&diamond2, 23, 49);
+		Text_Move(&diamond2, 30, 49);
 		Text_Render(&diamond2, 0, 0);
 		break;
 	case 3:
-		Text_Move(&diamond3, 21, 48);
+		Text_Move(&diamond3, 28, 48);
 		Text_Render(&diamond3, 0, 0);
 		break;
 	default:
-		Text_Move(&diamond1, 25, 50);
+		Text_Move(&diamond1, 32, 50);
 		Text_RenderColor(&diamond1, spriteColor, 0, 0);
 		break;
 	}
@@ -338,44 +392,6 @@ void _colorSwitch()
 	}
 }
 
-void _renderChoice()
-{
-	switch (choice)
-	{
-	case PLAY:
-		Text_Move(&Button_PLAY, 61, 75);
-		Text_Render(&Button_PLAY, 0, 0);
-		break;
-	case PLAY2P:
-		Text_Move(&Button_2P, 61, 75);
-		Text_Render(&Button_2P, 0, 0);
-		break;
-	case LEVEL:
-		Text_Move(&Button_LEVEL, 61, 75);
-		Text_Render(&Button_LEVEL, 0, 0);
-		break;
-	case HISCORE:
-		Text_Move(&Button_HISCORE, 61, 75);
-		Text_Render(&Button_HISCORE, 0, 0);
-		break;
-	case CREDIT:
-		Text_Move(&Button_CREDIT, 61, 75);
-		Text_Render(&Button_CREDIT, 0, 0);
-		break;
-	case QUIT:
-		Text_Move(&Button_QUIT, 61, 75);
-		Text_Render(&Button_QUIT, 0, 0);
-		break;
-	case CREDITSCREEN:
-		_renderCredit();
-		break;
-	case LEVEL_TUTORIAL:
-		Text_Move(&Button_TUTORIAL, 61, 75);
-		Text_Render(&Button_TUTORIAL, 0, 0);
-		break;
-	}
-}
-
 int leftArrowX = 0;
 int rightArrowX = 0;
 
@@ -422,11 +438,24 @@ void _renderBackground(int offset, CONSOLECOLOR color)
 
 void _renderCredit()
 {
-	Text_Render(&Role_GAMEPLAY, 0, 0);
-	Text_Render(&Role_AUDIO, 0, 0);
-	Text_Render(&Role_LEVEL, 0, 0);
-	Text_Render(&Name_FIKRUL, 0, 0);
-	Text_Render(&Name_NICO, 0, 0);
-	Text_Render(&Name_TED, 0, 0);
-	Text_Render(&Name_GUANHIN, 0, 0);
+	switch (choice)
+	{
+	case CREDITSCREEN1:
+		Text_Move(&title, 30, 10);
+		Text_Render(&Role_GAMEPLAY, 40, 0);
+		Text_Render(&Role_AUDIO, 60, 0);
+		Text_Render(&Role_LEVEL, 25, 0);
+		Text_Render(&Name_FIKRUL, 40, 0);
+		Text_Render(&Name_NICO, 45, 0);
+		Text_Render(&Name_TED, 47, 0);
+		Text_Render(&Name_GUANHIN, 35, 0);
+		break;
+	case CREDITSCREEN2:
+		Text_Move(&title, 32, 74);
+		break;
+	case CREDITSCREEN3:
+		Text_Move(&title, 30, 10);
+		break;
+	}
+	
 }
