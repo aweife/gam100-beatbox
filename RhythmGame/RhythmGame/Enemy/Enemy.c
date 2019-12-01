@@ -86,7 +86,7 @@ void Enemy_Init(GAMETYPE type)
 	{
 		enableLaser = false;
 		projSpeed /= 4.0;
-		moveSpeed /= 2.0;
+		moveSpeed /= 5.0;
 		projSpawnSpeed *= 3.0;
 	}
 }
