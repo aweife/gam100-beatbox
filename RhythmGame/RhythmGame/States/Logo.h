@@ -4,7 +4,8 @@
 
 typedef struct LogoStruct {
 	Vector2d position;
-	sprite LogoSprite;
+	sprite LogoSprite1;
+	sprite LogoSprite2;
 } LogoStruct;
 
 extern void Logo_EnterState();
