@@ -45,10 +45,11 @@ static bool visible;
 #define SCORE_X 140
 #define SCORE_Y 94
 #define DIGIT_SPACING 6
-static int gameScore;
-static int digitCount;
+static int gameScore,gameScore2;
+static int digitCount, digitCount2;
+static DisplayScore displayMode;
 
-sprite digits[MAX_DIGITS];
+sprite digits[2][MAX_DIGITS];
 
 // For name display
 #define MAX_LETTERS 3
@@ -127,6 +128,7 @@ void GameOver_ProcessInput()
 	if (GetAsyncKeyState(VK_RETURN) && !keyEnter)
 	{
 		keyEnter = true;
+		if(displayMode == SOLO)
 		_InputScore(name[0].choice, name[1].choice, name[2].choice, gameScore);
 	}
 	else if (!GetAsyncKeyState(VK_RETURN)) keyEnter = false;
@@ -173,21 +175,34 @@ void GameOver_Render()
 	_RenderCryingBeatmanAnimation();
 	_RenderReaperAnimation();
 	Text_Render(&GetScore, 0, 0);
+	if(displayMode == SOLO)
 	Text_Render(&GetName, 0, 0);
 	Text_Render(&Enter, 0, 0);
 
 	// Render cursor
-	if (visible)
-		for (int i = 0, x = LETTER_X - 1 + (LETTER_SPACING * positionChoice), y = LETTER_Y + LETTER_SPACING; i <= FONT_SPACING; i++)
-			Console_SetRenderBuffer_CharColor(x + i, y, ' ', WHITE);
+	if (displayMode == SOLO)
+	{
+		if (visible)
+			for (int i = 0, x = LETTER_X - 1 + (LETTER_SPACING * positionChoice), y = LETTER_Y + LETTER_SPACING; i <= FONT_SPACING; i++)
+				Console_SetRenderBuffer_CharColor(x + i, y, ' ', WHITE);
 
-	// Render name choice
-	for (int i = 0; i < MAX_LETTERS; i++)
-		Text_Render(&name[i].letterSprite, 0, 0);
+		// Render name choice
+		for (int i = 0; i < MAX_LETTERS; i++)
+			Text_Render(&name[i].letterSprite, 0, 0);
 
-	// Render nscore
-	for (int i = 0; i < digitCount; i++)
-		Text_Render(&digits[i], 0, 0);
+		// Render score
+		for (int i = 0; i < digitCount; i++)
+			Text_Render(&digits[0][i], 0, 0);
+	}
+	else
+	{
+		// Render scores
+		for (int i = 0; i < digitCount; i++)
+			Text_Render(&digits[0][i], 0, 0);
+
+		for (int i = 0; i < digitCount; i++)
+			Text_Render(&digits[1][i], 0, 0);
+	}
 }
 
 
@@ -229,16 +244,25 @@ void GameOver_EnterState()
 	Text_Move(&Enter, (GAME_WIDTH / 2) - CENTER_OFFSETX - 32, (GAME_HEIGHT / 4) + CENTER_OFFSETY + 85);
 
 	// Init score and name
-	gameScore = 123456;
 	_PositionScore();
 	_PositionName();
 
 	path = TEXT_PATHNAME;
 }
 	
-
 void GameOver_ExitState()
 {
+	gameScore2 = gameScore = 0;
+
+	// Cleanup
+}
+
+void GameOver_SetScore(int score, DisplayScore mode, int score2)
+{
+	gameScore = score;
+	displayMode = mode;
+	if(displayMode == NOTSOLO)
+		gameScore2 = score2;
 }
 
 //*********************************************************************************
@@ -277,10 +301,32 @@ void _PositionScore()
 	digitCount = 0;
 	for (int i = 0, digit = gameScore; digit > 0; i++, digit /= 10)
 	{
-		digits[i] = Text_CreateSprite();
-		digits[i] = Font_ConvertToSprite(26+digit % 10);
-		Text_Move(&digits[i], SCORE_X - (DIGIT_SPACING * i), SCORE_Y);
+		digits[0][i] = Text_CreateSprite();
+		digits[0][i] = Font_ConvertToSprite(26+digit % 10);
+		Text_Move(&digits[0][i], SCORE_X - (DIGIT_SPACING * i), SCORE_Y);
 		digitCount++;
+	}
+
+	if (displayMode == NOTSOLO)
+	{
+		digitCount2 = 0;
+		for (int i = 0, digit = gameScore; digit > 0; i++, digit /= 10)
+		{
+			digits[1][i] = Text_CreateSprite();
+			digits[1][i] = Font_ConvertToSprite(26 + digit % 10);
+			Text_Move(&digits[1][i], SCORE_X - (DIGIT_SPACING * i), LETTER_Y);
+			digitCount++;
+		}
+
+		for (int i = 0; i < digitCount; i++)
+			for (int j = 0; j < digits[0][i].charCount; j++)
+				if (digits[0][i].spriteI[j].printchar == 'w')
+					digits[0][i].spriteI[j].printColor = BLUE;
+
+		for (int i = 0; i < digitCount; i++)
+			for (int j = 0; j < digits[1][i].charCount; j++)
+				if (digits[1][i].spriteI[j].printchar == 'w')
+					digits[1][i].spriteI[j].printColor = GREEN;
 	}
 }
 
