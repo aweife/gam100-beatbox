@@ -188,7 +188,9 @@ void MainMenu_EnterState()
 
 void MainMenu_ExitState()
 {
-	Audio_Unload();
+	if (choice != HISCORE)
+		Audio_Unload();
+
 	Sprite_Unload();
 }
 
@@ -321,6 +323,7 @@ void _confirmChoice()
 		choice = LEVEL_TUTORIAL;
 		break;
 	case HISCORE:
+		StateMachine_ChangeState(State_Highscore);
 		break;
 	case CREDIT:
 		choice = CREDITSCREEN1;

@@ -10,7 +10,7 @@ LogoStruct Logo;
 
 extern void Logo_EnterState()
 {
-	Logo = (LogoStruct){ .position.x = 15, .position.y = 100, .position.eulerY = 100.0, .LogoSprite1 = Text_CreateSprite(), .LogoSprite2 = Text_CreateSprite()};
+	Logo = (LogoStruct){ .position.x = 3, .position.y = 100, .position.eulerY = 100.0, .LogoSprite1 = Text_CreateSprite(), .LogoSprite2 = Text_CreateSprite()};
 	Text_Init(&Logo.LogoSprite1, "..//RhythmGame//$Resources//Logo.txt");
 	Text_Init(&Logo.LogoSprite2, "..//RhythmGame//$Resources//Credit//Credit2_COPYRIGHT.txt");
 }
@@ -37,7 +37,7 @@ extern void Logo_Update()
 
 	Logo.position.y = (int)Logo.position.eulerY;
 	Text_Move(&Logo.LogoSprite1, Logo.position.x, Logo.position.y);
-	Text_Move(&Logo.LogoSprite2, Logo.position.x, Logo.position.y + 30);
+	Text_Move(&Logo.LogoSprite2, Logo.position.x + 15, Logo.position.y + 30);
 
 	if (stateTimer < 0)
 		StateMachine_ChangeState(State_MainMenu);
