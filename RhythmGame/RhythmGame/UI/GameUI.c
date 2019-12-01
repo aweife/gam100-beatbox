@@ -115,7 +115,7 @@ void _InitHealth()
 
 		// Set health origin
 		health[i].origin.x = GAMEUI_OFFSET;
-		health[i].origin.y = MAP_OFFSET + (HEART_SPRITE_HEIGHT * i);
+		health[i].origin.y = GAMEUI_OFFSET - MAP_OFFSET + (HEART_SPRITE_HEIGHT * i);
 
 		// Create sprites
 		for (int j = 0; j < HEARTS_PER_ROW; j++)

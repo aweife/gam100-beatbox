@@ -196,9 +196,6 @@ void MainMenu_ExitState()
 //*********************************************************************************
 void MainMenu_ProcessInput()
 {
-	if (GetAsyncKeyState(VK_ESCAPE))
-		Game_Exit();
-
 	if (GetAsyncKeyState(VK_RETURN) && keyDown == 0)
 		_confirmChoice(choice);
 
@@ -334,6 +331,9 @@ void _confirmChoice()
 	case LEVEL_LEVEL1:
 		StateMachine_ChangeMode(ONEPLAYER);
 		StateMachine_ChangeState(State_Game);
+	case QUIT:
+		Game_Exit();
+		break;
 	}
 }
 

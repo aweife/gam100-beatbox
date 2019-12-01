@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define DEBUG_AABB 1
+#define DEBUG_AABB 0
 #define COLLISION_OFFSET 2
 
 #define LASER_UPDATE_SPEED 4
@@ -156,10 +156,10 @@ void Attack_Render() // put in game.c
 		{
 			for (int j = 0; j < 3; j++)
 				if (plArray[i].projectileSprite.spriteI[j].printchar == 'C')
-					plArray[i].projectileSprite.spriteI[j].printColor = plArray[i].which ?  DARKGREEN : DARKCYAN;
-				else if(plArray[i].projectileSprite.spriteI[j].printchar == 'c')
+					plArray[i].projectileSprite.spriteI[j].printColor = plArray[i].which ? DARKGREEN : DARKCYAN;
+				else if (plArray[i].projectileSprite.spriteI[j].printchar == 'c')
 					plArray[i].projectileSprite.spriteI[j].printColor = plArray[i].which ? GREEN : CYAN;
-				
+
 			Text_Render(&plArray[i].projectileSprite, 0, 0);
 		}
 
@@ -281,7 +281,7 @@ void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, 
 			// Find a projectile that is not in use
 			if (plArray[i].active) continue;
 			plArray[i].position = spawnPosition;
-			plArray[i].position.y -= which*2;
+			plArray[i].position.y -= which * 2;
 			plArray[i].direction = direction;
 			plArray[i].speed = speed;
 			plArray[i].active = true;
@@ -449,10 +449,10 @@ void _CheckProjectileCollision()
 		}
 
 		// Check against enemy 
-		if (plArray[i].position.x >= Enemy_GetEnemy()->startPosition.x &&
-			plArray[i].position.x <= Enemy_GetEnemy()->endPosition.x &&
-			plArray[i].position.y >= Enemy_GetEnemy()->startPosition.y &&
-			plArray[i].position.y <= Enemy_GetEnemy()->endPosition.y)
+		if (plArray[i].position.x > Enemy_GetEnemy()->startPosition.x &&
+			plArray[i].position.x < Enemy_GetEnemy()->endPosition.x &&
+			plArray[i].position.y > Enemy_GetEnemy()->startPosition.y &&
+			plArray[i].position.y < Enemy_GetEnemy()->endPosition.y)
 		{
 			plArray[i].active = false;
 			plArray[i].position.x = -3;
@@ -614,10 +614,8 @@ void _MoveNote()
 
 		nArray[i].startPosition.x = (int)(nArray[i].startPosition.eulerX);
 		nArray[i].startPosition.y = (int)(nArray[i].startPosition.eulerY);
-		//nArray[i].endPosition.x = (int)(nArray[i].startPosition.eulerX + nArray[i].noteSprite.spriteI[nArray[i].noteSprite.charCount - 1].position.x);
-		//nArray[i].endPosition.y = (int)(nArray[i].startPosition.eulerY + nArray[i].noteSprite.spriteI[nArray[i].noteSprite.charCount - 1].position.y);
-		nArray[i].endPosition.x = (int)(nArray[i].startPosition.eulerX + nArray[i].noteSprite.spriteI[40].position.x + 5);
-		nArray[i].endPosition.y = (int)(nArray[i].startPosition.eulerY + nArray[i].noteSprite.spriteI[40].position.y);
+		nArray[i].endPosition.x = (int)(nArray[i].startPosition.eulerX + nArray[i].noteSprite.spriteI[nArray[i].noteSprite.charCount - 1].position.x);
+		nArray[i].endPosition.y = (int)(nArray[i].startPosition.eulerY + nArray[i].noteSprite.spriteI[nArray[i].noteSprite.charCount - 1].position.y);
 		Text_Move(&nArray[i].noteSprite, nArray[i].startPosition.x, nArray[i].startPosition.y);
 	}
 }
