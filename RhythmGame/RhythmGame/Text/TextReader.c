@@ -91,7 +91,7 @@ int _CountCharsArray(char *path,int state)
 			{
 				for (int i = 0; i < 200; i++)
 				{
-					if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n')
+					if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n' && Charline[i] != ' ')
 					{
 
 						charcount++;
@@ -132,7 +132,7 @@ int _CountChars(char * path)
 
 			for (int i = 0; i < 200; i++)
 			{
-				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0')
+				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != ' ')
 				{
 				
 					charcount++;

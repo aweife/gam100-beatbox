@@ -184,11 +184,16 @@ void MainMenu_EnterState()
 
 	Audio_Load(MAINMENU);
 	Audio_PlayBGM(MAINMENU);
+
+	// Initialise mainmenu
+	choice = PRESSENTER;
+	spriteColorCount = PRESSENTER;
+	spriteColor = BLACK;
 }
 
 void MainMenu_ExitState()
 {
-	Audio_Unload();
+	
 }
 
 //*********************************************************************************

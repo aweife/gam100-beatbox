@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include "../Text/Font.h"
 #include "../Clock/Clock.h"
+#include "../Audio/AudioEngine.h"
 
 //*********************************************************************************
 //								LOCAL VARIABLES
@@ -28,7 +29,6 @@ sprite Enter;
 // Animation
 #define CENTER_OFFSETX 20
 #define CENTER_OFFSETY 10
-static double animationDuration = 0.0;
 static bool animate = false;
 static bool RETURN_DOWN = false;
 
@@ -42,18 +42,22 @@ static bool visible;
 
 // For score display
 #define MAX_DIGITS 10
-#define SCORE_X 140
-#define SCORE_Y 94
+#define SCORE_X 156
+#define SCORE_Y 95
 #define DIGIT_SPACING 6
-static int gameScore,gameScore2;
-static int digitCount, digitCount2;
+
 static DisplayScore displayMode;
 
-sprite digits[2][MAX_DIGITS];
+typedef struct Score {
+	int gameScore;
+	int digitCount;
+	sprite digits[MAX_DIGITS];
+}Score;
+Score score[2];
 
 // For name display
 #define MAX_LETTERS 3
-#define LETTER_X 110
+#define LETTER_X 140
 #define LETTER_Y 114
 #define LETTER_SPACING 8
 
@@ -128,8 +132,10 @@ void GameOver_ProcessInput()
 	if (GetAsyncKeyState(VK_RETURN) && !keyEnter)
 	{
 		keyEnter = true;
-		if(displayMode == SOLO)
-		_InputScore(name[0].choice, name[1].choice, name[2].choice, gameScore);
+		if (displayMode == SOLO)
+			_InputScore(name[0].choice, name[1].choice, name[2].choice, score[0].gameScore);
+
+		StateMachine_ChangeState(State_MainMenu);
 	}
 	else if (!GetAsyncKeyState(VK_RETURN)) keyEnter = false;
 
@@ -149,22 +155,12 @@ void GameOver_ProcessInput()
 //*********************************************************************************
 void GameOver_Update()
 {
-	animationDuration += Clock_GetDeltaTime();
-
-	//Logic to Animate in between to Sprite States
-	if (animationDuration >= 0.0 && animationDuration <= 500.0)
-	{
-		animate = false;
-	}
-	else if (animationDuration >= 500.0 && animationDuration <= 1000.0)
-	{
-		animate = true;
-		animationDuration -= 1000.0;
-	}
-
+	animate = Audio_GetSpectrum(1);
+	
+	// Update cursor
 	_BlinkingCursor();
 }
-	
+
 
 //*********************************************************************************
 //									RENDER
@@ -175,34 +171,31 @@ void GameOver_Render()
 	_RenderCryingBeatmanAnimation();
 	_RenderReaperAnimation();
 	Text_Render(&GetScore, 0, 0);
-	if(displayMode == SOLO)
-	Text_Render(&GetName, 0, 0);
 	Text_Render(&Enter, 0, 0);
 
 	// Render cursor
 	if (displayMode == SOLO)
 	{
-		if (visible)
-			for (int i = 0, x = LETTER_X - 1 + (LETTER_SPACING * positionChoice), y = LETTER_Y + LETTER_SPACING; i <= FONT_SPACING; i++)
-				Console_SetRenderBuffer_CharColor(x + i, y, ' ', WHITE);
+		// Render name:
+		Text_Render(&GetName, 0, 0);
 
 		// Render name choice
 		for (int i = 0; i < MAX_LETTERS; i++)
 			Text_Render(&name[i].letterSprite, 0, 0);
 
-		// Render score
-		for (int i = 0; i < digitCount; i++)
-			Text_Render(&digits[0][i], 0, 0);
+		// Render linking cursor
+		if (visible)
+			for (int i = 0, x = LETTER_X - 1 + (LETTER_SPACING * positionChoice), y = LETTER_Y + LETTER_SPACING; i <= FONT_SPACING; i++)
+				Console_SetRenderBuffer_CharColor(x + i, y, ' ', WHITE);
 	}
 	else
-	{
-		// Render scores
-		for (int i = 0; i < digitCount; i++)
-			Text_Render(&digits[0][i], 0, 0);
+		for (int i = 0; i < score[1].digitCount; i++)
+			Text_RenderColor(&score[1].digits[i], GREEN, 0, 0);
 
-		for (int i = 0; i < digitCount; i++)
-			Text_Render(&digits[1][i], 0, 0);
-	}
+
+	// Render scores
+	for (int i = 0; i < score[0].digitCount; i++)
+		Text_RenderColor(&score[0].digits[i], BLUE, 0, 0);
 }
 
 
@@ -234,7 +227,7 @@ void GameOver_EnterState()
 	GetScore = Text_CreateSprite();
 	Text_Init(&GetScore, "..//RhythmGame//$Resources//GetScore.txt");
 	Text_Move(&GetScore, (GAME_WIDTH / 2) - CENTER_OFFSETX - 75, (GAME_HEIGHT / 4) + CENTER_OFFSETY + 42);
-	
+
 	GetName = Text_CreateSprite();
 	Text_Init(&GetName, "..//RhythmGame//$Resources//GetName.txt");
 	Text_Move(&GetName, (GAME_WIDTH / 2) - CENTER_OFFSETX - 59, (GAME_HEIGHT / 4) + CENTER_OFFSETY + 62);
@@ -248,21 +241,38 @@ void GameOver_EnterState()
 	_PositionName();
 
 	path = TEXT_PATHNAME;
-}
 	
+	Audio_Load(MAINMENU);
+	Audio_PlayBGM(MAINMENU);
+}
+
 void GameOver_ExitState()
 {
-	gameScore2 = gameScore = 0;
+	// Reset score
+	score[1].gameScore = score[0].gameScore = 0;
 
-	// Cleanup
+	// Cleanup audio
+	Audio_Unload();
+
+	// Cleanup sprites
+	Text_Cleanup(&CryingBeatmanState1);
+	Text_Cleanup(&CryingBeatmanState2);
+	Text_Cleanup(&ReaperState1);
+	Text_Cleanup(&ReaperState2);
+	Text_Cleanup(&GameOver);
+	Text_Cleanup(&GetScore);
+	Text_Cleanup(&GetName);
+	Text_Cleanup(&Enter);
 }
 
-void GameOver_SetScore(int score, DisplayScore mode, int score2)
+void GameOver_SetScore(DisplayScore mode, int score1, int score2)
 {
-	gameScore = score;
 	displayMode = mode;
-	if(displayMode == NOTSOLO)
-		gameScore2 = score2;
+	score[0].gameScore = score1;
+
+	// If its two player
+	if (displayMode == NOTSOLO)
+		score[1].gameScore = score2;
 }
 
 //*********************************************************************************
@@ -298,35 +308,25 @@ void _RenderReaperAnimation()
 
 void _PositionScore()
 {
-	digitCount = 0;
-	for (int i = 0, digit = gameScore; digit > 0; i++, digit /= 10)
+	score[0].digitCount = 0;
+	for (int i = 0, digit = score[0].gameScore; digit > 0; i++, digit /= 10)
 	{
-		digits[0][i] = Text_CreateSprite();
-		digits[0][i] = Font_ConvertToSprite(26+digit % 10);
-		Text_Move(&digits[0][i], SCORE_X - (DIGIT_SPACING * i), SCORE_Y);
-		digitCount++;
+		score[0].digits[i] = Text_CreateSprite();
+		score[0].digits[i] = Font_ConvertToSprite(26 + digit % 10);
+		Text_Move(&score[0].digits[i], SCORE_X - (DIGIT_SPACING * i), SCORE_Y);
+		score[0].digitCount++;
 	}
 
 	if (displayMode == NOTSOLO)
 	{
-		digitCount2 = 0;
-		for (int i = 0, digit = gameScore; digit > 0; i++, digit /= 10)
+		score[1].digitCount = 0;
+		for (int i = 0, digit = score[1].gameScore; digit > 0; i++, digit /= 10)
 		{
-			digits[1][i] = Text_CreateSprite();
-			digits[1][i] = Font_ConvertToSprite(26 + digit % 10);
-			Text_Move(&digits[1][i], SCORE_X - (DIGIT_SPACING * i), LETTER_Y);
-			digitCount++;
+			score[1].digits[i] = Text_CreateSprite();
+			score[1].digits[i] = Font_ConvertToSprite(26 + digit % 10);
+			Text_Move(&score[1].digits[i], SCORE_X - (DIGIT_SPACING * i), SCORE_Y+DIGIT_SPACING);
+			score[1].digitCount++;
 		}
-
-		for (int i = 0; i < digitCount; i++)
-			for (int j = 0; j < digits[0][i].charCount; j++)
-				if (digits[0][i].spriteI[j].printchar == 'w')
-					digits[0][i].spriteI[j].printColor = BLUE;
-
-		for (int i = 0; i < digitCount; i++)
-			for (int j = 0; j < digits[1][i].charCount; j++)
-				if (digits[1][i].spriteI[j].printchar == 'w')
-					digits[1][i].spriteI[j].printColor = GREEN;
 	}
 }
 
