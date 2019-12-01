@@ -3,21 +3,19 @@
 typedef struct Phighscore
 {
 	int visible;
-	char score;
 	sprite printsprite;
 }Phighscore;
 
 typedef struct Pname
 {
 	int visible;
-    char name;
 	sprite printsprite;
 }Pname;
 
 typedef struct Pinfo
 {
-	Phighscore playerscore[10];
-	Pname playername[8];
+	Phighscore playerscore[8];
+	Pname playername[3];
 	int score;
 
 }Pinfo;

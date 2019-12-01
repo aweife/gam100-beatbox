@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_DEPRECATE
 
 #include <stdio.h>
 #include<stdlib.h>
@@ -52,7 +51,7 @@ int _CountCharsArray(char *path,int state)
 		Charline[i] = 'n';
 	}
 
-	pFile = fopen(path, "r");
+	 fopen_s(&pFile,path, "r");
 	if (pFile == NULL)
 	{
 		perror("Error opening file");
@@ -117,7 +116,7 @@ int _CountChars(char * path)
 {
 	totalcharcount = 0;
 
-	pFile = fopen(path, "r");
+	 fopen_s(&pFile,path, "r");
 	if (pFile == NULL)
 	{
 		perror("Error opening file");
@@ -260,7 +259,7 @@ void _Readandstoretext(sprite *s, const char *path)
 		Charline[i] = 'n';
 	}
 
-	pFile = fopen(path, "r");
+	 fopen_s(&pFile,path, "r");
 	if (pFile == NULL)
 		perror("Error opening file");
 	else
@@ -365,7 +364,7 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 		Charline[i] = 'n';
 	}
 
-	pFile = fopen(path, "r");
+	 fopen_s(&pFile,path, "r");
 	if (pFile == NULL) perror("Error opening file");
 	else
 	{

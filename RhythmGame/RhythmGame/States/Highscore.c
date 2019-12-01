@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_DEPRECATE
+
 #include "MainMenu.h"
 #include <Windows.h>
 #include <stdlib.h>
@@ -8,7 +8,7 @@
 #include"Highscore.h"
 #include "Game.h"
 #include"../UI/UI.h"
-
+#include"../Text/font.h"
 sprite HS;
 sprite trophyman;
 sprite HSui;
@@ -27,9 +27,7 @@ static int pcount;
 static int nameiterator = 0;
 static int scoreiterator = 0;
 static int HSstate = 0;
-
-
-
+static int digitCount = 0;
 void _Init_players()
 {
 
@@ -62,7 +60,7 @@ int _Determineamountofplayers(char *path)
 {
 	int players = 0;
 
-	readScoreFile = fopen(path, "r");
+	  fopen_s(&readScoreFile,path, "r");
 	if (readScoreFile == NULL)
 	{
 		perror("Error opening file");
@@ -93,65 +91,103 @@ void _Init_Numbers()
 	{
 		PI[j].score = 0;
 		scoreiterator = 0;
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 8; i++)
 		{
 			PI[j].playerscore[i].printsprite = Text_CreateSprite();
 			Text_InitArray(&PI[j].playerscore[i].printsprite, "..//RhythmGame//$Resources//numbers.txt", 0);
-			PI[j].playerscore[i].score = 'n';
 			PI[j].playerscore[i].visible = 0;
-
 			Text_Move(&PI[j].playerscore[i].printsprite, infopositioning[j][0].x + scoreiterator, infopositioning[j][0].y);
+			scoreiterator += 4;
+		}
+	}
+
+		for (int j = 0;j < 5; j++)
+	{
+		PI[j].score = 0;
+		scoreiterator = 0;
+		for (int i = 0; i < 8; i++)
+		{
+			Topplayers[j].playerscore[i].printsprite = Text_CreateSprite();
+			Text_InitArray(&Topplayers[j].playerscore[i].printsprite, "..//RhythmGame//$Resources//numbers.txt", 0);
+			Topplayers[j].playerscore[i].visible = 0;
+			Text_Move(&Topplayers[j].playerscore[i].printsprite, infopositioning[j][0].x + scoreiterator, infopositioning[j][0].y);
 			scoreiterator += 4;
 		}
 	}
 }
 
+void _Move_placements()
+{
+
+	for (int j = 0; j < 5; j++)
+	{
+		
+		nameiterator = 0;
+		for (int i = 0; i < 3; i++)
+		{
+
+			Text_Move(&Topplayers[j].playername[i].printsprite, infopositioning[j][1].x + nameiterator, infopositioning[j][1].y);
+			nameiterator += 6;
+		}
+
+		scoreiterator = 0;
+		for (int i = 7; i >= 0; i--)
+		{
+			Text_Move(&Topplayers[j].playerscore[i].printsprite, infopositioning[j][0].x + scoreiterator, infopositioning[j][0].y);
+			scoreiterator += 6;
+		}
+
+
+
+	}
+}
+
+
 void _Init_Name()
 {
-	nameiterator = 0;
+
 
 	for (int j = 0; j < pcount; j++)
 	{
 		nameiterator = 0;
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			PI[j].playername[i].printsprite = Text_CreateSprite();
 			Text_InitArray(&PI[j].playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 6);
-			PI[j].playername[i].name = '0';
 			PI[j].playername[i].visible = 0;
+
+		}
+	}
+
+	for (int j = 0; j < 5; j++)
+	{
+		nameiterator = 0;
+		for (int i = 0; i < 3; i++)
+		{
+			Topplayers[j].playername[i].printsprite = Text_CreateSprite();
+			Text_InitArray(&Topplayers[j].playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 6);
+			Topplayers[j].playername[i].visible = 0;
 
 			Text_Move(&PI[j].playername[i].printsprite, infopositioning[j][1].x + nameiterator, infopositioning[j][1].y);
 			nameiterator += 6;
-
-
 		}
-
 	}
 
-}
-
-
-void _determinePscore(Pinfo *p,int count)
-{
-	switch (count)
-	{
-	case 0:break;
-
-	case 1: p->score = (p->playerscore[0].score) - '0';
-
-
-
-	}
 }
 
 
 void _readandstoreinfo(Pinfo *p,char *path)
 {
+	int letter1 = 0;
+	int letter2 = 0;
+	int letter3 = 0;
+	int score = 0;
+
+	
 	HSstate = 0;
 	charcount = 0;
 	scorecount = 0;
-
-	readScoreFile = fopen(path, "r");
+	fopen_s(&readScoreFile,path, "r");
 		if (readScoreFile == NULL)
 		{
 			perror("Error opening file");
@@ -161,31 +197,19 @@ void _readandstoreinfo(Pinfo *p,char *path)
 
 			while (!feof(readScoreFile))
 			{
-				charcount = 0;
-				scorecount = 0;
+				fscanf_s(readScoreFile, "%d %d %d %d",&letter1,&letter2,&letter3,&(p+HSstate)->score);
 
-				fgets(buffer, 200, readScoreFile);
+				(p + HSstate)->playername[0].printsprite = Font_ConvertToSprite(letter1);
+				(p + HSstate)->playername[0].visible = 1;
+				(p + HSstate)->playername[1].printsprite = Font_ConvertToSprite(letter2);
+				(p + HSstate)->playername[1].visible = 1;
+				(p + HSstate)->playername[2].printsprite = Font_ConvertToSprite(letter3);
+				(p + HSstate)->playername[2].visible = 1;
 
-				for (int i = 0; i < 200; i++)
+				for (int i = 0, digit = (p + HSstate)->score; digit > 0; i++, digit /= 10)
 				{
-
-					if (buffer[i] == '\n')
-						break;
-
-					if (!isdigit(buffer[i]) && buffer[i] != ' ' && buffer[i] != '\0')
-					{
-						(p+HSstate)->playername[charcount].name = buffer[i];
-						(p+HSstate)->playername[charcount].visible = 1;
-						charcount++;
-					}
-
-					else if (isdigit(buffer[i]) && buffer[i] != ' ' && buffer[i] != '\0')
-					{
-						(p+HSstate)->playerscore[scorecount].score = buffer[i];
-						(p+HSstate)->playerscore[scorecount].visible = 1;
-						scorecount++;
-					}
-
+					(p + HSstate)->playerscore[i].printsprite = Font_ConvertToSprite(26 + digit % 10);
+					(p + HSstate)->playerscore[i].visible = 1;
 				}
 
 
@@ -197,150 +221,37 @@ void _readandstoreinfo(Pinfo *p,char *path)
 
 }
 
-void _determineprintingname(Pinfo *p)
+
+
+
+void _determinetopplayers()
 {
-
-	for (int i = 0; i < 8; i++)
+	int Pfound = 0;
+	int maxnumber = PI[0].score;
+	while (Pfound < 5)
 	{
-		switch (p->playername[i].name)
-		{
-		case 'a' :case 'A':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets.txt", 0);
-			break;
-		case 'b':case 'B':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets.txt", 1);
-			break;
-		case 'c':case 'C':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets.txt", 2);
-			break;
-		case 'd':case 'D':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets.txt", 3);
-			break;
-		case 'e':case 'E':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets.txt", 4);
-			break;
-		case 'f':case 'F':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets.txt", 5);
-			break;
-		case 'g':case 'G':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets.txt", 6);
-			break;
-		case 'h':case 'H':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets.txt", 7);
-			break;
-		case 'i':case 'I':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets.txt", 8);
-			break;
-		case 'j':case 'J':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets.txt", 9);
-			break;
-		case 'k':case 'K':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 0);
-			break;
-		case 'l':case 'L':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 1);
-			break;
-		case 'm':case 'M':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 2);
-			break;
-		case 'n':case 'N':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 3);
-			break;
-		case 'o':case 'O':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 4);
-			break;
-		case 'p':case 'P':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 5);
-			break;
-		case 'q':case 'Q':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 6);
-			break;
-		case 'r':case 'R':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 7);
-			break;
-		case 's':case 'S':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 8);
-			break;
-		case 't':case 'T':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 9);
-			break;
-		case 'u':case 'U':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets3.txt", 0);
-			break;
-		case 'v':case 'V':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets3.txt", 1);
-			break;
-		case 'w':case 'W':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets3.txt", 2);
-			break;
-		case 'x':case 'X':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets3.txt", 3);
-			break;
-		case 'y':case 'Y':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets3.txt", 4);
-			break;
-		case 'z':case 'Z':
-			Text_InitArray(&p->playername[i].printsprite, "..//RhythmGame//$resources//Alphabets3.txt", 5);
-			break;
+		maxnumber = 1;
 
+		for (int k = 0; k < pcount; k++)
+		{
+			if (PI[k].score > maxnumber)
+				maxnumber = PI[k].score;
 		}
 
+		for (int i = 0; i < pcount; i++)
+		{
+			if (PI[i].score == maxnumber)
+			{
+				Topplayers[Pfound] = PI[i];
+				PI[i].score = 0;
+			}
 	
-	}
-
-}
-
-void _determineprintingscore(Pinfo* p)
-{
-
-	for (int i = 0; i < 10; i++)
-	{
-		switch (p->playerscore[i].score)
-		{
-		case '0':
-			Text_InitArray(&p->playerscore[i].printsprite, "..//RhythmGame//$resources//numbers.txt", 0);
-			break;
-		case '1':
-			Text_InitArray(&p->playerscore[i].printsprite, "..//RhythmGame//$resources//numbers.txt", 1);
-			break;
-		case '2':
-			Text_InitArray(&p->playerscore[i].printsprite, "..//RhythmGame//$resources//numbers.txt", 2);
-			break;
-		case '3':
-			Text_InitArray(&p->playerscore[i].printsprite, "..//RhythmGame//$resources//numbers.txt", 3);
-			break;
-		case '4':
-			Text_InitArray(&p->playerscore[i].printsprite, "..//RhythmGame//$resources//numbers.txt", 4);
-			break;
-		case '5':
-			Text_InitArray(&p->playerscore[i].printsprite, "..//RhythmGame//$resources//numbers.txt", 5);
-			break;
-		case '6':
-			Text_InitArray(&p->playerscore[i].printsprite, "..//RhythmGame//$resources//numbers.txt", 6);
-			break;
-		case '7':
-			Text_InitArray(&p->playerscore[i].printsprite, "..//RhythmGame//$resources//numbers.txt", 7);
-			break;
-		case '8':
-			Text_InitArray(&p->playerscore[i].printsprite, "..//RhythmGame//$resources//numbers.txt", 8);
-			break;
-		case '9':
-			Text_InitArray(&p->playerscore[i].printsprite, "..//RhythmGame//$resources//numbers.txt", 9);
-			break;
-
 		}
 
-
+		Pfound++;
 	}
 
-}
 
-void _determinetopplayers(Pinfo *p)
-{
-	for (int i = 0; i < pcount; i++)
-	{
-  
-	}
 }
 
 
@@ -368,11 +279,8 @@ void Highscore_EnterState()
 
      _readandstoreinfo(&PI[0],"..//RhythmGame//$Resources//scores.txt");
 
-	 for (int i = 0; i < pcount; i++)
-	 {
-		 _determineprintingname(&PI[i]);
-		 _determineprintingscore(&PI[i]);
-	 }
+	 _determinetopplayers();
+	 _Move_placements();
 
 }
 
@@ -397,32 +305,19 @@ void Highscore_Render()
 	Text_Render(&trophyman, 0, 0);
 	Text_Render(&HSui, 0, 0);
 
-	for (int j = 0; j < pcount; j++)
+	for (int j = 0; j < 5; j++)
 	{
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 8; i++)
 		{
-			if (PI[j].playerscore[i].visible == 1)
-				Text_Render(&PI[j].playerscore[i].printsprite, 0, 0);
+			if (Topplayers[j].playerscore[i].visible == 1)
+				Text_Render(&Topplayers[j].playerscore[i].printsprite, 0, 0);
 		}
 
-		for (int k = 0; k < 8; k++)
+		for (int k = 0; k < 3; k++)
 		{
-			if (PI[j].playername[k].visible == 1)
-				Text_Render(&PI[j].playername[k].printsprite, 0, 0);
+			if (Topplayers[j].playername[k].visible == 1)
+				Text_Render(&Topplayers[j].playername[k].printsprite, 0, 0);
 		}
 	}
-	//}
 }
-//Write Score to File
-//void _InputScore(char* path, int Get_Score())
-//{
-//	writeScoreFile = fopen(path, "a");
-//	if (writeScoreFile == NULL)
-//	{
-//		perror("Error opening file");
-//	}
-//	else {
-//		fprintf(writeScoreFile, "Player Score: %d\n", Get_Score());
-//		fclose(writeScoreFile);
-//	}
-//}
+
