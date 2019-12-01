@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "../Text/Font.h"
+#include "../Clock/Clock.h"
 
 
 //*********************************************************************************
@@ -13,20 +14,27 @@
 //*********************************************************************************
 
 // For selection
+#define CURSOR_SPEED 1000.0
 static bool keyUp, keyDown, keyLeft, keyRight, keyEnter;
 static int positionChoice;
+static double cursorTimer;
+static bool visible;
 
-// For display
-#define MAX_LETTERS 3
-#define LETTER_X 50
-#define LETTER_Y 100
-
-
-// For writing score to text file
-#define TEXT_PATHNAME "..//RhythmGame//$Resources//TestScore.txt"
-static char *path;
-static FILE *writeScoreFile;
+// For score display
+#define MAX_DIGITS 10
+#define SCORE_X 100
+#define SCORE_Y 80
+#define DIGIT_SPACING 6
 static int gameScore;
+static int digitCount;
+
+sprite digits[MAX_DIGITS];
+
+// For name display
+#define MAX_LETTERS 3
+#define LETTER_X 100
+#define LETTER_Y 100
+#define LETTER_SPACING 8
 
 typedef struct Letter {
 	int choice;
@@ -34,11 +42,17 @@ typedef struct Letter {
 } Letter;
 Letter name[MAX_LETTERS];
 
+// For writing score to text file
+#define TEXT_PATHNAME "..//RhythmGame//$Resources//TestScore.txt"
+static char *path;
+static FILE *writeScoreFile;
 
 // Functions
+void _PositionScore();
 void _PositionName();
 void _ChooseLetter(Letter *selection, int dir);
 void _InputScore(int first, int second, int third, int score);
+void _BlinkingCursor();
 
 //*********************************************************************************
 //									INPUT
@@ -67,6 +81,9 @@ void GameOver_ProcessInput()
 		keyLeft = true;
 		if (positionChoice > 0)
 			positionChoice--;
+
+		visible = true;
+		cursorTimer = CURSOR_SPEED;
 	}
 	else if (!GetAsyncKeyState(VK_LEFT)) keyLeft = false;
 
@@ -76,6 +93,9 @@ void GameOver_ProcessInput()
 		keyRight = true;
 		if (positionChoice < MAX_LETTERS - 1)
 			positionChoice++;
+
+		visible = true;
+		cursorTimer = CURSOR_SPEED;
 	}
 	else if (!GetAsyncKeyState(VK_RIGHT)) keyRight = false;
 
@@ -93,7 +113,7 @@ void GameOver_ProcessInput()
 //*********************************************************************************
 void GameOver_Update()
 {
-
+	_BlinkingCursor();
 }
 
 
@@ -105,6 +125,14 @@ void GameOver_Render()
 	// Render name choice
 	for (int i = 0; i < MAX_LETTERS; i++)
 		Text_Render(&name[i].letterSprite, 0, 0);
+
+	// Render nscore
+	for (int i = 0; i < digitCount; i++)
+		Text_Render(&digits[i], 0, 0);
+
+	if (visible)
+		for (int i = 0, x = LETTER_X-1 + (LETTER_SPACING * positionChoice), y = LETTER_Y + LETTER_SPACING; i <= FONT_SPACING; i++)
+			Console_SetRenderBuffer_CharColor(x + i, y, ' ', WHITE);
 }
 
 
@@ -113,9 +141,9 @@ void GameOver_Render()
 //*********************************************************************************
 void GameOver_EnterState()
 {
-	gameScore = 123456;
-
 	// Initialise gameover
+	gameScore = 123456;
+	_PositionScore();
 	_PositionName();
 
 	path = TEXT_PATHNAME;
@@ -123,7 +151,19 @@ void GameOver_EnterState()
 
 void GameOver_ExitState()
 {
-	
+
+}
+
+void _PositionScore()
+{
+	digitCount = 0;
+	for (int i = 0, digit = gameScore; digit > 0; i++, digit /= 10)
+	{
+		digits[i] = Text_CreateSprite();
+		digits[i] = Font_ConvertToSprite(26+digit % 10);
+		Text_Move(&digits[i], SCORE_X - (DIGIT_SPACING * i), SCORE_Y);
+		digitCount++;
+	}
 }
 
 void _PositionName()
@@ -133,7 +173,7 @@ void _PositionName()
 		name[i].choice = 0;
 		name[i].letterSprite = Text_CreateSprite();
 		name[i].letterSprite = Font_ConvertToSprite(0);
-		Text_Move(&name[i].letterSprite, LETTER_X + (FONT_SPACING * i), LETTER_Y);
+		Text_Move(&name[i].letterSprite, LETTER_X + (LETTER_SPACING * i), LETTER_Y);
 	}
 }
 
@@ -149,7 +189,7 @@ void _ChooseLetter(Letter *selection, int dir)
 		selection->choice = 35;
 
 	name[positionChoice].letterSprite = Font_ConvertToSprite(selection->choice);
-	Text_Move(&name[positionChoice].letterSprite, LETTER_X + (FONT_SPACING * positionChoice), LETTER_Y);
+	Text_Move(&name[positionChoice].letterSprite, LETTER_X + (LETTER_SPACING * positionChoice), LETTER_Y);
 }
 
 //Write Score to File
@@ -160,9 +200,20 @@ void _InputScore(int first, int second, int third, int score)
 	{
 		perror("Error opening file");
 	}
-	else 
+	else
 	{
-		fprintf(writeScoreFile, "%d %d %d %d\n",first,second,third,score);
+		fprintf(writeScoreFile, "%d %d %d %d\n", first, second, third, score);
 		fclose(writeScoreFile);
+	}
+}
+
+void _BlinkingCursor()
+{
+	if (cursorTimer > 0.0)
+		cursorTimer -= Clock_GetDeltaTime();
+	else if (cursorTimer <= 0.0)
+	{
+		cursorTimer = CURSOR_SPEED;
+		visible = !visible;
 	}
 }

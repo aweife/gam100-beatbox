@@ -1,60 +1,60 @@
 0
-www
-w w
-w w
-w w
-www
+wwwww
+w   w
+w   w
+w   w
+wwwww
 1
-ww 
- w 
- w 
- w 
-www
+ ww 
+w w 
+  w 
+  w 
+wwwww
 2
-www
-  w
-www
+wwwww
+    w
+wwwww
 w  
-www
+wwwww
 3
-www
-  w
-www
-  w
-www
+wwwww
+    w
+wwwww
+    w
+wwwww
 4
-w w
-w w
-www
-  w
-  w
+w   w
+w   w
+wwwww
+    w
+    w
 5
-www
+wwwww
 w  
-www
-  w
-www
+wwwww
+    w
+wwwww
 6
-www
+wwwww
 w  
-www
-w w
-www
+wwwww
+w   w
+wwwww
 7
-www
-  w
-  w
-  w
-  w
+wwwww
+    w
+    w
+    w
+    w
 8
-www
-w w
-www
-w w
-www
+wwwww
+w   w
+wwwww
+w   w
+wwwww
 9
-www
-w w
-www
-  w
-  w
+wwwww
+w   w
+wwwww
+    w
+wwwww
