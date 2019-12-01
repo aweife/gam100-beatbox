@@ -156,10 +156,10 @@ void Attack_Render() // put in game.c
 		{
 			for (int j = 0; j < 3; j++)
 				if (plArray[i].projectileSprite.spriteI[j].printchar == 'C')
-					plArray[i].projectileSprite.spriteI[j].printColor = plArray[i].which ?  DARKGREEN : DARKCYAN;
-				else if(plArray[i].projectileSprite.spriteI[j].printchar == 'c')
+					plArray[i].projectileSprite.spriteI[j].printColor = plArray[i].which ? DARKGREEN : DARKCYAN;
+				else if (plArray[i].projectileSprite.spriteI[j].printchar == 'c')
 					plArray[i].projectileSprite.spriteI[j].printColor = plArray[i].which ? GREEN : CYAN;
-				
+
 			Text_Render(&plArray[i].projectileSprite, 0, 0);
 		}
 
@@ -281,7 +281,7 @@ void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, 
 			// Find a projectile that is not in use
 			if (plArray[i].active) continue;
 			plArray[i].position = spawnPosition;
-			plArray[i].position.y -= which*2;
+			plArray[i].position.y -= which * 2;
 			plArray[i].direction = direction;
 			plArray[i].speed = speed;
 			plArray[i].active = true;
@@ -449,10 +449,10 @@ void _CheckProjectileCollision()
 		}
 
 		// Check against enemy 
-		if (plArray[i].position.x >= Enemy_GetEnemy()->startPosition.x &&
-			plArray[i].position.x <= Enemy_GetEnemy()->endPosition.x &&
-			plArray[i].position.y >= Enemy_GetEnemy()->startPosition.y &&
-			plArray[i].position.y <= Enemy_GetEnemy()->endPosition.y)
+		if (plArray[i].position.x > Enemy_GetEnemy()->startPosition.x &&
+			plArray[i].position.x < Enemy_GetEnemy()->endPosition.x &&
+			plArray[i].position.y > Enemy_GetEnemy()->startPosition.y &&
+			plArray[i].position.y < Enemy_GetEnemy()->endPosition.y)
 		{
 			plArray[i].active = false;
 			plArray[i].position.x = -3;
