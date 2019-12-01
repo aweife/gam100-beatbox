@@ -2,13 +2,22 @@
 #include <Windows.h>
 #include "StateMachine.h"
 #include "Game.h"
+#include "../Global.h"
+#include "../Text/TextReader.h"
 #include "../Console/Console.h"
+#include "../Clock/Clock.h"
+#include <stdbool.h>
 
 
 //*********************************************************************************
 //								LOCAL VARIABLES
 //*********************************************************************************
 
+sprite CryingBeatmanState1;
+sprite CryingBeatmanState2;
+
+static double animationDuration = 0.0;
+static bool animate = false;
 
 //*********************************************************************************
 //									INPUT
@@ -26,6 +35,17 @@ void GameOver_ProcessInput()
 //*********************************************************************************
 void GameOver_Update()
 {
+	animationDuration += Clock_GetDeltaTime();
+
+	if (animationDuration >= 0.0 && animationDuration <= 500.0)
+	{
+		animate = false;
+	}
+	else if (animationDuration >= 500.0 && animationDuration <= 1000.0)
+	{
+		animate = true;
+		animationDuration -= 1000.0;
+	}
 }
 
 
@@ -34,15 +54,15 @@ void GameOver_Update()
 //*********************************************************************************
 void GameOver_Render()
 {
-	Console_SetRenderBuffer_String(16, 16, " _____________________________________________________");
-	Console_SetRenderBuffer_String(16, 17, "   _____                         ____                 ");
-	Console_SetRenderBuffer_String(16, 18, "  / ____|                       / __ \\                ");
-	Console_SetRenderBuffer_String(16, 19, " | |  __  __ _ _ __ ___   ___  | |  | |_   _____ _ __ ");
-	Console_SetRenderBuffer_String(16, 20, " | | |_ |/ _` | '_ ` _ \\ / _ \\ | |  | \\ \\ / / _ \\ '__|");
-	Console_SetRenderBuffer_String(16, 21, " | |__| | (_| | | | | | |  __/ | |__| |\\ V /  __/ |   ");
-	Console_SetRenderBuffer_String(16, 22, "  \\_____|\\__,_|_| |_| |_|\\___|  \\____/  \\_/ \\___|_|   ");
-	Console_SetRenderBuffer_String(16, 23, " _____________________________________________________");
-	Console_SetRenderBuffer_String(28, 30, "Press Esc to exit game");
+	if (animate == false)
+	{
+		Text_Render(&CryingBeatmanState1, 0, 0);
+	}
+
+	if (animate == true)
+	{
+		Text_Render(&CryingBeatmanState2, 0, 0);
+	}
 }
 
 
@@ -54,6 +74,13 @@ void GameOver_Render()
 //*********************************************************************************
 void GameOver_EnterState()
 {
+	CryingBeatmanState1 = Text_CreateSprite();
+	Text_Init(&CryingBeatmanState1, "..//RhythmGame//$Resources//CryingBeatman1.txt");
+	Text_Move(&CryingBeatmanState1, (GAME_WIDTH / 4), (GAME_HEIGHT / 2));
+
+	CryingBeatmanState2 = Text_CreateSprite();
+	Text_Init(&CryingBeatmanState2, "..//RhythmGame//$Resources//CryingBeatman2.txt");
+	Text_Move(&CryingBeatmanState2, (GAME_WIDTH / 4), (GAME_HEIGHT / 2));
 }
 
 void GameOver_ExitState()

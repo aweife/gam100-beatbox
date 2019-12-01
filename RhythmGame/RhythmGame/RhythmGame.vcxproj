@@ -34,7 +34,6 @@
     <ClCompile Include="States\MainMenu.c" />
     <ClCompile Include="States\StateMachine.c" />
     <ClCompile Include="Text\TextReader.c" />
-    <ClCompile Include="Tutorial\Tutorial.c" />
     <ClCompile Include="UI\GameUI.c" />
     <ClCompile Include="UI\UI.c" />
   </ItemGroup>
@@ -54,36 +53,34 @@
     <ClInclude Include="States\MainMenu.h" />
     <ClInclude Include="States\StateMachine.h" />
     <ClInclude Include="Text\TextReader.h" />
-    <ClInclude Include="Tutorial\Tutorial.h" />
     <ClInclude Include="UI\GameUI.h" />
     <ClInclude Include="UI\UI.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="$Resources\ArrowKeys2.txt" />
-    <Text Include="$Resources\DashDialogue.txt" />
-    <Text Include="$Resources\EndTutorialDialogue.txt" />
-    <Text Include="$Resources\EnemyDialogue.txt" />
-    <Text Include="$Resources\EnemySpotted2.txt" />
-    <Text Include="$Resources\NotesDialogue.txt" />
-    <Text Include="%24Resources\EnemySpotted1.txt" />
-    <Text Include="$Resources\SpaceKey2.txt" />
-    <Text Include="%24Resources\SpaceKey1.txt" />
-    <Text Include="%24Resources\ArrowKeys1.txt" />
     <Text Include="$Resources\Beatbar.txt" />
-    <Text Include="$Resources\beathead1.txt" />
-    <Text Include="$Resources\beathead2.txt" />
-    <Text Include="$Resources\beatman1.txt" />
-    <Text Include="$Resources\beatman2.txt" />
-    <Text Include="$Resources\Dialogue1_MovePlayer.txt" />
-    <Text Include="$Resources\Dialogue2_DashAttack1.txt" />
-    <Text Include="$Resources\Dialogue2_DontSpam.txt" />
-    <Text Include="$Resources\Dialogue3_DodgeEnemy.txt" />
-    <Text Include="$Resources\Dialogue3_EnemySpotted.txt" />
-    <Text Include="$Resources\Dialogue4_AllSet.txt" />
-    <Text Include="$Resources\Dialogue4_Groove.txt" />
-    <Text Include="$Resources\Enter.txt" />
+    <Text Include="$Resources\CryingBeatman2.txt" />
+    <Text Include="$Resources\DialogueDashAttack.txt" />
+    <Text Include="$Resources\DialogueDodgeEnemy.txt" />
+    <Text Include="$Resources\DialogueEndTutorial.txt" />
+    <Text Include="$Resources\DialogueMovePlayer.txt" />
+    <Text Include="$Resources\DialogueMoveToGame.txt" />
+    <Text Include="$Resources\digipenlogo.txt" />
+    <Text Include="$Resources\eyeball.txt" />
+    <Text Include="$Resources\Eye_Level.txt" />
+    <Text Include="$Resources\Eye_Play.txt" />
+    <Text Include="$Resources\Eye_Quit.txt" />
     <Text Include="$Resources\Health.txt" />
     <Text Include="$Resources\Health2.txt" />
+    <Text Include="$Resources\Intro1.txt" />
+    <Text Include="$Resources\Intro2.txt" />
+    <Text Include="$Resources\laserspawn.txt" />
+    <Text Include="$Resources\notes.txt" />
+    <Text Include="$Resources\numbers.txt" />
+    <Text Include="$Resources\pause.txt" />
+    <Text Include="$Resources\projectile2.txt" />
+    <Text Include="$Resources\Robot.txt" />
+    <Text Include="$Resources\TextLogo2.txt" />
+    <Text Include="%24Resources\laser.txt" />
     <Text Include="$Resources\Intro1.txt" />
     <Text Include="$Resources\Intro2.txt" />
     <Text Include="$Resources\laserspawn.txt" />
@@ -106,9 +103,18 @@
     <Text Include="$Resources\TestLogo.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Media Include="$Resources\Cluster1.wav" />
     <Media Include="$Resources\Kick.wav" />
+    <Media Include="$Resources\KickMenu.wav" />
+    <Media Include="$Resources\Laser1.wav" />
     <Media Include="$Resources\Melody.wav" />
+    <Media Include="$Resources\Melody1.wav" />
+    <Media Include="$Resources\MelodyMenu.wav" />
+    <Media Include="$Resources\Normal1.wav" />
     <Media Include="$Resources\Snare.wav" />
+    <Media Include="$Resources\Snare1.wav" />
+    <Media Include="$Resources\SnareMenu.wav" />
+    <Media Include="$Resources\Warning1.wav" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
