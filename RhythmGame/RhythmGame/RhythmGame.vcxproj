@@ -71,12 +71,6 @@
     <Text Include="$Resources\Eye_Quit.txt" />
     <Text Include="$Resources\Health.txt" />
     <Text Include="$Resources\Health2.txt" />
-    <Text Include="$Resources\Intro1.txt" />
-    <Text Include="$Resources\Intro2.txt" />
-    <Text Include="$Resources\laserspawn.txt" />
-    <Text Include="$Resources\notes.txt" />
-    <Text Include="$Resources\numbers.txt" />
-    <Text Include="$Resources\pause.txt" />
     <Text Include="$Resources\projectile2.txt" />
     <Text Include="$Resources\Robot.txt" />
     <Text Include="$Resources\TextLogo2.txt" />
@@ -89,10 +83,6 @@
     <Text Include="$Resources\pause.txt" />
     <Text Include="$Resources\MainMenu\LeftArrow.txt" />
     <Text Include="$Resources\MainMenu\RightArrow.txt" />
-    <Text Include="$Resources\projectile2.txt" />
-    <Text Include="$Resources\Robot.txt" />
-    <Text Include="$Resources\TextLogo2.txt" />
-    <Text Include="%24Resources\laser.txt" />
     <Text Include="$Resources\Logo.txt" />
     <Text Include="$Resources\Logo2.txt" />
     <Text Include="$Resources\Logo2.txt.txt" />
