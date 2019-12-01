@@ -122,5 +122,27 @@
     <Text Include="$Resources\ArrowKeys1.txt" />
     <Text Include="$Resources\ArrowKeys2.txt" />
     <Text Include="$Resources\CryingBeatman1.txt" />
+    <Text Include="$Resources\GameOver.txt" />
+    <Text Include="$Resources\GameOver_Enter.txt" />
+    <Text Include="$Resources\GetName.txt" />
+    <Text Include="$Resources\GetScore.txt" />
+    <Text Include="$Resources\beathead1.txt" />
+    <Text Include="$Resources\beathead2.txt" />
+    <Text Include="$Resources\beatman1.txt" />
+    <Text Include="$Resources\beatman2.txt" />
+    <Text Include="$Resources\DashDialogue.txt" />
+    <Text Include="$Resources\EndTutorialDialogue.txt" />
+    <Text Include="$Resources\EnemyDialogue.txt" />
+    <Text Include="$Resources\EnemySpotted1.txt" />
+    <Text Include="$Resources\EnemySpotted2.txt" />
+    <Text Include="$Resources\Instruction_Enter1.txt" />
+    <Text Include="$Resources\Instruction_Enter2.txt" />
+    <Text Include="$Resources\Instruction_Header.txt" />
+    <Text Include="$Resources\MoveDialogue.txt" />
+    <Text Include="$Resources\NotesDialogue.txt" />
+    <Text Include="$Resources\Reaper1.txt" />
+    <Text Include="$Resources\Reaper2.txt" />
+    <Text Include="$Resources\SpaceKey1.txt" />
+    <Text Include="$Resources\SpaceKey2.txt" />
   </ItemGroup>
 </Project>
