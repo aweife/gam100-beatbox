@@ -18,6 +18,7 @@ typedef struct Pinfo
 {
 	Phighscore playerscore[10];
 	Pname playername[8];
+	int score;
 
 }Pinfo;
 

@@ -12,58 +12,86 @@
 sprite HS;
 sprite trophyman;
 sprite HSui;
-Pinfo PI[5];
+Pinfo *PI;
+Pinfo Topplayers[5];
+Pinfo Highestscorers;
 FILE* readScoreFile;
 
 Vector2d infopositioning[5][2];
-
+int NameScorey;
 static char buffer[200];
 
 static int charcount;
 static int scorecount;
-
+static int pcount;
 static int nameiterator = 0;
 static int scoreiterator = 0;
 static int HSstate = 0;
 
-//void ReadfromTextHS();
+
+
+void _Init_players()
+{
+
+	pcount = _Determineamountofplayers("..//RhythmGame//$Resources//scores.txt");
+	PI = (Pinfo*)malloc(sizeof(Pinfo) * pcount);
+
+}
+
+
+
 
 void _Init_positions()
 {
-	infopositioning[0][0].x = 125;
-	infopositioning[0][0].y = 75;
-	infopositioning[1][0].x = 125;
-	infopositioning[1][0].y = 85;
-	infopositioning[2][0].x = 125;
-	infopositioning[2][0].y = 95;
-	infopositioning[3][0].x = 125;
-	infopositioning[3][0].y = 105;
-	infopositioning[4][0].x = 125;
-	infopositioning[4][0].y = 115;
+	NameScorey = 75;
+	for (int i = 0; i < 5; i++)
+	{
+		infopositioning[i][0].x = 125;
+		infopositioning[i][0].y = NameScorey;
 
-	infopositioning[0][1].x = 83;
-	infopositioning[0][1].y = 75;
-	infopositioning[1][1].x = 83;
-	infopositioning[1][1].y = 85;
-	infopositioning[2][1].x = 83;
-	infopositioning[2][1].y = 95;
-	infopositioning[3][1].x = 83;
-	infopositioning[3][1].y = 105;
-	infopositioning[4][1].x = 83;
-	infopositioning[4][1].y = 115;
+		infopositioning[i][1].x = 83;
+		infopositioning[i][1].y = NameScorey;
 
-
-
+		NameScorey += 10;
+	}
 
 }
+
+
+int _Determineamountofplayers(char *path)
+{
+	int players = 0;
+
+	readScoreFile = fopen(path, "r");
+	if (readScoreFile == NULL)
+	{
+		perror("Error opening file");
+	}
+	else {
+
+
+		while (!feof(readScoreFile))
+		{
+			if (fgets(buffer, 200, readScoreFile))
+				players++;
+	
+		}
+		fclose(readScoreFile);
+		return players;
+	}
+
+	
+}
+
 
 
 void _Init_Numbers()
 {
 	scoreiterator = 0;
 
-	for (int j = 0;j < 5; j++)
+	for (int j = 0;j < pcount; j++)
 	{
+		PI[j].score = 0;
 		scoreiterator = 0;
 		for (int i = 0; i < 10; i++)
 		{
@@ -82,7 +110,7 @@ void _Init_Name()
 {
 	nameiterator = 0;
 
-	for (int j = 0; j < 5; j++)
+	for (int j = 0; j < pcount; j++)
 	{
 		nameiterator = 0;
 		for (int i = 0; i < 8; i++)
@@ -101,6 +129,21 @@ void _Init_Name()
 	}
 
 }
+
+
+void _determinePscore(Pinfo *p,int count)
+{
+	switch (count)
+	{
+	case 0:break;
+
+	case 1: p->score = (p->playerscore[0].score) - '0';
+
+
+
+	}
+}
+
 
 void _readandstoreinfo(Pinfo *p,char *path)
 {
@@ -144,8 +187,11 @@ void _readandstoreinfo(Pinfo *p,char *path)
 					}
 
 				}
+
+
 				HSstate++;
 			}
+
 			fclose(readScoreFile);
 		}
 
@@ -289,6 +335,15 @@ void _determineprintingscore(Pinfo* p)
 
 }
 
+void _determinetopplayers(Pinfo *p)
+{
+	for (int i = 0; i < pcount; i++)
+	{
+  
+	}
+}
+
+
 
 
 void Highscore_EnterState()
@@ -306,13 +361,14 @@ void Highscore_EnterState()
 	Text_Init(&HSui,"..//RhythmGame//$Resources//scoreinfo.txt");
 	Text_Move(&HSui,40,65);
 	_Init_positions();
+	_Init_players();
 	_Init_Name();
 	_Init_Numbers();
 
 
-     _readandstoreinfo(&PI,"..//RhythmGame//$Resources//scores.txt");
+     _readandstoreinfo(&PI[0],"..//RhythmGame//$Resources//scores.txt");
 
-	 for (int i = 0; i < 5; i++)
+	 for (int i = 0; i < pcount; i++)
 	 {
 		 _determineprintingname(&PI[i]);
 		 _determineprintingscore(&PI[i]);
@@ -341,7 +397,7 @@ void Highscore_Render()
 	Text_Render(&trophyman, 0, 0);
 	Text_Render(&HSui, 0, 0);
 
-	for (int j = 0; j < 5; j++)
+	for (int j = 0; j < pcount; j++)
 	{
 		for (int i = 0; i < 10; i++)
 		{
@@ -357,16 +413,6 @@ void Highscore_Render()
 	}
 	//}
 }
-
-
-////Render Scoreboard
-//void _RenderScoreBoard(int score, int x, int y)
-//{
-//	_itoa_s(score, scoreDisplay, sizeof(scoreDisplay), 10);
-//	Console_SetRenderBuffer_String(x, y, "Score:");
-//	Console_SetRenderBuffer_String(x + 7, y, scoreDisplay);
-//}
-
 //Write Score to File
 //void _InputScore(char* path, int Get_Score())
 //{
@@ -377,37 +423,6 @@ void Highscore_Render()
 //	}
 //	else {
 //		fprintf(writeScoreFile, "Player Score: %d\n", Get_Score());
-//		fclose(writeScoreFile);
-//	}
-//}
-
-//Read from Score File
-//void _OutputScore(char* path, int x, int y)
-//{
-//	readScoreFile = fopen(path, "rt");
-//	if (readScoreFile == NULL)
-//	{
-//		perror("Error opening file");
-//	}
-//	else {
-//		while (!feof(writeScoreFile))
-//		{
-//			if (fgets(buffer, 200, writeScoreFile))
-//			{
-//
-//				for (int i = 0; i <200; i++)
-//				{
-//					if (buffer[i] == '\n')
-//						buffer[i] = ' ';
-//
-//				}
-//
-//				Console_SetRenderBuffer_String(x, y, buffer);
-//				y += 1;
-//				//printf(buffer);
-//			}
-//
-//		}
 //		fclose(writeScoreFile);
 //	}
 //}
