@@ -614,10 +614,10 @@ void _MoveNote()
 
 		nArray[i].startPosition.x = (int)(nArray[i].startPosition.eulerX);
 		nArray[i].startPosition.y = (int)(nArray[i].startPosition.eulerY);
-		//nArray[i].endPosition.x = (int)(nArray[i].startPosition.eulerX + nArray[i].noteSprite.spriteI[nArray[i].noteSprite.charCount - 1].position.x);
-		//nArray[i].endPosition.y = (int)(nArray[i].startPosition.eulerY + nArray[i].noteSprite.spriteI[nArray[i].noteSprite.charCount - 1].position.y);
-		nArray[i].endPosition.x = (int)(nArray[i].startPosition.eulerX + nArray[i].noteSprite.spriteI[40].position.x + 5);
-		nArray[i].endPosition.y = (int)(nArray[i].startPosition.eulerY + nArray[i].noteSprite.spriteI[40].position.y);
+		nArray[i].endPosition.x = (int)(nArray[i].startPosition.eulerX + nArray[i].noteSprite.spriteI[nArray[i].noteSprite.charCount - 1].position.x + 5);
+		nArray[i].endPosition.y = (int)(nArray[i].startPosition.eulerY + nArray[i].noteSprite.spriteI[nArray[i].noteSprite.charCount - 1].position.y);
+		//nArray[i].endPosition.x = (int)(nArray[i].startPosition.eulerX + nArray[i].noteSprite.spriteI[40].position.x + 5);
+		//Array[i].endPosition.y = (int)(nArray[i].startPosition.eulerY + nArray[i].noteSprite.spriteI[40].position.y);
 		Text_Move(&nArray[i].noteSprite, nArray[i].startPosition.x, nArray[i].startPosition.y);
 	}
 }
