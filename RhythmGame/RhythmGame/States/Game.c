@@ -193,10 +193,7 @@ void _CheckGameEnd()
 		exitTimer = 0.0;
 
 	if (exitTimer >= DELAY_AFTER_GAME_ENDS)
-	{
-		// TODO: CHANGE TO GAMEOVER WHEN DONE
-		StateMachine_ChangeState(State_MainMenu);
-	}
+		StateMachine_ChangeState(State_GameOver);
 }
 
 void _PauseGame(bool pause)

@@ -24,6 +24,7 @@
     <ClCompile Include="Clock\Clock.cpp" />
     <ClCompile Include="Console\Console.c" />
     <ClCompile Include="Enemy\Enemy.c" />
+    <ClCompile Include="States\Highscore.c" />
     <ClCompile Include="States\Logo.c" />
     <ClCompile Include="Main.c" />
     <ClCompile Include="Map\Map.c" />
@@ -33,6 +34,7 @@
     <ClCompile Include="States\GameOver.c" />
     <ClCompile Include="States\MainMenu.c" />
     <ClCompile Include="States\StateMachine.c" />
+    <ClCompile Include="Text\Font.c" />
     <ClCompile Include="Text\TextReader.c" />
     <ClCompile Include="Tutorial\Tutorial.c" />
     <ClCompile Include="UI\GameUI.c" />
@@ -45,6 +47,7 @@
     <ClInclude Include="Console\Console.h" />
     <ClInclude Include="Enemy\Enemy.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="States\Highscore.h" />
     <ClInclude Include="States\Logo.h" />
     <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Player\Player.h" />
@@ -53,12 +56,16 @@
     <ClInclude Include="States\GameOver.h" />
     <ClInclude Include="States\MainMenu.h" />
     <ClInclude Include="States\StateMachine.h" />
+    <ClInclude Include="Text\Font.h" />
     <ClInclude Include="Text\TextReader.h" />
     <ClInclude Include="Tutorial\Tutorial.h" />
     <ClInclude Include="UI\GameUI.h" />
     <ClInclude Include="UI\UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="$Resources\Alphabets.txt" />
+    <Text Include="$Resources\Alphabets2.txt" />
+    <Text Include="$Resources\Alphabets3.txt" />
     <Text Include="$Resources\ArrowKeys1.txt" />
     <Text Include="$Resources\ArrowKeys2.txt" />
     <Text Include="$Resources\Beatbar.txt" />
@@ -66,6 +73,7 @@
     <Text Include="$Resources\beathead2.txt" />
     <Text Include="$Resources\beatman1.txt" />
     <Text Include="$Resources\beatman2.txt" />
+    <Text Include="$Resources\beatman3.txt" />
     <Text Include="$Resources\Credit\Credit2_COPYRIGHT.txt" />
     <Text Include="$Resources\Credit\Credit2_PRESENT.txt" />
     <Text Include="$Resources\Credit\Credit2_SCHOOL.txt" />
@@ -102,6 +110,8 @@
     <Text Include="$Resources\GetScore.txt" />
     <Text Include="$Resources\Health.txt" />
     <Text Include="$Resources\Health2.txt" />
+    <Text Include="$Resources\Highscore.txt" />
+    <Text Include="$Resources\Highscore2.txt" />
     <Text Include="$Resources\Instruction_Enter1.txt" />
     <Text Include="$Resources\Instruction_Enter2.txt" />
     <Text Include="$Resources\Instruction_Header.txt" />
@@ -128,9 +138,16 @@
     <Text Include="$Resources\Reaper1.txt" />
     <Text Include="$Resources\Reaper2.txt" />
     <Text Include="$Resources\Robot.txt" />
+    <Text Include="$Resources\scoreinfo.txt" />
     <Text Include="$Resources\SpaceKey1.txt" />
     <Text Include="$Resources\SpaceKey2.txt" />
     <Text Include="$Resources\TextLogo2.txt" />
+    <Text Include="$Resources\trophy.txt" />
+    <Text Include="$Resources\trophy2.txt" />
+    <Text Include="$Resources\trophyman1.txt" />
+    <Text Include="$Resources\trophyman2.txt" />
+    <Text Include="$Resources\trophyman3.txt" />
+    <Text Include="$Resources\trophyman4.txt" />
     <Text Include="%24Resources\laser.txt" />
     <Text Include="$Resources\Intro1.txt" />
     <Text Include="$Resources\Intro2.txt" />

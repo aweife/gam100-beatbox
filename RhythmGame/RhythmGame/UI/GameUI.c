@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "../Text/TextReader.h"
 #include "../Global.h"
+#include "../States/GameOver.h"
 
 // Hearts
 #define HEART_SPRITE_WIDTH 5
@@ -15,7 +16,7 @@
 
 // Score
 #define MAX_SCORE_DIGITS 10
-#define NUMBER_SPACING 4
+#define NUMBER_SPACING 6
 #define SCORE_ROWS 2 
 #define SCORE_HEIGHT 10
 
@@ -74,8 +75,11 @@ void GameUI_DecreaseHealth(int damage, int which)
 {
 	if (uiMode == TWOPLAYER)
 	{
-		if (health[!which].count <= 1)
+		if (health[!which].count <= 1) 
+		{
+			GameOver_SetScore(score[0].count, NOTSOLO, score[1].count);
 			StateMachine_ChangeState(State_GameOver);
+		}
 		else
 			health[!which].count -= damage;
 	}
@@ -84,7 +88,10 @@ void GameUI_DecreaseHealth(int damage, int which)
 		if (health[which + 1].count <= 1)
 		{
 			if (health[which].count <= 1)
+			{
+				GameOver_SetScore(score[0].count, SOLO, 0);
 				StateMachine_ChangeState(State_GameOver);
+			}
 			else health[which].count -= damage;
 		}
 		else

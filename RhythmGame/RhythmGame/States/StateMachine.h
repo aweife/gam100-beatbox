@@ -9,6 +9,7 @@ typedef enum GameState
 	State_Game,
 	State_GameOver,
 	State_Pause,
+	State_Highscore,
 }GameState;
 
 extern void StateMachine_Start();
