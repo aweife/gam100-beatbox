@@ -241,7 +241,7 @@ void GameOver_EnterState()
 
 	Enter = Text_CreateSprite();
 	Text_Init(&Enter, "..//RhythmGame//$Resources//GameOver_Enter.txt");
-	Text_Move(&Enter, (GAME_WIDTH / 2) - CENTER_OFFSETX - 32, (GAME_HEIGHT / 4) + CENTER_OFFSETY + 85);
+	Text_Move(&Enter, (GAME_WIDTH / 2) - CENTER_OFFSETX - 35, (GAME_HEIGHT / 4) + CENTER_OFFSETY + 85);
 
 	// Init score and name
 	_PositionScore();
