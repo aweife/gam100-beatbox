@@ -84,7 +84,7 @@ void GameUI_DecreaseHealth(int damage, int which)
 	{
 		if (health[which + 1].count <= 1)
 		{
-			if (health[which].count <= 1)
+			if (health[which].count < 1)
 				StateMachine_ChangeState(State_GameOver);
 			else health[which].count -= damage;
 		}

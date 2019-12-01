@@ -1,21 +1,22 @@
-
 #include "MainMenu.h"
 #include <Windows.h>
 #include <stdlib.h>
-#include<stdio.h>
+#include <stdio.h>
 #include "../Text/TextReader.h"
 #include "StateMachine.h"
-#include"Highscore.h"
+#include "Highscore.h"
 #include "Game.h"
-#include"../UI/UI.h"
-#include"../Text/font.h"
+#include "../UI/UI.h"
+#include "../Text/font.h"
+#include <stdbool.h>
+
 sprite HS;
 sprite trophyman;
 sprite HSui;
 Pinfo *PI;
 Pinfo Topplayers[5];
 Pinfo Highestscorers;
-FILE* readScoreFile;
+FILE *readScoreFile;
 
 Vector2d infopositioning[5][2];
 int NameScorey;
@@ -32,12 +33,9 @@ void _Init_players()
 {
 
 	pcount = _Determineamountofplayers("..//RhythmGame//$Resources//scores.txt");
-	PI = (Pinfo*)malloc(sizeof(Pinfo) * pcount);
+	PI = (Pinfo *)malloc(sizeof(Pinfo) * pcount);
 
 }
-
-
-
 
 void _Init_positions()
 {
@@ -55,12 +53,11 @@ void _Init_positions()
 
 }
 
-
 int _Determineamountofplayers(char *path)
 {
 	int players = 0;
 
-	  fopen_s(&readScoreFile,path, "r");
+	fopen_s(&readScoreFile, path, "r");
 	if (readScoreFile == NULL)
 	{
 		perror("Error opening file");
@@ -72,22 +69,20 @@ int _Determineamountofplayers(char *path)
 		{
 			if (fgets(buffer, 200, readScoreFile))
 				players++;
-	
+
 		}
 		fclose(readScoreFile);
 		return players;
 	}
 
-	
+
 }
-
-
 
 void _Init_Numbers()
 {
 	scoreiterator = 0;
 
-	for (int j = 0;j < pcount; j++)
+	for (int j = 0; j < pcount; j++)
 	{
 		PI[j].score = 0;
 		scoreiterator = 0;
@@ -101,7 +96,7 @@ void _Init_Numbers()
 		}
 	}
 
-		for (int j = 0;j < 5; j++)
+	for (int j = 0; j < 5; j++)
 	{
 		PI[j].score = 0;
 		scoreiterator = 0;
@@ -121,7 +116,7 @@ void _Move_placements()
 
 	for (int j = 0; j < 5; j++)
 	{
-		
+
 		nameiterator = 0;
 		for (int i = 0; i < 3; i++)
 		{
@@ -141,7 +136,6 @@ void _Move_placements()
 
 	}
 }
-
 
 void _Init_Name()
 {
@@ -175,54 +169,50 @@ void _Init_Name()
 
 }
 
-
-void _readandstoreinfo(Pinfo *p,char *path)
+void _readandstoreinfo(Pinfo *p, char *path)
 {
 	int letter1 = 0;
 	int letter2 = 0;
 	int letter3 = 0;
 	int score = 0;
 
-	
+
 	HSstate = 0;
 	charcount = 0;
 	scorecount = 0;
-	fopen_s(&readScoreFile,path, "r");
-		if (readScoreFile == NULL)
+	fopen_s(&readScoreFile, path, "r");
+	if (readScoreFile == NULL)
+	{
+		perror("Error opening file");
+	}
+	else {
+
+
+		while (!feof(readScoreFile))
 		{
-			perror("Error opening file");
-		}
-		else {
+			fscanf_s(readScoreFile, "%d %d %d %d", &letter1, &letter2, &letter3, &(p + HSstate)->score);
 
+			(p + HSstate)->playername[0].printsprite = Font_ConvertToSprite(letter1);
+			(p + HSstate)->playername[0].visible = 1;
+			(p + HSstate)->playername[1].printsprite = Font_ConvertToSprite(letter2);
+			(p + HSstate)->playername[1].visible = 1;
+			(p + HSstate)->playername[2].printsprite = Font_ConvertToSprite(letter3);
+			(p + HSstate)->playername[2].visible = 1;
 
-			while (!feof(readScoreFile))
+			for (int i = 0, digit = (p + HSstate)->score; digit > 0; i++, digit /= 10)
 			{
-				fscanf_s(readScoreFile, "%d %d %d %d",&letter1,&letter2,&letter3,&(p+HSstate)->score);
-
-				(p + HSstate)->playername[0].printsprite = Font_ConvertToSprite(letter1);
-				(p + HSstate)->playername[0].visible = 1;
-				(p + HSstate)->playername[1].printsprite = Font_ConvertToSprite(letter2);
-				(p + HSstate)->playername[1].visible = 1;
-				(p + HSstate)->playername[2].printsprite = Font_ConvertToSprite(letter3);
-				(p + HSstate)->playername[2].visible = 1;
-
-				for (int i = 0, digit = (p + HSstate)->score; digit > 0; i++, digit /= 10)
-				{
-					(p + HSstate)->playerscore[i].printsprite = Font_ConvertToSprite(26 + digit % 10);
-					(p + HSstate)->playerscore[i].visible = 1;
-				}
-
-
-				HSstate++;
+				(p + HSstate)->playerscore[i].printsprite = Font_ConvertToSprite(26 + digit % 10);
+				(p + HSstate)->playerscore[i].visible = 1;
 			}
 
-			fclose(readScoreFile);
+
+			HSstate++;
 		}
 
+		fclose(readScoreFile);
+	}
+
 }
-
-
-
 
 void _determinetopplayers()
 {
@@ -245,7 +235,7 @@ void _determinetopplayers()
 				Topplayers[Pfound] = PI[i];
 				PI[i].score = 0;
 			}
-	
+
 		}
 
 		Pfound++;
@@ -254,34 +244,30 @@ void _determinetopplayers()
 
 }
 
-
-
-
 void Highscore_EnterState()
 {
 
 	HS = Text_CreateSprite();
 	Text_Init(&HS, "..//RhythmGame//$Resources//Highscore2.txt");
-	Text_Move(&HS,5, 55);
+	Text_Move(&HS, 5, 55);
 
 	trophyman = Text_CreateSprite();
 	Text_Init(&trophyman, "..//RhythmGame//$Resources//trophyman1.txt");
-	Text_Move(&trophyman,80,10);
-	
+	Text_Move(&trophyman, 80, 10);
+
 	HSui = Text_CreateSprite();
-	Text_Init(&HSui,"..//RhythmGame//$Resources//scoreinfo.txt");
-	Text_Move(&HSui,40,65);
+	Text_Init(&HSui, "..//RhythmGame//$Resources//scoreinfo.txt");
+	Text_Move(&HSui, 40, 65);
 	_Init_positions();
 	_Init_players();
-	_Init_Name();
-	_Init_Numbers();
+	//_Init_Name();
+	//_Init_Numbers();
 
 
-     _readandstoreinfo(&PI[0],"..//RhythmGame//$Resources//scores.txt");
+	_readandstoreinfo(&PI[0], "..//RhythmGame//$Resources//scores.txt");
 
-	 _determinetopplayers();
-	 _Move_placements();
-
+	_determinetopplayers();
+	_Move_placements();
 }
 
 void Highscore_ExitState()
@@ -291,9 +277,18 @@ void Highscore_ExitState()
 	Text_Cleanup(&HSui);
 }
 
+bool keyDown;
 void Highscore_ProcessInput()
 {
-
+	if (GetAsyncKeyState(VK_ESCAPE) || GetAsyncKeyState(VK_RETURN) || GetAsyncKeyState(VK_UP) ||
+		GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VK_RIGHT))
+	{
+		if (!keyDown)
+			StateMachine_ChangeState(State_MainMenu);
+		keyDown = true;
+	}
+	else
+		keyDown = false;
 }
 
 void Highscore_Update()
@@ -303,7 +298,7 @@ void Highscore_Update()
 
 void Highscore_Render()
 {
-	Text_Render(&HS,0,0);
+	Text_Render(&HS, 0, 0);
 	Text_Render(&trophyman, 0, 0);
 	Text_Render(&HSui, 0, 0);
 

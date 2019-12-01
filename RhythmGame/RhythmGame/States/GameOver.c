@@ -241,18 +241,12 @@ void GameOver_EnterState()
 	_PositionName();
 
 	path = TEXT_PATHNAME;
-	
-	Audio_Load(MAINMENU);
-	Audio_PlayBGM(MAINMENU);
 }
 
 void GameOver_ExitState()
 {
 	// Reset score
 	score[1].gameScore = score[0].gameScore = 0;
-
-	// Cleanup audio
-	Audio_Unload();
 
 	// Cleanup sprites
 	Text_Cleanup(&CryingBeatmanState1);

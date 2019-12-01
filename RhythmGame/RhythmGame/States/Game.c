@@ -56,6 +56,7 @@ void Game_EnterState(GAMETYPE type)
 	GameUI_Init(type);
 
 	// Play bgm for audio
+	Audio_Unload();
 	Audio_Load(STAGEONE);
 	Audio_PlayBGM(STAGEONE);
 
@@ -75,6 +76,8 @@ void Game_ExitState()
 	_PauseGame(false);
 	Attack_Cleanup();
 	Audio_Unload();
+	Audio_Load(MAINMENU);
+	Audio_PlayBGM(MAINMENU);
 }
 
 void Game_ProcessInput()

@@ -181,16 +181,10 @@ void MainMenu_EnterState()
 	Text_Move(&upArrow, 83, 40);
 	Text_Move(&downArrow, 83, 125);
 	Text_Move(&title, 30, 10);
-
-	Audio_Load(MAINMENU);
-	Audio_PlayBGM(MAINMENU);
 }
 
 void MainMenu_ExitState()
 {
-	if (choice != HISCORE)
-		Audio_Unload();
-
 	Sprite_Unload();
 }
 

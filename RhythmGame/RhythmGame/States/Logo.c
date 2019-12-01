@@ -2,6 +2,7 @@
 #include "Logo.h"
 #include "StateMachine.h"
 #include "../Clock/Clock.h"
+#include "../Audio/AudioEngine.h"
 
 static double dTimer;
 static double stateTimer = 4000.0;
@@ -19,6 +20,9 @@ extern void Logo_ExitState()
 {
 	Text_Cleanup(&Logo.LogoSprite1);
 	Text_Cleanup(&Logo.LogoSprite2);
+
+	Audio_Load(MAINMENU);
+	Audio_PlayBGM(MAINMENU);
 }
 
 extern void Logo_ProcessInput()

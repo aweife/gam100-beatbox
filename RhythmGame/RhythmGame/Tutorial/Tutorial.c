@@ -124,6 +124,9 @@ void Tutorial_ProcessInput()
 		Player_Init(TUT);
 		Map_Init(0);
 		Attack_Init();
+		Audio_Unload();
+		Audio_Load(TUTORIAL);
+		Audio_PlayBGM(TUTORIAL);
 	}
 	else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
 		// Changes to Main Game
@@ -158,12 +161,7 @@ void Tutorial_Update()
 	if (tutorialDuration >= 0.0 && tutorialDuration <= 5000.0)
 	{
 		if (!startTutorial)
-		{
-			Audio_Unload();
-			Audio_Load(TUTORIAL);
-			Audio_PlayBGM(TUTORIAL);
 			startTutorial = true;
-		}
 	}
 	// Moves on after 5 seconds
 	else if (tutorialDuration > 5000.0 && tutorialDuration <= 10000.0) {
@@ -279,9 +277,6 @@ void Tutorial_EnterState()
 
 void Tutorial_ExitState()
 {
-	//Disable Audio
-	Audio_Unload();
-
 	//FREE ALL THE SPRITES
 	Attack_Cleanup();
 	Text_Cleanup(&Instruction); 
@@ -295,7 +290,6 @@ void Tutorial_ExitState()
 	Text_Cleanup(&leftBeatmanState2);
 	Text_Cleanup(&rightBeatmanState2);
 	Text_Cleanup(&EnterState1);
-	Text_Cleanup(&EnterState2);
 	Text_Cleanup(&EnterState2);
 	Text_Cleanup(&BeatheadState1);
 	Text_Cleanup(&BeatheadState2);
