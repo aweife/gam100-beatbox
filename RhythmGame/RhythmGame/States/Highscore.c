@@ -287,6 +287,8 @@ void Highscore_EnterState()
 void Highscore_ExitState()
 {
 	Text_Cleanup(&HS);
+	Text_Cleanup(&trophyman);
+	Text_Cleanup(&HSui);
 }
 
 void Highscore_ProcessInput()
