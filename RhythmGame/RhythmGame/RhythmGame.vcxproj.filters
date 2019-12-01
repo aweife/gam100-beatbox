@@ -85,5 +85,11 @@
     <Text Include="$Resources\notes.txt" />
     <Text Include="$Resources\pause.txt" />
     <Text Include="$Resources\CryingBeatman2.txt" />
+    <Text Include="$Resources\GameOver.txt" />
+    <Text Include="%24Resources\Reaper1.txt" />
+    <Text Include="$Resources\Reaper2.txt" />
+    <Text Include="$Resources\GetScore.txt" />
+    <Text Include="$Resources\GetName.txt" />
+    <Text Include="$Resources\GameOver_Enter.txt" />
   </ItemGroup>
 </Project>

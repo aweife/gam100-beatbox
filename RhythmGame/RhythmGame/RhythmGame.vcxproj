@@ -69,6 +69,10 @@
     <Text Include="$Resources\Eye_Level.txt" />
     <Text Include="$Resources\Eye_Play.txt" />
     <Text Include="$Resources\Eye_Quit.txt" />
+    <Text Include="$Resources\GameOver.txt" />
+    <Text Include="$Resources\GameOver_Enter.txt" />
+    <Text Include="$Resources\GetName.txt" />
+    <Text Include="$Resources\GetScore.txt" />
     <Text Include="$Resources\Health.txt" />
     <Text Include="$Resources\Health2.txt" />
     <Text Include="$Resources\Intro1.txt" />
@@ -78,6 +82,8 @@
     <Text Include="$Resources\numbers.txt" />
     <Text Include="$Resources\pause.txt" />
     <Text Include="$Resources\projectile2.txt" />
+    <Text Include="$Resources\Reaper2.txt" />
+    <Text Include="%24Resources\Reaper1.txt" />
     <Text Include="$Resources\Robot.txt" />
     <Text Include="$Resources\TextLogo2.txt" />
     <Text Include="%24Resources\laser.txt" />
