@@ -10,7 +10,7 @@
 
 FILE *pFile;
 sprite skullenemy;
-char Charline[150] = { 0 };
+char Charline[200] = { 0 };
 int length = 0;
 int charcount = 0;
 int newcharcount = 0;
@@ -47,7 +47,7 @@ int _CountCharsArray(char *path,int state)
 	jump = 0;
 	totalcharcount = 0;
 
-	for (int i = 0; i < 150; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		Charline[i] = 'n';
 	}
@@ -64,9 +64,9 @@ int _CountCharsArray(char *path,int state)
 		{
 			charcount = 0;
 
-			fgets(Charline, 150, pFile);
+			fgets(Charline, 200, pFile);
 
-			for (int i = 0; i < 150; i++)
+			for (int i = 0; i < 200; i++)
 			{
 				if (isdigit(Charline[i]) && (Charline[i] - '0') == state)
 				{
@@ -90,7 +90,7 @@ int _CountCharsArray(char *path,int state)
 
 			if (rendertrue == 1)
 			{
-				for (int i = 0; i < 150; i++)
+				for (int i = 0; i < 200; i++)
 				{
 					if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n' && Charline[i] != ' ')
 					{
@@ -129,9 +129,9 @@ int _CountChars(char * path)
 		{
 			charcount = 0;
 
-			fgets(Charline, 150, pFile);
+			fgets(Charline, 200, pFile);
 
-			for (int i = 0; i < 150; i++)
+			for (int i = 0; i < 200; i++)
 			{
 				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != ' ')
 				{
@@ -255,7 +255,7 @@ void _Readandstoretext(sprite *s, const char *path)
 	Xoffset = 0;
 	currentyposition = 0;
 
-	for (int i = 0; i < 150; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		Charline[i] = '0';
 	}
@@ -271,12 +271,12 @@ void _Readandstoretext(sprite *s, const char *path)
 			Xoffset = 0;
 			iteration = 0;
 
-			fgets(Charline, 150, pFile);
+			fgets(Charline, 200, pFile);
 
 
 
 
-			for (int i = 0; i < 150; i++)
+			for (int i = 0; i < 200; i++)
 			{
 				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0')
 				{
@@ -360,7 +360,7 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 	Xoffset = 0;
 	currentyposition = 0;
 
-	for (int i = 0; i < 150; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		Charline[i] = 'n';
 	}
@@ -377,9 +377,9 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 			Xoffset = 0;
 			iteration = 0;
 
-			fgets(Charline, 150, pFile);
+			fgets(Charline, 200, pFile);
 
-			for (int i = 0; i < 150; i++)
+			for (int i = 0; i < 200; i++)
 			{
 
 
@@ -405,7 +405,7 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 
 			if (rendertrue == 1)
 			{
-				for (int i = 0; i < 150; i++)
+				for (int i = 0; i < 200; i++)
 				{
 					if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n')
 					{

@@ -331,6 +331,7 @@ void _confirmChoice()
 	case LEVEL_LEVEL1:
 		StateMachine_ChangeMode(ONEPLAYER);
 		StateMachine_ChangeState(State_Game);
+		break;
 	case QUIT:
 		Game_Exit();
 		break;
