@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_DEPRECATE
 
 #include <stdio.h>
 #include<stdlib.h>
@@ -52,7 +51,7 @@ int _CountCharsArray(char *path,int state)
 		Charline[i] = 'n';
 	}
 
-	pFile = fopen(path, "r");
+	 fopen_s(&pFile,path, "r");
 	if (pFile == NULL)
 	{
 		perror("Error opening file");
@@ -92,7 +91,7 @@ int _CountCharsArray(char *path,int state)
 			{
 				for (int i = 0; i < 200; i++)
 				{
-					if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n' && Charline[i] != ' ')
+					if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n')
 					{
 
 						charcount++;
@@ -117,7 +116,7 @@ int _CountChars(char * path)
 {
 	totalcharcount = 0;
 
-	pFile = fopen(path, "r");
+	 fopen_s(&pFile,path, "r");
 	if (pFile == NULL)
 	{
 		perror("Error opening file");
@@ -133,7 +132,7 @@ int _CountChars(char * path)
 
 			for (int i = 0; i < 200; i++)
 			{
-				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != ' ')
+				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0')
 				{
 				
 					charcount++;
@@ -257,10 +256,10 @@ void _Readandstoretext(sprite *s, const char *path)
 
 	for (int i = 0; i < 200; i++)
 	{
-		Charline[i] = '0';
+		Charline[i] = 'n';
 	}
 
-	pFile = fopen(path, "r");
+	 fopen_s(&pFile,path, "r");
 	if (pFile == NULL)
 		perror("Error opening file");
 	else
@@ -278,14 +277,14 @@ void _Readandstoretext(sprite *s, const char *path)
 
 			for (int i = 0; i < 200; i++)
 			{
-				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0')
+				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n')
 				{
 
 					charcount++;
 				}
 				else
 				{
-					Charline[i] = '0';
+					Charline[i] = 'n';
 				}
 
 
@@ -293,7 +292,7 @@ void _Readandstoretext(sprite *s, const char *path)
 
 			for (int i = 0; i < charcount; i++)
 			{
-				if (Charline[i] != ' ' && Charline[i] != '0')
+				if (Charline[i] != ' ' && Charline[i] != '0' && Charline[i] != 'n')
 				{
 					s->spriteI[newcharcount + iteration].position.x = Xoffset;
 					s->spriteI[newcharcount + iteration].position.y = currentyposition;
@@ -365,7 +364,7 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 		Charline[i] = 'n';
 	}
 
-	pFile = fopen(path, "r");
+	 fopen_s(&pFile,path, "r");
 	if (pFile == NULL) perror("Error opening file");
 	else
 	{
@@ -373,18 +372,26 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 
 		while (!feof(pFile))
 		{
+
+		
+
+
 			charcount = 0;
 			Xoffset = 0;
 			iteration = 0;
 
 			fgets(Charline, 200, pFile);
 
+
+
+
 			for (int i = 0; i < 200; i++)
 			{
 
 
-				if (isdigit(Charline[i]) && (Charline[i] - '0') == state)
+				if (isdigit(Charline[0]) && (Charline[0] - '0') == state)
 				{
+
 					rendertrue = 1;
 					jump = 1;
 					break;

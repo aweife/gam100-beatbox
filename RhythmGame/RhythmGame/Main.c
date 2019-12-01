@@ -5,6 +5,7 @@
 #include "Clock/Clock.h"
 
 #include "Audio/AudioEngine.h"
+#include "Text/Font.h"
 #include <stdio.h>
 
 #define DEBUG_AUDIO 0
@@ -17,6 +18,7 @@ int main(void)
 
 	// Create audio engine once
 	Audio_Create();
+	Font_Create();
 
 	float timer = 10000.0f;
 
@@ -30,7 +32,7 @@ int main(void)
 	{
 		Console_SetSquareFont();
 		Console_SetWindowedMode(GAME_WIDTH, GAME_HEIGHT, true);
-		StateMachine_ChangeState(State_MainMenu);
+		StateMachine_ChangeState(State_GameOver);
 	}
 
 	// MAIN loop
