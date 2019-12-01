@@ -11,14 +11,11 @@
 #include "../Text/Font.h"
 #include "../Clock/Clock.h"
 
-#define CENTER_OFFSETX 20
-#define CENTER_OFFSETY 10
-
 //*********************************************************************************
 //								LOCAL VARIABLES
 //*********************************************************************************
 
-//Family of Sprites
+// Family of Sprites
 sprite CryingBeatmanState1;
 sprite CryingBeatmanState2;
 sprite ReaperState1;
@@ -27,8 +24,17 @@ sprite GameOver;
 sprite GetScore;
 sprite GetName;
 sprite Enter;
+
+// Animation
+#define CENTER_OFFSETX 20
+#define CENTER_OFFSETY 10
+static double animationDuration = 0.0;
+static bool animate = false;
+static bool RETURN_DOWN = false;
+
+
 // For selection
-#define CURSOR_SPEED 1000.0
+#define CURSOR_SPEED 600.0
 static bool keyUp, keyDown, keyLeft, keyRight, keyEnter;
 static int positionChoice;
 static double cursorTimer;
@@ -36,8 +42,8 @@ static bool visible;
 
 // For score display
 #define MAX_DIGITS 10
-#define SCORE_X 100
-#define SCORE_Y 80
+#define SCORE_X 140
+#define SCORE_Y 94
 #define DIGIT_SPACING 6
 static int gameScore;
 static int digitCount;
@@ -46,8 +52,8 @@ sprite digits[MAX_DIGITS];
 
 // For name display
 #define MAX_LETTERS 3
-#define LETTER_X 100
-#define LETTER_Y 100
+#define LETTER_X 110
+#define LETTER_Y 114
 #define LETTER_SPACING 8
 
 typedef struct Letter {
@@ -62,16 +68,15 @@ static char *path;
 static FILE *writeScoreFile;
 
 // Functions
+// Animate Crying Beatman
+void _RenderCryingBeatmanAnimation();
+// Animate Reaper
+void _RenderReaperAnimation();
 void _PositionScore();
 void _PositionName();
 void _ChooseLetter(Letter *selection, int dir);
 void _InputScore(int first, int second, int third, int score);
 void _BlinkingCursor();
-
-//Static Variables
-static double animationDuration = 0.0;
-static bool animate = false;
-static bool RETURN_DOWN = false;
 
 //*********************************************************************************
 //									INPUT
@@ -125,7 +130,7 @@ void GameOver_ProcessInput()
 		_InputScore(name[0].choice, name[1].choice, name[2].choice, gameScore);
 	}
 	else if (!GetAsyncKeyState(VK_RETURN)) keyEnter = false;
-}
+
 
 	if (GetAsyncKeyState(VK_ESCAPE) && !RETURN_DOWN)
 	{
@@ -154,23 +159,37 @@ void GameOver_Update()
 		animate = true;
 		animationDuration -= 1000.0;
 	}
-}
+
 	_BlinkingCursor();
 }
+	
 
 //*********************************************************************************
 //									RENDER
 //*********************************************************************************
 void GameOver_Render()
 {
-	
 	Text_Render(&GameOver, 0, 0);
 	_RenderCryingBeatmanAnimation();
 	_RenderReaperAnimation();
 	Text_Render(&GetScore, 0, 0);
 	Text_Render(&GetName, 0, 0);
 	Text_Render(&Enter, 0, 0);
+
+	// Render cursor
+	if (visible)
+		for (int i = 0, x = LETTER_X - 1 + (LETTER_SPACING * positionChoice), y = LETTER_Y + LETTER_SPACING; i <= FONT_SPACING; i++)
+			Console_SetRenderBuffer_CharColor(x + i, y, ' ', WHITE);
+
+	// Render name choice
+	for (int i = 0; i < MAX_LETTERS; i++)
+		Text_Render(&name[i].letterSprite, 0, 0);
+
+	// Render nscore
+	for (int i = 0; i < digitCount; i++)
+		Text_Render(&digits[i], 0, 0);
 }
+
 
 //*********************************************************************************
 //								STATE MANAGEMENT
@@ -200,13 +219,7 @@ void GameOver_EnterState()
 	GetScore = Text_CreateSprite();
 	Text_Init(&GetScore, "..//RhythmGame//$Resources//GetScore.txt");
 	Text_Move(&GetScore, (GAME_WIDTH / 2) - CENTER_OFFSETX - 75, (GAME_HEIGHT / 4) + CENTER_OFFSETY + 42);
-	// Render name choice
-	for (int i = 0; i < MAX_LETTERS; i++)
-		Text_Render(&name[i].letterSprite, 0, 0);
-
-	// Render nscore
-	for (int i = 0; i < digitCount; i++)
-		Text_Render(&digits[i], 0, 0);
+	
 	GetName = Text_CreateSprite();
 	Text_Init(&GetName, "..//RhythmGame//$Resources//GetName.txt");
 	Text_Move(&GetName, (GAME_WIDTH / 2) - CENTER_OFFSETX - 59, (GAME_HEIGHT / 4) + CENTER_OFFSETY + 62);
@@ -214,11 +227,15 @@ void GameOver_EnterState()
 	Enter = Text_CreateSprite();
 	Text_Init(&Enter, "..//RhythmGame//$Resources//GameOver_Enter.txt");
 	Text_Move(&Enter, (GAME_WIDTH / 2) - CENTER_OFFSETX - 32, (GAME_HEIGHT / 4) + CENTER_OFFSETY + 85);
+
+	// Init score and name
+	gameScore = 123456;
+	_PositionScore();
+	_PositionName();
+
+	path = TEXT_PATHNAME;
 }
-	if (visible)
-		for (int i = 0, x = LETTER_X-1 + (LETTER_SPACING * positionChoice), y = LETTER_Y + LETTER_SPACING; i <= FONT_SPACING; i++)
-			Console_SetRenderBuffer_CharColor(x + i, y, ' ', WHITE);
-}
+	
 
 void GameOver_ExitState()
 {
@@ -247,18 +264,11 @@ void _RenderReaperAnimation()
 	{
 		Text_Render(&ReaperState1, 0, 0);
 	}
-void GameOver_EnterState()
-{
-	// Initialise gameover
-	gameScore = 123456;
-	_PositionScore();
-	_PositionName();
 
-	path = TEXT_PATHNAME;
-}
-
-void GameOver_ExitState()
-{
+	if (animate == true)
+	{
+		Text_Render(&ReaperState2, 0, 0);
+	}
 
 }
 
@@ -300,7 +310,6 @@ void _ChooseLetter(Letter *selection, int dir)
 	Text_Move(&name[positionChoice].letterSprite, LETTER_X + (LETTER_SPACING * positionChoice), LETTER_Y);
 }
 
-//Write Score to File
 void _InputScore(int first, int second, int third, int score)
 {
 	fopen_s(&writeScoreFile, path, "a");

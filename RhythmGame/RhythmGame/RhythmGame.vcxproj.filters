@@ -20,6 +20,8 @@
     <ClCompile Include="UI\UI.c" />
     <ClCompile Include="States\Logo.c" />
     <ClCompile Include="Tutorial\Tutorial.c" />
+    <ClCompile Include="Text\Font.c" />
+    <ClCompile Include="States\Highscore.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Attack\Attack.h" />
@@ -41,6 +43,8 @@
     <ClInclude Include="UI\UI.h" />
     <ClInclude Include="States\Logo.h" />
     <ClInclude Include="Tutorial\Tutorial.h" />
+    <ClInclude Include="Text\Font.h" />
+    <ClInclude Include="States\Highscore.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$Resources\Cluster1.wav" />
@@ -174,5 +178,18 @@
     <Text Include="$Resources\MainMenu\Diamond2.txt" />
     <Text Include="$Resources\MainMenu\Diamond3.txt" />
     <Text Include="$Resources\MainMenu\Title1.txt" />
+    <Text Include="$Resources\Alphabets.txt" />
+    <Text Include="$Resources\Alphabets2.txt" />
+    <Text Include="$Resources\Alphabets3.txt" />
+    <Text Include="$Resources\beatman3.txt" />
+    <Text Include="$Resources\Highscore.txt" />
+    <Text Include="$Resources\Highscore2.txt" />
+    <Text Include="$Resources\scoreinfo.txt" />
+    <Text Include="$Resources\trophy.txt" />
+    <Text Include="$Resources\trophy2.txt" />
+    <Text Include="$Resources\trophyman1.txt" />
+    <Text Include="$Resources\trophyman2.txt" />
+    <Text Include="$Resources\trophyman3.txt" />
+    <Text Include="$Resources\trophyman4.txt" />
   </ItemGroup>
 </Project>

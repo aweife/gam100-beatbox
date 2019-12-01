@@ -5,9 +5,3 @@ extern void GameOver_ExitState();
 extern void GameOver_ProcessInput();
 extern void GameOver_Update();
 extern void GameOver_Render();
-
-//Animate Crying Beatman
-void _RenderCryingBeatmanAnimation();
-
-//Animate Reaper
-void _RenderReaperAnimation();
