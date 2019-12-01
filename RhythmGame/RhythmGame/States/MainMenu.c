@@ -184,16 +184,12 @@ void MainMenu_EnterState()
 
 	Audio_Load(MAINMENU);
 	Audio_PlayBGM(MAINMENU);
-
-	// Initialise mainmenu
-	choice = PRESSENTER;
-	spriteColorCount = PRESSENTER;
-	spriteColor = BLACK;
 }
 
 void MainMenu_ExitState()
 {
-	
+	Audio_Unload();
+	Sprite_Unload();
 }
 
 //*********************************************************************************
@@ -567,4 +563,34 @@ void _creditExitState()
 	Text_Move(&upArrow, 83, 40);
 	Text_Move(&downArrow, 83, 125);
 	Text_Move(&title, 30, 10);
+}
+
+void Sprite_Unload()
+{
+	Text_Cleanup(&diamond1, diamond2, diamond3);
+	Text_Cleanup(&Button_ENTER);
+	Text_Cleanup(&Button_PLAY);
+	Text_Cleanup(&Button_2P);
+	Text_Cleanup(&Button_LEVEL);
+	Text_Cleanup(&Button_HISCORE);
+	Text_Cleanup(&Button_CREDIT);
+	Text_Cleanup(&Button_QUIT);
+	Text_Cleanup(&Button_TUTORIAL);
+	Text_Cleanup(&Button_LEVEL1);
+	Text_Cleanup(&leftArrow, rightArrow, upArrow, downArrow);
+	Text_Cleanup(&title);
+
+	Text_Cleanup(&Role_GAMEPLAY);
+	Text_Cleanup(&Role_AUDIO);
+	Text_Cleanup(&Role_LEVEL);
+	Text_Cleanup(&Name_FIKRUL);
+	Text_Cleanup(&Name_NICO);
+	Text_Cleanup(&Name_TED);
+	Text_Cleanup(&Name_GUANHIN);
+
+	Text_Cleanup(&credit2_SCHOOL);
+	Text_Cleanup(&credit2_TEAM);
+	Text_Cleanup(&credit2_PRESENT);
+	Text_Cleanup(&credit2_WEBSITE);
+	Text_Cleanup(&credit2_COPYRIGHT);
 }
