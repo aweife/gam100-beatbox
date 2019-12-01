@@ -273,8 +273,6 @@ void Tutorial_Render()
 //*********************************************************************************
 void Tutorial_EnterState()
 {
-	Audio_Load(TUTORIAL);
-	Audio_PlayBGM(TUTORIAL);
 	InstructionSprite_Init();
 	GameplaySprite_Init();
 }

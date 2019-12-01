@@ -10,14 +10,14 @@
 #include <math.h>
 
 #define DEBUG_AABB 0
-#define COLLISION_OFFSET 7
 
 // ENEMY AI
 #define START_OF_GAME_DELAY 2000.0
 #define ENEMY_BASE_MOVESPEED 0.015
-#define PROJECTILE_SPAWN_SPEED 150.0
+#define PROJECTILE_SPAWN_SPEED 100.0
 #define PROJECTILE_SPEED 0.03
 #define LASER_SPAWN_SPEED 200.0
+#define LASER_SPAWN_OFFSET 5
 
 // SCORING
 #define HEALTHBAR_WIDTH 25
@@ -217,8 +217,10 @@ void _MoveToPosition(double velocity)
 		// Update position with euler
 		skullEnemy.startPosition.x = (int)skullEnemy.startPosition.eulerX;
 		skullEnemy.startPosition.y = (int)skullEnemy.startPosition.eulerY;
-		skullEnemy.endPosition.x = (int)(skullEnemy.startPosition.eulerX + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.x + COLLISION_OFFSET);
+		skullEnemy.endPosition.x = (int)(skullEnemy.startPosition.eulerX + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.x);
 		skullEnemy.endPosition.y = (int)(skullEnemy.startPosition.eulerY + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.y);
+		skullEnemy.endPosition.eulerX = skullEnemy.startPosition.eulerX + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.x;
+		skullEnemy.endPosition.eulerY = skullEnemy.startPosition.eulerY + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.y;
 
 		Text_Move(&skullEnemy.enemySprite, skullEnemy.startPosition.x, skullEnemy.startPosition.y);
 	}
@@ -283,14 +285,26 @@ void _EnemyAttack()
 	{
 		if (enableLaser && Audio_GetSpectrum(3))
 		{
-			Attack_Spawn(LASER, skullEnemy.startPosition, Random_Range(5, 8), (projectileSpeed) { 0, 0 }, 0);
+			Vector2d skullMouth = (Vector2d){
+				.x = (skullEnemy.startPosition.x + skullEnemy.endPosition.x) / 2,
+				.y = skullEnemy.endPosition.y + LASER_SPAWN_OFFSET };
+			Attack_Spawn(LASER, skullMouth, Random_Range(5, 8), (projectileSpeed) { 0, 0 }, 0);
 			laserSpawnTimer = LASER_SPAWN_SPEED;
 		}
+	}
 
+	if (projectileSpawnTimer <= 0.0)
+	{
 		if (Audio_GetSpectrum(1))
 		{
+			Vector2d skullMouth = (Vector2d){
+				.x = (skullEnemy.startPosition.x + skullEnemy.endPosition.x) / 2,
+				.y = (skullEnemy.startPosition.y + skullEnemy.endPosition.y) / 2,
+
+				.eulerX = (skullEnemy.startPosition.eulerX + skullEnemy.endPosition.eulerX) / 2.0,
+				.eulerY = (skullEnemy.startPosition.eulerY + skullEnemy.endPosition.eulerY) / 2.0 };
 			projectileSpeed speed = { projSpeed,projSpeed * 3.0 };
-			Attack_Spawn(PROJECTILE, skullEnemy.startPosition, Random_Range(1, 8), speed, 0);
+			Attack_Spawn(PROJECTILE, skullMouth, Random_Range(1, 8), speed, 0);
 			projectileSpawnTimer = projSpawnSpeed;
 		}
 	}

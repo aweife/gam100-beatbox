@@ -188,7 +188,6 @@ void MainMenu_EnterState()
 
 void MainMenu_ExitState()
 {
-	Audio_Unload();
 	Sprite_Unload();
 }
 

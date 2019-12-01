@@ -39,6 +39,9 @@ void _ProcessPlayerControls();
 
 void Game_EnterState(GAMETYPE type)
 {
+	// If audio is playing
+	Audio_Unload();
+
 	// Check if one player or two player
 	gameType = type;
 

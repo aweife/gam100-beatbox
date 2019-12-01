@@ -4,20 +4,21 @@
 #include "../Clock/Clock.h"
 
 static double dTimer;
-static double stateTimer = 5000.0;
+static double stateTimer = 4000.0;
 static double velocity = 0.04;
 LogoStruct Logo;
 
 extern void Logo_EnterState()
 {
-	Logo = (LogoStruct){ .position.x = 10, .position.y = 100, .position.eulerY = 100.0, .LogoSprite1 = Text_CreateSprite(), .LogoSprite2 = Text_CreateSprite()};
+	Logo = (LogoStruct){ .position.x = 15, .position.y = 100, .position.eulerY = 100.0, .LogoSprite1 = Text_CreateSprite(), .LogoSprite2 = Text_CreateSprite()};
 	Text_Init(&Logo.LogoSprite1, "..//RhythmGame//$Resources//Logo.txt");
 	Text_Init(&Logo.LogoSprite2, "..//RhythmGame//$Resources//Credit//Credit2_COPYRIGHT.txt");
 }
 
 extern void Logo_ExitState()
 {
-
+	Text_Cleanup(&Logo.LogoSprite1);
+	Text_Cleanup(&Logo.LogoSprite2);
 }
 
 extern void Logo_ProcessInput()
