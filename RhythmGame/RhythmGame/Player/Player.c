@@ -10,7 +10,6 @@
 #include "../States/Game.h"
 
 #define DEBUG_AABB 0
-#define COLLISION_OFFSET 1
 
 #define PLAYER_BASE_MOVESPEED 0.06
 #define PLAYER_FAST_MOVESPEED 0.3
@@ -265,7 +264,7 @@ void _MovePlayer(int which)
 
 	player[which].startPosition.x = (int)player[which].startPosition.eulerX;
 	player[which].startPosition.y = (int)player[which].startPosition.eulerY;
-	player[which].endPosition.x = (int)(player[which].startPosition.eulerX + player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.x + COLLISION_OFFSET);
+	player[which].endPosition.x = (int)(player[which].startPosition.eulerX + player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.x);
 	player[which].endPosition.y = (int)(player[which].startPosition.eulerY + player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.y);
 
 	Text_Move(&player[which].playerSprite, player[which].startPosition.x, player[which].startPosition.y);

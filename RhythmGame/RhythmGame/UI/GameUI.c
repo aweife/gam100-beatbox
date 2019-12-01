@@ -75,11 +75,8 @@ void GameUI_DecreaseHealth(int damage, int which)
 {
 	if (uiMode == TWOPLAYER)
 	{
-		if (health[!which].count <= 1) 
-		{
-			GameOver_SetScore(score[0].count, NOTSOLO, score[1].count);
+		if (health[!which].count <= 1)
 			StateMachine_ChangeState(State_GameOver);
-		}
 		else
 			health[!which].count -= damage;
 	}
@@ -88,10 +85,7 @@ void GameUI_DecreaseHealth(int damage, int which)
 		if (health[which + 1].count <= 1)
 		{
 			if (health[which].count <= 1)
-			{
-				GameOver_SetScore(score[0].count, SOLO, 0);
 				StateMachine_ChangeState(State_GameOver);
-			}
 			else health[which].count -= damage;
 		}
 		else
@@ -108,6 +102,11 @@ void GameUI_AddScore(int amt, int which)
 		score[which].digits[i].numberSprite = numbers[digit % 10];
 		score[which].digits[i].color = uiMode == ONEPLAYER ? WHITE : which ? GREEN : BLUE;
 	}
+
+	if (uiMode == ONEPLAYER)
+		GameOver_SetScore(SOLO, score[0].count, 0);
+	else
+		GameOver_SetScore(NOTSOLO, score[0].count, score[1].count);
 
 	// Align again
 	_AlignScore(&score[which]);

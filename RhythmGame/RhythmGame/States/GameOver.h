@@ -12,4 +12,4 @@ extern void GameOver_Update();
 extern void GameOver_Render();
 
 // Always set score after game
-extern void GameOver_SetScore(int score, DisplayScore mode, int score2);
+extern void GameOver_SetScore(DisplayScore mode, int score, int score2);

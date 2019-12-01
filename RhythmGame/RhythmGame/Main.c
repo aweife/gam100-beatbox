@@ -63,6 +63,9 @@ int main(void)
 		}
 	}
 
+	// Cleanup
+	Audio_Shutdown();
+	Font_Cleanup();
 	Console_CleanUp();
 
 	return 0;

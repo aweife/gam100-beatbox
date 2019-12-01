@@ -154,8 +154,8 @@ void Tutorial_Update()
 		Attack_Update();
 	}
 
-	// Moves on after 10 seconds
-	if (tutorialDuration >= 0.0 && tutorialDuration <= 10000.0)
+	// Moves on after 5 seconds
+	if (tutorialDuration >= 0.0 && tutorialDuration <= 5000.0)
 	{
 		if (!startTutorial)
 		{
@@ -165,12 +165,12 @@ void Tutorial_Update()
 			startTutorial = true;
 		}
 	}
-	// Moves on after 10 seconds
-	else if (tutorialDuration > 10000.0 && tutorialDuration <= 20000.0) {
+	// Moves on after 5 seconds
+	else if (tutorialDuration > 5000.0 && tutorialDuration <= 10000.0) {
 		state = STATE_PLAYERDASH;
 	}
 	// Moves on after 20 seconds
-	else if (tutorialDuration > 20000.0 && tutorialDuration <= 40000.0) {
+	else if (tutorialDuration > 10000.0 && tutorialDuration <= 30000.0) {
 		state = STATE_ENEMY;
 
 		if (!spawnEnemy)
@@ -189,14 +189,14 @@ void Tutorial_Update()
 
 		Attack_Update();
 
-		if (tutorialDuration > 30000.0 && tutorialDuration <= 40000.0)
+		if (tutorialDuration > 17000.0 && tutorialDuration <= 30000.0)
 		{
 			state = STATE_NOTES;
 		}
 
 	}
-	// Moves on after 10 seconds
-	else if (tutorialDuration > 40000.0) {
+	// Ends Tutorial here
+	else if (tutorialDuration > 30000.0) {
 		state = STATE_END; 
 		spawnEnemy = false;
 		attackEnemy = false;
@@ -273,16 +273,38 @@ void Tutorial_Render()
 //*********************************************************************************
 void Tutorial_EnterState()
 {
-	Audio_Load(TUTORIAL);
-	Audio_PlayBGM(TUTORIAL);
 	InstructionSprite_Init();
 	GameplaySprite_Init();
 }
 
 void Tutorial_ExitState()
 {
+	//Disable Audio
 	Audio_Unload();
+
+	//FREE ALL THE SPRITES
 	Attack_Cleanup();
+	Text_Cleanup(&Instruction); 
+	Text_Cleanup(&MoveDialogue);
+	Text_Cleanup(&DashDialogue);
+	Text_Cleanup(&EnemyDialogue);
+	Text_Cleanup(&NotesDialogue);
+	Text_Cleanup(&EndTutorialDialogue);
+	Text_Cleanup(&leftBeatmanState1);
+	Text_Cleanup(&rightBeatmanState1);
+	Text_Cleanup(&leftBeatmanState2);
+	Text_Cleanup(&rightBeatmanState2);
+	Text_Cleanup(&EnterState1);
+	Text_Cleanup(&EnterState2);
+	Text_Cleanup(&EnterState2);
+	Text_Cleanup(&BeatheadState1);
+	Text_Cleanup(&BeatheadState2);
+	Text_Cleanup(&ArrowKeysState1);
+	Text_Cleanup(&ArrowKeysState2);
+	Text_Cleanup(&SpaceKeyState1);
+	Text_Cleanup(&SpaceKeyState2);
+	Text_Cleanup(&EnemyWarningState1);
+	Text_Cleanup(&EnemyWarningState2);
 }
 
 //*********************************************************************************
