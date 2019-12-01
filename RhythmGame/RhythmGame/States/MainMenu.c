@@ -20,10 +20,11 @@ sprite Button_HISCORE;
 sprite Button_CREDIT;
 sprite Button_QUIT;
 sprite Button_TUTORIAL;
-sprite leftArrow, rightArrow;
+sprite Button_LEVEL1;
+sprite leftArrow, rightArrow, upArrow, downArrow;
 sprite title;
 
-// CREDIT SPRITES
+// CREDIT1 SPRITES
 sprite Role_GAMEPLAY;
 sprite Role_AUDIO;
 sprite Role_LEVEL;
@@ -31,6 +32,16 @@ sprite Name_FIKRUL;
 sprite Name_NICO;
 sprite Name_TED;
 sprite Name_GUANHIN;
+
+// CREDIT2 SPRITES
+sprite credit2_SCHOOL;
+sprite credit2_TEAM;
+sprite credit2_PRESENT;
+sprite credit2_WEBSITE;
+sprite credit2_COPYRIGHT;
+
+// CREDIT3 SPRITES
+sprite credit3;
 
 extern void _renderBackground(int offset, CONSOLECOLOR color);
 extern void _renderChoice();
@@ -91,6 +102,7 @@ void MainMenu_EnterState()
 	Button_CREDIT = Text_CreateSprite();
 	Button_QUIT = Text_CreateSprite();	
 	Button_TUTORIAL = Text_CreateSprite();
+	Button_LEVEL1 = Text_CreateSprite();
 	Text_Init(&Button_ENTER, "..//RhythmGame//$Resources//MainMenu//Button_ENTER.txt");
 	Text_Init(&Button_PLAY, "..//RhythmGame//$Resources//MainMenu//Button_PLAY.txt");
 	Text_Init(&Button_2P, "..//RhythmGame//$Resources//MainMenu//Button_2P.txt");
@@ -99,42 +111,75 @@ void MainMenu_EnterState()
 	Text_Init(&Button_CREDIT, "..//RhythmGame//$Resources//MainMenu//Button_CREDIT.txt");
 	Text_Init(&Button_QUIT, "..//RhythmGame//$Resources//MainMenu//Button_QUIT.txt");
 	Text_Init(&Button_TUTORIAL, "..//RhythmGame//$Resources//MainMenu//Button_TUTORIAL.txt");
+	Text_Init(&Button_LEVEL1, "..//RhythmGame//$Resources//MainMenu//Button_LEVEL1.txt");
 
 	leftArrow = Text_CreateSprite();
 	rightArrow = Text_CreateSprite();
+	upArrow = Text_CreateSprite();
+	downArrow = Text_CreateSprite();
 	Text_Init(&leftArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_LEFT.txt");
 	Text_Init(&rightArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_RIGHT.txt");
+	Text_Init(&upArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_UP.txt");
+	Text_Init(&downArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_DOWN.txt");
 
 	title = Text_CreateSprite();
 	Text_Init(&title, "..//RhythmGame//$Resources//MainMenu//Title1.txt");
 
 	// CREDIT SPRITES INIT
 	Role_GAMEPLAY = Text_CreateSprite();
-	Text_Init(&Role_GAMEPLAY, "..//RhythmGame//$Resources//Credit//Role_GAMEPLAY.txt");
 	Role_AUDIO = Text_CreateSprite();
-	Text_Init(&Role_AUDIO, "..//RhythmGame//$Resources//Credit//Role_AUDIO.txt");
 	Role_LEVEL = Text_CreateSprite();
-	Text_Init(&Role_LEVEL, "..//RhythmGame//$Resources//Credit//Role_LEVEL.txt");
 	Name_FIKRUL = Text_CreateSprite();
-	Text_Init(&Name_FIKRUL, "..//RhythmGame//$Resources//Credit//Name_FIKRUL.txt");
 	Name_NICO = Text_CreateSprite();
-	Text_Init(&Name_NICO, "..//RhythmGame//$Resources//Credit//Name_NICO.txt");
 	Name_TED = Text_CreateSprite();
-	Text_Init(&Name_TED, "..//RhythmGame//$Resources//Credit//Name_TED.txt");
 	Name_GUANHIN = Text_CreateSprite();
+	Text_Init(&Role_GAMEPLAY, "..//RhythmGame//$Resources//Credit//Role_GAMEPLAY.txt");
+	Text_Init(&Role_AUDIO, "..//RhythmGame//$Resources//Credit//Role_AUDIO.txt");
+	Text_Init(&Role_LEVEL, "..//RhythmGame//$Resources//Credit//Role_LEVEL.txt");
+	Text_Init(&Name_FIKRUL, "..//RhythmGame//$Resources//Credit//Name_FIKRUL.txt");
+	Text_Init(&Name_NICO, "..//RhythmGame//$Resources//Credit//Name_NICO.txt");
+	Text_Init(&Name_TED, "..//RhythmGame//$Resources//Credit//Name_TED.txt");
 	Text_Init(&Name_GUANHIN, "..//RhythmGame//$Resources//Credit//Name_GUANHIN.txt");
 
-	// CREDIT SPRITES UPDATE
-	Text_Move(&Role_GAMEPLAY, 10, 40);
-	Text_Move(&Role_AUDIO, 10, 80);
-	Text_Move(&Role_LEVEL, 10, 110);
-	Text_Move(&Name_FIKRUL, 40, 55);
-	Text_Move(&Name_NICO, 40, 65);
-	Text_Move(&Name_TED, 40, 95);
-	Text_Move(&Name_GUANHIN, 40, 125);
+	// CREDIT2 SPRITES INIT
+	credit2_SCHOOL = Text_CreateSprite();
+	Text_Init(&credit2_SCHOOL, "..//RhythmGame//$Resources//Credit//Credit2_SCHOOL.txt");
+	credit2_PRESENT = Text_CreateSprite();
+	Text_Init(&credit2_PRESENT, "..//RhythmGame//$Resources//Credit//Credit2_PRESENT.txt");
+	credit2_TEAM = Text_CreateSprite();
+	Text_Init(&credit2_TEAM, "..//RhythmGame//$Resources//Credit//Credit2_TEAM.txt");
+	credit2_WEBSITE = Text_CreateSprite();
+	Text_Init(&credit2_WEBSITE, "..//RhythmGame//$Resources//Credit//Credit2_WEBSITE.txt");
+	credit2_COPYRIGHT = Text_CreateSprite();
+	Text_Init(&credit2_COPYRIGHT, "..//RhythmGame//$Resources//Credit//Credit2_COPYRIGHT.txt");
+
+	// CREDIT3 SPRITES INIT
+	credit3 = Text_CreateSprite();
+	Text_Init(&credit3, "..//RhythmGame//$Resources//Credit//Credit3.txt");
+
+	// CREDIT1 SPRITES UPDATE
+	Text_Move(&Role_GAMEPLAY, 50, 40);
+	Text_Move(&Role_AUDIO, 70, 80);
+	Text_Move(&Role_LEVEL, 35, 110);
+	Text_Move(&Name_FIKRUL, 80, 55);
+	Text_Move(&Name_NICO, 85, 65);
+	Text_Move(&Name_TED, 87, 95);
+	Text_Move(&Name_GUANHIN, 75, 125);
+
+	// CREDIT2 SPRITES UPDATE
+	Text_Move(&credit2_PRESENT, 40, 27);
+	Text_Move(&credit2_SCHOOL, 15, 20);
+	Text_Move(&credit2_TEAM, 30, 35);
+	Text_Move(&credit2_WEBSITE, 15, 100);
+	Text_Move(&credit2_COPYRIGHT, 15, 110);
+
+	// CREDIT3 SPRITES UPDATE
+	Text_Move(&credit3, 17, 50);
 
 	Text_Move(&leftArrow, 12, 75);
 	Text_Move(&rightArrow, 170, 75);
+	Text_Move(&upArrow, 83, 40);
+	Text_Move(&downArrow, 83, 125);
 	Text_Move(&title, 30, 10);
 
 	Audio_Load(MAINMENU);
@@ -159,19 +204,41 @@ void MainMenu_ProcessInput()
 
 	if (GetAsyncKeyState(VK_LEFT) && keyDown == 0)
 	{
-		choice--;
+		if (choice < LEVEL_TUTORIAL)
+			choice--;
 		arrowTimer = 100.0;
 		shakeDirection = LEFT;
 	}
 
 	if (GetAsyncKeyState(VK_RIGHT) && keyDown == 0)
 	{
-		choice++;
+		if (choice < LEVEL_TUTORIAL)
+			choice++;
 		arrowTimer = 100.0;
 		shakeDirection = RIGHT;
 	}
 
-	if (GetAsyncKeyState(VK_RIGHT) || GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VK_RETURN))
+	if (GetAsyncKeyState(VK_UP) && keyDown == 0)
+	{
+		if (choice >= LEVEL_TUTORIAL)
+			choice--;
+		arrowTimer = 100.0;
+		shakeDirection = UP;
+	}
+
+	if (GetAsyncKeyState(VK_DOWN) && keyDown == 0)
+	{
+		if (choice >= LEVEL_TUTORIAL)
+			choice++;
+		arrowTimer = 100.0;
+		shakeDirection = DOWN;
+	}
+
+	if (GetAsyncKeyState(VK_RIGHT) || 
+		GetAsyncKeyState(VK_LEFT) || 
+		GetAsyncKeyState(VK_RETURN) || 
+		GetAsyncKeyState(VK_UP) || 
+		GetAsyncKeyState(VK_DOWN))
 		keyDown = 1;
 	else
 		keyDown = 0;
@@ -246,7 +313,7 @@ void _confirmChoice()
 		break;
 	case PLAY:
 		StateMachine_ChangeMode(ONEPLAYER);
-		StateMachine_ChangeState(State_Game);
+		StateMachine_ChangeState(State_Tutorial);
 		break;
 	case PLAY2P:
 		StateMachine_ChangeMode(TWOPLAYER);
@@ -264,11 +331,17 @@ void _confirmChoice()
 		StateMachine_ChangeMode(ONEPLAYER);
 		StateMachine_ChangeState(State_Tutorial);
 		break;
+	case LEVEL_LEVEL1:
+		StateMachine_ChangeMode(ONEPLAYER);
+		StateMachine_ChangeState(State_Game);
 	}
 }
 
 void _renderChoice()
 {
+	if (choice < CREDITSCREEN1)
+		_creditExitState();
+
 	switch (choice)
 	{
 	case PRESSENTER:
@@ -303,6 +376,10 @@ void _renderChoice()
 	case LEVEL_TUTORIAL:
 		Text_Move(&Button_TUTORIAL, 68, 75);
 		Text_Render(&Button_TUTORIAL, 0, 0);
+		break;
+	case LEVEL_LEVEL1:
+		Text_Move(&Button_LEVEL1, 68, 75);
+		Text_Render(&Button_LEVEL1, 0, 0);
 		break;
 	default:
 		Text_Move(&Button_PLAY, 68, 75);
@@ -392,25 +469,37 @@ void _colorSwitch()
 	}
 }
 
-int leftArrowX = 0;
-int rightArrowX = 0;
+int ArrowX = 0;
+int ArrowY = 0;
 
 void _renderArrow()
 {
-	Text_RenderColor(&leftArrow, RED, leftArrowX, 0);
-	Text_RenderColor(&rightArrow, RED, rightArrowX, 0);
-	if (arrowTimer < 0)
+	if (choice >= LEVEL_TUTORIAL)
 	{
-		shakeDirection = 0;
-		rightArrowX = 0;
-		leftArrowX = 0;
+		if (choice != CREDITSCREEN1)
+			Text_RenderColor(&upArrow, RED, 0, 0);
+
+		Text_RenderColor(&downArrow, RED, 0, 0);
 	}
+	else
+	{
+		Text_RenderColor(&leftArrow, RED, 0, 0);
+		Text_RenderColor(&rightArrow, RED, 0, 0);
+	}
+	
+	if (arrowTimer < 0)
+		shakeDirection = 0;
 	else if (arrowTimer >= 0)
 	{
-		if (shakeDirection == RIGHT)
-			rightArrowX = 4;
-		else if (shakeDirection == LEFT)
-			leftArrowX = -4;
+		if (shakeDirection == RIGHT && choice < LEVEL_TUTORIAL)
+			Text_RenderColor(&rightArrow, RED, 4, 0);
+		else if (shakeDirection == LEFT && choice < LEVEL_TUTORIAL)
+			Text_RenderColor(&leftArrow, RED, -4, 0);
+
+		if (shakeDirection == UP && choice >= LEVEL_TUTORIAL && choice != CREDITSCREEN1)
+			Text_RenderColor(&upArrow, RED, 0, -4);
+		else if (shakeDirection == DOWN && choice >= LEVEL_TUTORIAL)
+			Text_RenderColor(&downArrow, RED, 0, 4);
 	}
 }
 
@@ -442,20 +531,34 @@ void _renderCredit()
 	{
 	case CREDITSCREEN1:
 		Text_Move(&title, 30, 10);
-		Text_Render(&Role_GAMEPLAY, 40, 0);
-		Text_Render(&Role_AUDIO, 60, 0);
-		Text_Render(&Role_LEVEL, 25, 0);
-		Text_Render(&Name_FIKRUL, 40, 0);
-		Text_Render(&Name_NICO, 45, 0);
-		Text_Render(&Name_TED, 47, 0);
-		Text_Render(&Name_GUANHIN, 35, 0);
+		Text_Move(&downArrow, 83, 140);
+		Text_Render(&Role_GAMEPLAY, 0, 0);
+		Text_Render(&Role_AUDIO, 0, 0);
+		Text_Render(&Role_LEVEL, 0, 0);
+		Text_Render(&Name_FIKRUL, 0, 0);
+		Text_Render(&Name_NICO, 0, 0);
+		Text_Render(&Name_TED, 0, 0);
+		Text_Render(&Name_GUANHIN, 0, 0);
 		break;
 	case CREDITSCREEN2:
-		Text_Move(&title, 32, 74);
+		Text_Move(&title, 32, 60);
+		Text_Move(&upArrow, 83, 5);
+		Text_Render(&credit2_SCHOOL, 0, 0);
+		Text_Render(&credit2_TEAM, 0, 0);
+		Text_Render(&credit2_PRESENT, 0, 0);
+		Text_Render(&credit2_WEBSITE, 0, 0);
+		Text_Render(&credit2_COPYRIGHT, 0, 0);
 		break;
 	case CREDITSCREEN3:
-		Text_Move(&title, 30, 10);
+		Text_Move(&title, 32, 20);
+		Text_Render(&credit3, 0, 0);
 		break;
 	}
-	
+}
+
+void _creditExitState()
+{
+	Text_Move(&upArrow, 83, 40);
+	Text_Move(&downArrow, 83, 125);
+	Text_Move(&title, 30, 10);
 }
