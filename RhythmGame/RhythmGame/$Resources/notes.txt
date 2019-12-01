@@ -1,7 +1,7 @@
 0
-     b    
-     bb   
-     bbb  
+     w    
+     bw   
+     bbw  
      bBbb 
      b BbB
      b  BB
@@ -10,34 +10,34 @@
  bbbbb    
 bwbbbB    
 bbbbbB    
- BBBB     
+ BBBB    W
 1
+    dddddmm
     mmmmmmm
-    m     m
     m     m
     mmmMMMm
     m     m
     m     m
  mmmm     m
-mmmmM  mmmm
-mmmMM mmmmM
+mwmmM  mmmm
+mmmMM mwmmM
  MMM  mmmMM
-       MMM 
+       MMMW
 2
-     yyy   
-     yYy   
+     wwy   
+     wYy   
     yY yy  
    yy  yy  
    yy  yy  
     yyyy   
    yYY     
- yY  y     
-yy  Yyy    
-yy Yyyyyyy 
-yy y y   yy
+ wY  y     
+wy  Yyy    
+wy Yyyyyyw 
+wy y y   yw
  Yy  y  yYY
   YYyyyYY  
      y     
-  yy y     
+  ww y     
   Yyyy     
-   YY      
+   YY     W
