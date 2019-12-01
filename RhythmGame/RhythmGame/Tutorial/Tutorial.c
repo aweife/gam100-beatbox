@@ -99,6 +99,17 @@ static bool animateWarning = false;
 static double tutorialDuration = 0.0;
 static double animateDuration = 0.0;
 
+// Internal functions
+void GameplaySprite_Init();
+void InstructionSprite_Init();
+void _MovePlayer();
+void _RenderArrowKeysAnimation();
+void _RenderBeatHeadAnimation();
+void _RenderBeatmanAnimation();
+void _RenderEnterAnimation();
+void _RenderSpaceKeyAnimation();
+void _RenderWarningAnimation();
+
 //*********************************************************************************
 //									INPUT
 //*********************************************************************************

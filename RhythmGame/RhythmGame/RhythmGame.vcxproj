@@ -34,6 +34,7 @@
     <ClCompile Include="States\MainMenu.c" />
     <ClCompile Include="States\StateMachine.c" />
     <ClCompile Include="Text\TextReader.c" />
+    <ClCompile Include="Tutorial\Tutorial.c" />
     <ClCompile Include="UI\GameUI.c" />
     <ClCompile Include="UI\UI.c" />
   </ItemGroup>
@@ -53,11 +54,15 @@
     <ClInclude Include="States\MainMenu.h" />
     <ClInclude Include="States\StateMachine.h" />
     <ClInclude Include="Text\TextReader.h" />
+    <ClInclude Include="Tutorial\Tutorial.h" />
     <ClInclude Include="UI\GameUI.h" />
     <ClInclude Include="UI\UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="$Resources\ArrowKeys1.txt" />
+    <Text Include="$Resources\ArrowKeys2.txt" />
     <Text Include="$Resources\Beatbar.txt" />
+    <Text Include="$Resources\CryingBeatman1.txt" />
     <Text Include="$Resources\CryingBeatman2.txt" />
     <Text Include="$Resources\DialogueDashAttack.txt" />
     <Text Include="$Resources\DialogueDodgeEnemy.txt" />

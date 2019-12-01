@@ -119,5 +119,8 @@
     <Text Include="$Resources\notes.txt" />
     <Text Include="$Resources\pause.txt" />
     <Text Include="$Resources\CryingBeatman2.txt" />
+    <Text Include="$Resources\ArrowKeys1.txt" />
+    <Text Include="$Resources\ArrowKeys2.txt" />
+    <Text Include="$Resources\CryingBeatman1.txt" />
   </ItemGroup>
 </Project>
