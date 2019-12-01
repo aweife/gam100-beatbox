@@ -143,14 +143,14 @@ void MainMenu_EnterState()
 
 	// CREDIT2 SPRITES INIT
 	credit2_SCHOOL = Text_CreateSprite();
-	Text_Init(&credit2_SCHOOL, "..//RhythmGame//$Resources//Credit//Credit2_SCHOOL.txt");
 	credit2_PRESENT = Text_CreateSprite();
-	Text_Init(&credit2_PRESENT, "..//RhythmGame//$Resources//Credit//Credit2_PRESENT.txt");
 	credit2_TEAM = Text_CreateSprite();
-	Text_Init(&credit2_TEAM, "..//RhythmGame//$Resources//Credit//Credit2_TEAM.txt");
 	credit2_WEBSITE = Text_CreateSprite();
-	Text_Init(&credit2_WEBSITE, "..//RhythmGame//$Resources//Credit//Credit2_WEBSITE.txt");
 	credit2_COPYRIGHT = Text_CreateSprite();
+	Text_Init(&credit2_SCHOOL, "..//RhythmGame//$Resources//Credit//Credit2_SCHOOL.txt");
+	Text_Init(&credit2_PRESENT, "..//RhythmGame//$Resources//Credit//Credit2_PRESENT.txt");
+	Text_Init(&credit2_TEAM, "..//RhythmGame//$Resources//Credit//Credit2_TEAM.txt");
+	Text_Init(&credit2_WEBSITE, "..//RhythmGame//$Resources//Credit//Credit2_WEBSITE.txt");
 	Text_Init(&credit2_COPYRIGHT, "..//RhythmGame//$Resources//Credit//Credit2_COPYRIGHT.txt");
 
 	// CREDIT3 SPRITES INIT
@@ -570,7 +570,9 @@ void _creditExitState()
 
 void Sprite_Unload()
 {
-	Text_Cleanup(&diamond1, diamond2, diamond3);
+	Text_Cleanup(&diamond1);
+	Text_Cleanup(&diamond2);
+	Text_Cleanup(&diamond3);
 	Text_Cleanup(&Button_ENTER);
 	Text_Cleanup(&Button_PLAY);
 	Text_Cleanup(&Button_2P);
@@ -580,7 +582,10 @@ void Sprite_Unload()
 	Text_Cleanup(&Button_QUIT);
 	Text_Cleanup(&Button_TUTORIAL);
 	Text_Cleanup(&Button_LEVEL1);
-	Text_Cleanup(&leftArrow, rightArrow, upArrow, downArrow);
+	Text_Cleanup(&leftArrow);
+	Text_Cleanup(&rightArrow);
+	Text_Cleanup(&upArrow);
+	Text_Cleanup(&downArrow);
 	Text_Cleanup(&title);
 
 	Text_Cleanup(&Role_GAMEPLAY);

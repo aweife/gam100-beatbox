@@ -17,7 +17,7 @@ typedef enum MenuState
 	CREDITSCREEN1 = 20,
 	CREDITSCREEN2 = 21,
 	CREDITSCREEN3 = 22,
-};
+} MenuState;
 
 extern void MainMenu_EnterState();
 extern void MainMenu_ExitState();
