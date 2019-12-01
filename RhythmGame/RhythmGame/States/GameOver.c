@@ -5,20 +5,12 @@
 #include "../Text/TextReader.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include "../Text/Font.h"
 
 
 //*********************************************************************************
 //								LOCAL VARIABLES
 //*********************************************************************************
-
-// Word sprites
-typedef struct Words {
-	sprite atoj[10];
-	sprite ktot[10];
-	sprite utoz[6];
-	sprite numbers[10];
-} Words;
-Words words;
 
 // For selection
 static bool keyUp, keyDown, keyLeft, keyRight, keyEnter;
@@ -28,7 +20,7 @@ static int positionChoice;
 #define MAX_LETTERS 3
 #define LETTER_X 50
 #define LETTER_Y 100
-#define LETTER_SPACING 6
+
 
 // For writing score to text file
 #define TEXT_PATHNAME "..//RhythmGame//$Resources//TestScore.txt"
@@ -44,7 +36,6 @@ Letter name[MAX_LETTERS];
 
 
 // Functions
-void _InitLetters();
 void _PositionName();
 void _ChooseLetter(Letter *selection, int dir);
 void _InputScore(int first, int second, int third, int score);
@@ -120,11 +111,11 @@ void GameOver_Render()
 //*********************************************************************************
 //								STATE MANAGEMENT
 //*********************************************************************************
-void GameOver_EnterState(int score)
+void GameOver_EnterState()
 {
 	gameScore = 123456;
+
 	// Initialise gameover
-	_InitLetters();
 	_PositionName();
 
 	path = TEXT_PATHNAME;
@@ -132,49 +123,7 @@ void GameOver_EnterState(int score)
 
 void GameOver_ExitState()
 {
-	// Destroy a to j
-	for (int i = 0; i < 10; i++)
-		Text_Cleanup(&words.atoj[i]);
-
-	// Destroy k to t
-	for (int i = 0; i < 10; i++)
-		Text_Cleanup(&words.ktot[i]);
-
-	// Destroy u to z
-	for (int i = 0; i < 6; i++)
-		Text_Cleanup(&words.utoz[i]);
-
-	// Destroy numbers
-	for (int i = 0; i < 10; i++)
-		Text_Cleanup(&words.numbers[i]);
-}
-
-void _InitLetters()
-{
-	// Create a to j
-	for (int i = 0; i < 10; i++)
-	{
-		words.atoj[i] = Text_CreateSprite();
-		Text_InitArray(&words.atoj[i], "..//RhythmGame//$Resources//Alphabets.txt", i);
-	}
-	// Create k to t
-	for (int i = 0; i < 10; i++)
-	{
-		words.ktot[i] = Text_CreateSprite();
-		Text_InitArray(&words.ktot[i], "..//RhythmGame//$Resources//Alphabets2.txt", i);
-	}
-	// Create u to z
-	for (int i = 0; i < 6; i++)
-	{
-		words.utoz[i] = Text_CreateSprite();
-		Text_InitArray(&words.utoz[i], "..//RhythmGame//$Resources//Alphabets3.txt", i);
-	}
-	// Create numbers
-	for (int i = 0; i < 10; i++)
-	{
-		words.numbers[i] = Text_CreateSprite();
-		Text_InitArray(&words.numbers[i], "..//RhythmGame//$Resources//numbers.txt", i);
-	}
+	
 }
 
 void _PositionName()
@@ -183,8 +132,8 @@ void _PositionName()
 	{
 		name[i].choice = 0;
 		name[i].letterSprite = Text_CreateSprite();
-		name[i].letterSprite = words.atoj[0];
-		Text_Move(&name[i].letterSprite, LETTER_X + (LETTER_SPACING * i), LETTER_Y);
+		name[i].letterSprite = Font_ConvertToSprite(0);
+		Text_Move(&name[i].letterSprite, LETTER_X + (FONT_SPACING * i), LETTER_Y);
 	}
 }
 
@@ -199,8 +148,8 @@ void _ChooseLetter(Letter *selection, int dir)
 	else if (selection->choice < 0)
 		selection->choice = 35;
 
-	name[positionChoice].letterSprite = words.atoj[selection->choice];
-	Text_Move(&name[positionChoice].letterSprite, LETTER_X + (LETTER_SPACING * positionChoice), LETTER_Y);
+	name[positionChoice].letterSprite = Font_ConvertToSprite(selection->choice);
+	Text_Move(&name[positionChoice].letterSprite, LETTER_X + (FONT_SPACING * positionChoice), LETTER_Y);
 }
 
 //Write Score to File

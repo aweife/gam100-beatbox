@@ -34,6 +34,7 @@
     <ClCompile Include="States\GameOver.c" />
     <ClCompile Include="States\MainMenu.c" />
     <ClCompile Include="States\StateMachine.c" />
+    <ClCompile Include="Text\Font.c" />
     <ClCompile Include="Text\TextReader.c" />
     <ClCompile Include="UI\GameUI.c" />
     <ClCompile Include="UI\UI.c" />
@@ -54,6 +55,7 @@
     <ClInclude Include="States\GameOver.h" />
     <ClInclude Include="States\MainMenu.h" />
     <ClInclude Include="States\StateMachine.h" />
+    <ClInclude Include="Text\Font.h" />
     <ClInclude Include="Text\TextReader.h" />
     <ClInclude Include="UI\GameUI.h" />
     <ClInclude Include="UI\UI.h" />
