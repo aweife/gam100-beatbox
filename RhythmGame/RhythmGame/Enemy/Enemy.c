@@ -14,9 +14,9 @@
 
 // ENEMY AI
 #define START_OF_GAME_DELAY 2000.0
-#define ENEMY_BASE_MOVESPEED 0.0
+#define ENEMY_BASE_MOVESPEED 0.015
 #define PROJECTILE_SPAWN_SPEED 150.0
-#define PROJECTILE_SPEED 0.04
+#define PROJECTILE_SPEED 0.03
 #define LASER_SPAWN_SPEED 200.0
 
 // SCORING
@@ -86,7 +86,7 @@ void Enemy_Init(GAMETYPE type)
 	{
 		enableLaser = false;
 		projSpeed /= 4.0;
-		moveSpeed /= 2.0;
+		moveSpeed /= 5.0;
 		projSpawnSpeed *= 3.0;
 	}
 }

@@ -257,7 +257,7 @@ void _Readandstoretext(sprite *s, const char *path)
 
 	for (int i = 0; i < 200; i++)
 	{
-		Charline[i] = 'n';
+		Charline[i] = '0';
 	}
 
 	pFile = fopen(path, "r");
@@ -278,7 +278,7 @@ void _Readandstoretext(sprite *s, const char *path)
 
 			for (int i = 0; i < 200; i++)
 			{
-				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n')
+				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0')
 				{
 
 					charcount++;
