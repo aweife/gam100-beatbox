@@ -189,7 +189,5 @@
     <Text Include="$Resources\trophy2.txt" />
     <Text Include="$Resources\trophyman1.txt" />
     <Text Include="$Resources\trophyman2.txt" />
-    <Text Include="$Resources\trophyman3.txt" />
-    <Text Include="$Resources\trophyman4.txt" />
   </ItemGroup>
 </Project>

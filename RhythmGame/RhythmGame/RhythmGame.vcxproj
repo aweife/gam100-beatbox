@@ -146,8 +146,6 @@
     <Text Include="$Resources\trophy2.txt" />
     <Text Include="$Resources\trophyman1.txt" />
     <Text Include="$Resources\trophyman2.txt" />
-    <Text Include="$Resources\trophyman3.txt" />
-    <Text Include="$Resources\trophyman4.txt" />
     <Text Include="%24Resources\laser.txt" />
     <Text Include="$Resources\Intro1.txt" />
     <Text Include="$Resources\Intro2.txt" />

@@ -26,3 +26,6 @@ extern void Highscore_ExitState();
 extern void Highscore_ProcessInput();
 extern void Highscore_Update();
 extern void Highscore_Render();
+
+//Renders Animation for Trophyman
+void _RenderTrophymanAnimation();

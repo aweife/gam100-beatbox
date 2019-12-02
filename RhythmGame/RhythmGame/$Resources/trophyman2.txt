@@ -1,44 +1,46 @@
-       yyyyyyyyyyyyyyyyyyyyy
-   yyyyy                   yyyyy
- yyy   y        yy         y   yyy
-yy     yy      y y        yy     yy
-yy      yy       y       yy      yy
- yyyyy   yyy   yyyyy   yyy   yyyyy
-     yyyyyyyyy       yyyyyyyyy
-             yy     yy
-             yy     yy
-           yy         yy
-   yyyyyyyyyyyyyyyyyyyyyyyyyyyyy
- yy                             yy
-yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
-            www   www             
-            www   www             
-            www   www             
-            www   www             
-            www   www             
-          rrrrr   rrrrr           
-        wwwwwwwwwwwwwwwwww        
-         w   DDwwwwDD   w         
-        w   DD      DD   w        
-        ww DD  wwww  DD ww        
-        wwDD   wwww   DDww        
-        wwwwwwwwwwwwwwwwww        
-        wwww          wwww        
-        wwww          wwww        
-        wwwww        wwwww        
-        wwwwwwwwwwwwwwwwww        
-           rryrrrrrryrr           
-           rrryrrrryrrr           
-           rrrryrryrrrr           
-           rrrrryyrrrrr           
-           rrrrryyrrrrr           
-           rrrrrrrrrrrr           
-   BBBBBBBBBBBBBBBBBBBBBBBBBBB    
-   BBBBBBBBBBBBBBBBBBBBBBBBBBB    
-   BBBBBBBBBBBBBBBBBBBBBBBBBBB    
-   BBBB                   BBBB    
-   BBBB                   BBBB    
-   BBBB                   BBBB    
-   BBBB                   BBBB    
- DDDDDD                   DDDDDD  
- DDDDDD                   DDDDDD   
+        YYYYYYYYYYYYYYYYYYYYY        
+       YYyyyyyyyyyyyyyyyyyyyYY       
+   YYYYYyyyywwyyyyyyyyyyyyyyyYYYYY   
+ YYYyyyyyyyywwyyyYYyyyyyyyyyyyyyyYYY 
+YYyyy   yyyywwyyYyYyyyyyyyyyy   yyyYY
+Yyy     yyyywwyyyyYyyyyyyyyyy     yyY
+Yyy      yyywwyyyyYyyyyyyyyy      yyY
+YYyyyyy    yyyyyYYYYYyyyyy    yyyyyYY
+ YYYYYyyyyyyyyyyyyyyyyyyyyyyyyyYYYYY 
+     YYYYYYYYYyyyyyyyyyYYYYYYYYY     
+           YYYyyyyyyyyyYYY           
+   YYYYYYYYYyyyyyyyyyyyyyYYYYYYYYY   
+ YYYyyyyyyyyyyyyyyyyyyyyyyyyyyyyyYYY 
+YYyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyYY
+YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+              www   www              
+              www   www              
+              www   www              
+              www   www              
+              www   www              
+            rrrrr   rrrrr            
+          wwwwwwwwwwwwwwwwww         
+           w   DDwwww   DDw          
+          w   DD       DD  w         
+          ww DD  wwww DD  ww         
+          wwDD   wwwwDD   ww         
+          wwwwwwwwwwwwwwwwww         
+          wwww          wwww         
+          wwww          wwww         
+          wwwww        wwwww         
+          wwwwwwwwwwwwwwwwww         
+             rryrrrrrryrr            
+             rrryrrrryrrr            
+             rrrryrryrrrr            
+             rrrrryyrrrrr            
+             rrrrryyrrrrr            
+             rrrrrrrrrrrr            
+     BBBBBBBBBBBBBBBBBBBBBBBBBBB     
+     BBBBBBBBBBBBBBBBBBBBBBBBBBB     
+     BBBBBBBBBBBBBBBBBBBBBBBBBBB     
+     BBBB                   BBBB     
+     BBBB                   BBBB     
+     BBBB                   BBBB     
+     BBBB                   BBBB     
+   DDDDDD                   DDDDDD   
+   DDDDDD                   DDDDDD    

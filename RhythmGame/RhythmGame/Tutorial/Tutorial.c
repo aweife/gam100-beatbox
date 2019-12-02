@@ -213,7 +213,7 @@ void Tutorial_Render()
 {
 	if (state == STATE_INSTRUCTION)
 	{
-		Text_RenderRainbow(&Instruction, 0, 0);
+		Text_RenderRainbow(&Instruction);
 		_RenderBeatmanAnimation();
 		_RenderEnterAnimation();
 	}
@@ -396,14 +396,12 @@ void _RenderBeatmanAnimation()
 	animateBeatman = !Audio_GetSpectrum(1);
 	if (animateBeatman == false)
 	{
-		Text_Render(&EnterState2, 0, 0);
 		Text_Render(&leftBeatmanState1, 0, 0);
 		Text_Render(&rightBeatmanState1, 0, 0);
 	}
 
 	if (animateBeatman == true)
 	{
-		Text_Render(&EnterState1, 0, 0);
 		Text_Render(&leftBeatmanState2, 0, 0);
 		Text_Render(&rightBeatmanState2, 0, 0);
 	}
