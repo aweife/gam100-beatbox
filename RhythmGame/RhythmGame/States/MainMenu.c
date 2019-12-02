@@ -205,8 +205,8 @@ void MainMenu_ProcessInput()
 		if (choice < LEVEL_TUTORIAL)
 		{
 			choice--;
-			if(choice != PRESSENTER)
-			Audio_PlayOneShot(0, SFX_VOLUME);
+			if (choice != PRESSENTER)
+				Audio_PlayOneShot(0, SFX_VOLUME);
 		}
 		arrowTimer = 100.0;
 		shakeDirection = LEFT;
@@ -218,7 +218,7 @@ void MainMenu_ProcessInput()
 		{
 			choice++;
 			if (choice != PRESSENTER)
-			Audio_PlayOneShot(0, SFX_VOLUME);
+				Audio_PlayOneShot(0, SFX_VOLUME);
 		}
 		arrowTimer = 100.0;
 		shakeDirection = RIGHT;
@@ -230,7 +230,7 @@ void MainMenu_ProcessInput()
 		{
 			choice--;
 			if (choice != PRESSENTER)
-			Audio_PlayOneShot(0, SFX_VOLUME);
+				Audio_PlayOneShot(0, SFX_VOLUME);
 		}
 		arrowTimer = 100.0;
 		shakeDirection = UP;
@@ -242,7 +242,7 @@ void MainMenu_ProcessInput()
 		{
 			choice++;
 			if (choice != PRESSENTER)
-			Audio_PlayOneShot(0, SFX_VOLUME);
+				Audio_PlayOneShot(0, SFX_VOLUME);
 		}
 		arrowTimer = 100.0;
 		shakeDirection = DOWN;
@@ -590,6 +590,7 @@ void Sprite_Unload()
 	Text_Cleanup(&diamond1);
 	Text_Cleanup(&diamond2);
 	Text_Cleanup(&diamond3);
+
 	Text_Cleanup(&Button_ENTER);
 	Text_Cleanup(&Button_PLAY);
 	Text_Cleanup(&Button_2P);
@@ -599,15 +600,18 @@ void Sprite_Unload()
 	Text_Cleanup(&Button_QUIT);
 	Text_Cleanup(&Button_TUTORIAL);
 	Text_Cleanup(&Button_LEVEL1);
+
 	Text_Cleanup(&leftArrow);
 	Text_Cleanup(&rightArrow);
 	Text_Cleanup(&upArrow);
 	Text_Cleanup(&downArrow);
+
 	Text_Cleanup(&title);
 
 	Text_Cleanup(&Role_GAMEPLAY);
 	Text_Cleanup(&Role_AUDIO);
 	Text_Cleanup(&Role_LEVEL);
+
 	Text_Cleanup(&Name_FIKRUL);
 	Text_Cleanup(&Name_NICO);
 	Text_Cleanup(&Name_TED);
@@ -618,4 +622,6 @@ void Sprite_Unload()
 	Text_Cleanup(&credit2_PRESENT);
 	Text_Cleanup(&credit2_WEBSITE);
 	Text_Cleanup(&credit2_COPYRIGHT);
+
+	Text_Cleanup(&credit3);
 }

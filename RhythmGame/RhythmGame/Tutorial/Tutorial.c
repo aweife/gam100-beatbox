@@ -130,6 +130,7 @@ void Tutorial_ProcessInput()
 	}
 	else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
 		// Changes to Main Game
+		StateMachine_ChangeMode(0);
 		StateMachine_ChangeState(State_Game);
 	}
 	else if (!GetAsyncKeyState(VK_RETURN)) {
@@ -154,7 +155,6 @@ void Tutorial_Update()
 		tutorialDuration += Clock_GetDeltaTime();
 		Player_Update(0);
 		Map_Update();
-		Attack_Update();
 	}
 
 	// Moves on after 5 seconds
@@ -271,6 +271,21 @@ void Tutorial_Render()
 //*********************************************************************************
 void Tutorial_EnterState()
 {
+	spaceDown = false;
+	RETURN_DOWN = true;
+	startTutorial = false;
+	startGame = false;
+	spawnEnemy = false;
+	attackEnemy = false;
+	animateBeatman = false;
+	animateEnter = false;
+	animateBeatHead = false;
+	animateArrowKeys = false;
+	animateSpaceKey = false;
+	animateWarning = false;
+	state = STATE_INSTRUCTION;
+	tutorialDuration = 0.0;
+	animateDuration = 0.0;
 	InstructionSprite_Init();
 	GameplaySprite_Init();
 }
