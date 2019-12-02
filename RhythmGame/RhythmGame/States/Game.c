@@ -78,6 +78,8 @@ void Game_ExitState()
 	Audio_Unload(5);
 	Audio_Load(MAINMENU);
 	Audio_PlayBGM(MAINMENU);
+
+	gameType = ONEPLAYER;
 }
 
 void Game_ProcessInput()

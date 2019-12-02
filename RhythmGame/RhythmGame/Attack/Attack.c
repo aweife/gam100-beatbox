@@ -22,9 +22,9 @@
 
 // Keep tracks of how many projectiles are currently in use
 // then we update all in-use projectiles
-Projectile *pArray;
-Projectile *plArray;
-Laser *lArray;
+Projectile *pArray = 0;
+Projectile *plArray = 0;
+Laser *lArray = 0;
 
 // For notes
 sprite notes[TYPES_OF_NOTES] = { 0 };
@@ -127,7 +127,7 @@ void Attack_Render() // put in game.c
 {
 	//Print out projectile
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
-		if (pArray[i].active)
+	if (pArray[i].active)
 		{
 			CONSOLECOLOR c, d;
 			if (noteTimer > 0.0)
@@ -215,10 +215,10 @@ void Attack_Render() // put in game.c
 		// Debug 
 		if (lArray[i].active && DEBUG_AABB)
 		{
-			Console_SetRenderBuffer_CharColor(lArray[i].startPosition.x, lArray[i].startPosition.y, '+', GREEN);
-			Console_SetRenderBuffer_CharColor(lArray[i].startPositionCheck.x, lArray[i].startPositionCheck.y, '+', WHITE);
-			Console_SetRenderBuffer_CharColor(lArray[i].endPosition.x, lArray[i].endPosition.y, '+', WHITE);
-			Console_SetRenderBuffer_CharColor(lArray[i].endPositionCheck.x, lArray[i].endPositionCheck.y, '+', GREEN);
+			Console_SetRenderBuffer_CharColor(lArray[i].startPosition.x, lArray[i].startPosition.y, '+', WHITE);
+			Console_SetRenderBuffer_CharColor(lArray[i].startPositionCheck.x, lArray[i].startPositionCheck.y, '+', GREEN);
+			Console_SetRenderBuffer_CharColor(lArray[i].endPosition.x, lArray[i].endPosition.y, '+', BLUE);
+			Console_SetRenderBuffer_CharColor(lArray[i].endPositionCheck.x, lArray[i].endPositionCheck.y, '+', YELLOW);
 		}
 	}
 
@@ -275,6 +275,7 @@ void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, 
 			pArray[i].active = true;
 			return;
 		}
+		break;
 	case PLAYER:
 		for (int i = 0; i < NUMBER_OF_PLAYER_PROJECTILE; i++)
 		{
@@ -288,6 +289,7 @@ void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, 
 			plArray[i].which = which;
 			return;
 		}
+		break;
 	case LASER:
 		for (int i = 0; i < NUMBER_OF_LASER; i++)
 		{
@@ -301,6 +303,7 @@ void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, 
 			lArray[i].spawned = true;
 			return;
 		}
+		break;
 	}
 }
 
@@ -444,8 +447,8 @@ void _CheckProjectileCollision()
 		if (plArray[i].position.y <= Map_GetOrigin().y)
 		{
 			plArray[i].active = false;
-			plArray[i].position.x = -3;
-			plArray[i].position.y = -3;
+			plArray[i].position.x = 0;
+			plArray[i].position.y = 0;
 		}
 
 		// Check against enemy 
@@ -572,8 +575,15 @@ void _ClearLaser(int i)
 {
 	lArray[i].spawned = false;
 	lArray[i].active = false;
-	lArray[i].endPosition.x = -3;
-	lArray[i].endPosition.y = -3;
+	lArray[i].startPositionCheck.x = 0;
+	lArray[i].startPositionCheck.y = 0;
+	lArray[i].startPosition.x = 0;
+	lArray[i].startPosition.y = 0;
+	lArray[i].endPositionCheck.x = 0;
+	lArray[i].endPositionCheck.y = 0;
+	lArray[i].endPosition.x = 0;
+	lArray[i].endPosition.y = 0;
+
 
 	for (int j = 0; j < lArray[i].laserIndex; j++)
 		for (int k = 0; k < 2; k++)

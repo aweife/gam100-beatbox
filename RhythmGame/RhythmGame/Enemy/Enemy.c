@@ -26,12 +26,12 @@
 #define HEALTHBAR_OFFSET_X -2
 #define HEALTHBAR_OFFSET_Y -4
 #define HEALTH_FEEDBACK 50.0
-#define SMALL_PROGRESS Game_GetGameType() ? Random_Range(10,15):Random_Range(15,25)
-#define MEDIUM_PROGRESS  Game_GetGameType() ? Random_Range(5,10):Random_Range(10,20)
-#define BIG_PROGRESS  Game_GetGameType() ? Random_Range(1,10):Random_Range(5,15)
-#define SMALL_SCORE 1
-#define MEDIUM_SCORE 10
-#define BIG_SCORE 100
+#define SMALL_PROGRESS Game_GetGameType() ? Random_Range(10,15):Random_Range(10,20)
+#define MEDIUM_PROGRESS  Game_GetGameType() ? Random_Range(5,10):Random_Range(10,15)
+#define BIG_PROGRESS  Game_GetGameType() ? Random_Range(1,5):Random_Range(5,10)
+#define SMALL_SCORE 99
+#define MEDIUM_SCORE 999
+#define BIG_SCORE 9999
 
 
 // The skull enemy
@@ -312,7 +312,7 @@ void _EnemyAttack()
 
 void _RenderHealthBar()
 {
-	CONSOLECOLOR color;
+	CONSOLECOLOR color = BLUE;
 	switch (skullEnemy.scoreState)
 	{
 	case SMALL:

@@ -389,14 +389,11 @@ void Console_TestAPI()
 {
 	Console_SetTitle("Test API");
 	printf_s("Hello World!\n");
-	getchar();
 
 	Console_SetFullScreen();
 	Console_SetCursorVisibility(0);
-	getchar();
 
 	Console_Clear();
-	getchar();
 
 	Console_SetCursorPos(50, 25);
 	printf_s("Hello Digipen !~ ");
@@ -408,19 +405,15 @@ void Console_TestAPI()
 
 	Console_SetCursorPos(0, 28);
 	printf_s("Screen size: %d x %d !\n", Console_GetWidth(), Console_GetHeight());
-	getchar();
 
 	Console_SetWindowedMode(100,20, true);
 	printf_s("Screen size: %d x %d !\n", Console_GetWidth(), Console_GetHeight());
-	getchar();
 
 	Console_SetSize(120, 50);
 	printf_s("Screen size: %d x %d !\n", Console_GetWidth(), Console_GetHeight());
-	getchar();
 
 	Console_SetWindowedFullScreen();
 	printf_s("Screen size: %d x %d !\n", Console_GetWidth(), Console_GetHeight());
-	getchar();
 }
 
 

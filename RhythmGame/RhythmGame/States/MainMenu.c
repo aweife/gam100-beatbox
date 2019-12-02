@@ -236,7 +236,10 @@ void MainMenu_ProcessInput()
 		{
 			
 			if (choice != PRESSENTER)
+			{
+				choice--;
 				Audio_PlayOneShot(0, SFX_VOLUME);
+			}
 		}
 		arrowTimer = 100.0;
 		shakeDirection = UP;

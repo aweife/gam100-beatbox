@@ -219,13 +219,13 @@ void _UpdateState(int which)
 void _CheckBorder(int which)
 {
 	if (player[which].startPosition.x < Map_GetOrigin().x + 2)
-		player[which].startPosition.eulerX = Map_GetOrigin().x + 2;
+		player[which].startPosition.eulerX = (double)Map_GetOrigin().x + 2;
 	if (player[which].startPosition.y < Map_GetOrigin().y + 2)
-		player[which].startPosition.eulerY = Map_GetOrigin().y + 2;
+		player[which].startPosition.eulerY = (double)Map_GetOrigin().y + 2;
 	if (player[which].endPosition.x > Map_GetEnd().x - 2)
-		player[which].startPosition.eulerX = Map_GetEnd().x - 1 - player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.x - 1;
+		player[which].startPosition.eulerX = (double)Map_GetEnd().x - 1 - player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.x - 1;
 	if (player[which].endPosition.y > Map_GetEnd().y - 2)
-		player[which].startPosition.eulerY = Map_GetEnd().y - 1 - player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.y;
+		player[which].startPosition.eulerY = (double)Map_GetEnd().y - 1 - player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.y;
 }
 
 void _MovePlayer(int which)
