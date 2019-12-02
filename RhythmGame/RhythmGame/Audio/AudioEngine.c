@@ -78,9 +78,9 @@ void Audio_Load(STAGE stage)
 	}
 }
 
-void Audio_Unload()
+void Audio_Unload(int count)
 {
-	for (int i = 0; i < MAX_NUMBER_OF_TRACKS; i++)
+	for (int i = 0; i < count; i++)
 		if (tracks[i].sound)
 			FMOD_Sound_Release(tracks[i].sound);
 }
@@ -151,7 +151,7 @@ void Audio_Update()
 void Audio_Shutdown()
 {
 	// Unload all sounds
-	Audio_Unload();
+	Audio_Unload(3);
 
 	// SFX
 	for (int i = 0; i < MAX_NUMBER_OF_SFX; i++)

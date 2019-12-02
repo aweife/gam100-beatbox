@@ -75,7 +75,10 @@ int _Determineamountofplayers(char *path)
 		while (!feof(readScoreFile))
 		{
 			if (fgets(buffer, 200, readScoreFile))
+			{
+				if(buffer[0] != '\0')
 				players++;
+			}
 
 		}
 		fclose(readScoreFile);
@@ -210,7 +213,7 @@ void _readandstoreinfo(Pinfo *p, char *path)
 				(p + HSstate)->playerscore[i].visible = 1;
 			}
 
-
+			if(HSstate < (pcount-1))
 			HSstate++;
 		}
 
@@ -285,12 +288,14 @@ void Highscore_ExitState()
 	Text_Cleanup(&trophymanstate1);
 	Text_Cleanup(&trophymanstate2);
 	Text_Cleanup(&HSui);
+
+	free(PI);
 }
 
 bool keyDown;
 void Highscore_ProcessInput()
 {
-	if (GetAsyncKeyState(VK_ESCAPE) || GetAsyncKeyState(VK_RETURN) || GetAsyncKeyState(VK_UP) ||
+	if (GetAsyncKeyState(VK_ESCAPE) || GetAsyncKeyState(VK_UP) ||
 		GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VK_RIGHT))
 	{
 		if (!keyDown)

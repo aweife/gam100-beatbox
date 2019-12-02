@@ -46,7 +46,7 @@ int main(void)
 			if (timer < 0.0)
 			{
 				timer = 60000.0f;
-				Audio_Unload();
+				Audio_Unload(5);
 				Audio_Load(MAINMENU);
 				Audio_PlayBGM(MAINMENU);
 			}

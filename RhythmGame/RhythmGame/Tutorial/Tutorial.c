@@ -124,7 +124,7 @@ void Tutorial_ProcessInput()
 		Player_Init(TUT);
 		Map_Init(0);
 		Attack_Init();
-		Audio_Unload();
+		Audio_Unload(3);
 		Audio_Load(MAINMENU);
 		Audio_PlayBGM(MAINMENU);
 	}

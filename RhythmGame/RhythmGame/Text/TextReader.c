@@ -368,22 +368,13 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 	if (pFile == NULL) perror("Error opening file");
 	else
 	{
-
-
 		while (!feof(pFile))
 		{
-
-		
-
-
 			charcount = 0;
 			Xoffset = 0;
 			iteration = 0;
 
 			fgets(Charline, 200, pFile);
-
-
-
 
 			for (int i = 0; i < 200; i++)
 			{

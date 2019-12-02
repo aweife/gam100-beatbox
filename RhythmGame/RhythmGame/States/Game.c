@@ -38,9 +38,6 @@ void _ProcessPlayerControls();
 
 void Game_EnterState(GAMETYPE type)
 {
-	// If audio is playing
-	Audio_Unload();
-
 	// Check if one player or two player
 	gameType = type;
 
@@ -55,7 +52,7 @@ void Game_EnterState(GAMETYPE type)
 	GameUI_Init(type);
 
 	// Play bgm for audio
-	Audio_Unload();
+	Audio_Unload(3);
 	Audio_Load(STAGEONE);
 	Audio_PlayBGM(STAGEONE);
 
@@ -78,7 +75,7 @@ void Game_ExitState()
 	Text_Cleanup(&Player_GetPlayer(0)->playerSprite);
 	if(gameType==TWOPLAYER)
 		Text_Cleanup(&Player_GetPlayer(1)->playerSprite);
-	Audio_Unload();
+	Audio_Unload(5);
 	Audio_Load(MAINMENU);
 	Audio_PlayBGM(MAINMENU);
 }

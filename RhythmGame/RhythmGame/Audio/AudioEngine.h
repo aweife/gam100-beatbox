@@ -17,7 +17,7 @@ extern void Audio_Create();
 extern void Audio_Load(STAGE stage);
 
 // Unload sound so we dont use too much memory
-extern void Audio_Unload();
+extern void Audio_Unload(int count);
 
 // Pause the channels or not
 extern void Audio_Pause(bool pause);
