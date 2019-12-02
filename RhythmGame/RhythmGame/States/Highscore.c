@@ -8,10 +8,12 @@
 #include "Game.h"
 #include "../UI/UI.h"
 #include "../Text/font.h"
+#include "../Audio/AudioEngine.h"
 #include <stdbool.h>
 
 sprite HS;
-sprite trophyman;
+sprite trophymanstate1;
+sprite trophymanstate2;
 sprite HSui;
 Pinfo *PI;
 Pinfo Topplayers[5];
@@ -21,6 +23,8 @@ FILE *readScoreFile;
 Vector2d infopositioning[5][2];
 int NameScorey;
 static char buffer[200];
+
+static bool animateTrophyman = false;
 
 static int charcount;
 static int scorecount;
@@ -252,9 +256,13 @@ void Highscore_EnterState()
 	Text_Init(&HS, "..//RhythmGame//$Resources//Highscore2.txt");
 	Text_Move(&HS, 5, 55);
 
-	trophyman = Text_CreateSprite();
-	Text_Init(&trophyman, "..//RhythmGame//$Resources//trophyman1.txt");
-	Text_Move(&trophyman, 80, 10);
+	trophymanstate1 = Text_CreateSprite();
+	Text_Init(&trophymanstate1, "..//RhythmGame//$Resources//trophyman1.txt");
+	Text_Move(&trophymanstate1, 80, 10);
+
+	trophymanstate2 = Text_CreateSprite();
+	Text_Init(&trophymanstate2, "..//RhythmGame//$Resources//trophyman2.txt");
+	Text_Move(&trophymanstate2, 79, 5);
 
 	HSui = Text_CreateSprite();
 	Text_Init(&HSui, "..//RhythmGame//$Resources//scoreinfo.txt");
@@ -274,7 +282,8 @@ void Highscore_EnterState()
 void Highscore_ExitState()
 {
 	Text_Cleanup(&HS);
-	Text_Cleanup(&trophyman);
+	Text_Cleanup(&trophymanstate1);
+	Text_Cleanup(&trophymanstate2);
 	Text_Cleanup(&HSui);
 }
 
@@ -300,7 +309,7 @@ void Highscore_Update()
 void Highscore_Render()
 {
 	Text_Render(&HS, 0, 0);
-	Text_Render(&trophyman, 0, 0);
+	_RenderTrophymanAnimation();
 	Text_Render(&HSui, 0, 0);
 
 	for (int j = 0; j < 5; j++)
@@ -319,3 +328,16 @@ void Highscore_Render()
 	}
 }
 
+void _RenderTrophymanAnimation()
+{
+	animateTrophyman = !Audio_GetSpectrum(0);
+	if (animateTrophyman == false)
+	{
+		Text_Render(&trophymanstate2, 0, 0);
+	}
+
+	if (animateTrophyman == true)
+	{
+		Text_Render(&trophymanstate1, 0, 0);
+	}
+}
