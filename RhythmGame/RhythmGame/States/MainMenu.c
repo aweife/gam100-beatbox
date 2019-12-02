@@ -90,9 +90,9 @@ void MainMenu_EnterState()
 	diamond1 = Text_CreateSprite();
 	diamond2 = Text_CreateSprite();
 	diamond3 = Text_CreateSprite();
-	Text_Init(&diamond1, "..//RhythmGame//$Resources//MainMenu//Diamond1.txt");
-	Text_Init(&diamond2, "..//RhythmGame//$Resources//MainMenu//Diamond2.txt");
-	Text_Init(&diamond3, "..//RhythmGame//$Resources//MainMenu//Diamond3.txt");
+	Text_Init(&diamond1, "$Resources//Sprites//MainMenu//Diamond1.txt");
+	Text_Init(&diamond2, "$Resources//Sprites//MainMenu//Diamond2.txt");
+	Text_Init(&diamond3, "$Resources//Sprites//MainMenu//Diamond3.txt");
 
 	Button_ENTER = Text_CreateSprite();
 	Button_PLAY = Text_CreateSprite();
@@ -100,30 +100,30 @@ void MainMenu_EnterState()
 	Button_LEVEL = Text_CreateSprite();
 	Button_HISCORE = Text_CreateSprite();
 	Button_CREDIT = Text_CreateSprite();
-	Button_QUIT = Text_CreateSprite();	
+	Button_QUIT = Text_CreateSprite();
 	Button_TUTORIAL = Text_CreateSprite();
 	Button_LEVEL1 = Text_CreateSprite();
-	Text_Init(&Button_ENTER, "..//RhythmGame//$Resources//MainMenu//Button_ENTER.txt");
-	Text_Init(&Button_PLAY, "..//RhythmGame//$Resources//MainMenu//Button_PLAY.txt");
-	Text_Init(&Button_2P, "..//RhythmGame//$Resources//MainMenu//Button_2P.txt");
-	Text_Init(&Button_LEVEL, "..//RhythmGame//$Resources//MainMenu//Button_LEVEL.txt");
-	Text_Init(&Button_HISCORE, "..//RhythmGame//$Resources//MainMenu//Button_HISCORE.txt");
-	Text_Init(&Button_CREDIT, "..//RhythmGame//$Resources//MainMenu//Button_CREDIT.txt");
-	Text_Init(&Button_QUIT, "..//RhythmGame//$Resources//MainMenu//Button_QUIT.txt");
-	Text_Init(&Button_TUTORIAL, "..//RhythmGame//$Resources//MainMenu//Button_TUTORIAL.txt");
-	Text_Init(&Button_LEVEL1, "..//RhythmGame//$Resources//MainMenu//Button_LEVEL1.txt");
+	Text_Init(&Button_ENTER, "$Resources//Sprites//MainMenu//Button_ENTER.txt");
+	Text_Init(&Button_PLAY, "$Resources//Sprites//MainMenu//Button_PLAY.txt");
+	Text_Init(&Button_2P, "$Resources//Sprites//MainMenu//Button_2P.txt");
+	Text_Init(&Button_LEVEL, "$Resources//Sprites//MainMenu//Button_LEVEL.txt");
+	Text_Init(&Button_HISCORE, "$Resources//Sprites//MainMenu//Button_HISCORE.txt");
+	Text_Init(&Button_CREDIT, "$Resources//Sprites//MainMenu//Button_CREDIT.txt");
+	Text_Init(&Button_QUIT, "$Resources//Sprites//MainMenu//Button_QUIT.txt");
+	Text_Init(&Button_TUTORIAL, "$Resources//Sprites//MainMenu//Button_TUTORIAL.txt");
+	Text_Init(&Button_LEVEL1, "$Resources//Sprites//MainMenu//Button_LEVEL1.txt");
 
 	leftArrow = Text_CreateSprite();
 	rightArrow = Text_CreateSprite();
 	upArrow = Text_CreateSprite();
 	downArrow = Text_CreateSprite();
-	Text_Init(&leftArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_LEFT.txt");
-	Text_Init(&rightArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_RIGHT.txt");
-	Text_Init(&upArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_UP.txt");
-	Text_Init(&downArrow, "..//RhythmGame//$Resources//MainMenu//Arrow_DOWN.txt");
+	Text_Init(&leftArrow, "$Resources//Sprites//MainMenu//Arrow_LEFT.txt");
+	Text_Init(&rightArrow, "$Resources//Sprites//MainMenu//Arrow_RIGHT.txt");
+	Text_Init(&upArrow, "$Resources//Sprites//MainMenu//Arrow_UP.txt");
+	Text_Init(&downArrow, "$Resources//Sprites//MainMenu//Arrow_DOWN.txt");
 
 	title = Text_CreateSprite();
-	Text_Init(&title, "..//RhythmGame//$Resources//MainMenu//Title1.txt");
+	Text_Init(&title, "$Resources//Sprites//MainMenu//Title1.txt");
 
 	// CREDIT SPRITES INIT
 	Role_GAMEPLAY = Text_CreateSprite();
@@ -133,13 +133,13 @@ void MainMenu_EnterState()
 	Name_NICO = Text_CreateSprite();
 	Name_TED = Text_CreateSprite();
 	Name_GUANHIN = Text_CreateSprite();
-	Text_Init(&Role_GAMEPLAY, "..//RhythmGame//$Resources//Credit//Role_GAMEPLAY.txt");
-	Text_Init(&Role_AUDIO, "..//RhythmGame//$Resources//Credit//Role_AUDIO.txt");
-	Text_Init(&Role_LEVEL, "..//RhythmGame//$Resources//Credit//Role_LEVEL.txt");
-	Text_Init(&Name_FIKRUL, "..//RhythmGame//$Resources//Credit//Name_FIKRUL.txt");
-	Text_Init(&Name_NICO, "..//RhythmGame//$Resources//Credit//Name_NICO.txt");
-	Text_Init(&Name_TED, "..//RhythmGame//$Resources//Credit//Name_TED.txt");
-	Text_Init(&Name_GUANHIN, "..//RhythmGame//$Resources//Credit//Name_GUANHIN.txt");
+	Text_Init(&Role_GAMEPLAY, "$Resources//Sprites//Credit//Role_GAMEPLAY.txt");
+	Text_Init(&Role_AUDIO, "$Resources//Sprites//Credit//Role_AUDIO.txt");
+	Text_Init(&Role_LEVEL, "$Resources//Sprites//Credit//Role_LEVEL.txt");
+	Text_Init(&Name_FIKRUL, "$Resources//Sprites//Credit//Name_FIKRUL.txt");
+	Text_Init(&Name_NICO, "$Resources//Sprites//Credit//Name_NICO.txt");
+	Text_Init(&Name_TED, "$Resources//Sprites//Credit//Name_TED.txt");
+	Text_Init(&Name_GUANHIN, "$Resources//Sprites//Credit//Name_GUANHIN.txt");
 
 	// CREDIT2 SPRITES INIT
 	credit2_SCHOOL = Text_CreateSprite();
@@ -147,15 +147,15 @@ void MainMenu_EnterState()
 	credit2_TEAM = Text_CreateSprite();
 	credit2_WEBSITE = Text_CreateSprite();
 	credit2_COPYRIGHT = Text_CreateSprite();
-	Text_Init(&credit2_SCHOOL, "..//RhythmGame//$Resources//Credit//Credit2_SCHOOL.txt");
-	Text_Init(&credit2_PRESENT, "..//RhythmGame//$Resources//Credit//Credit2_PRESENT.txt");
-	Text_Init(&credit2_TEAM, "..//RhythmGame//$Resources//Credit//Credit2_TEAM.txt");
-	Text_Init(&credit2_WEBSITE, "..//RhythmGame//$Resources//Credit//Credit2_WEBSITE.txt");
-	Text_Init(&credit2_COPYRIGHT, "..//RhythmGame//$Resources//Credit//Credit2_COPYRIGHT.txt");
+	Text_Init(&credit2_SCHOOL, "$Resources//Sprites//Credit//Credit2_SCHOOL.txt");
+	Text_Init(&credit2_PRESENT, "$Resources//Sprites//Credit//Credit2_PRESENT.txt");
+	Text_Init(&credit2_TEAM, "$Resources//Sprites//Credit//Credit2_TEAM.txt");
+	Text_Init(&credit2_WEBSITE, "$Resources//Sprites//Credit//Credit2_WEBSITE.txt");
+	Text_Init(&credit2_COPYRIGHT, "$Resources//Sprites//Credit//Credit2_COPYRIGHT.txt");
 
 	// CREDIT3 SPRITES INIT
 	credit3 = Text_CreateSprite();
-	Text_Init(&credit3, "..//RhythmGame//$Resources//Credit//Credit3.txt");
+	Text_Init(&credit3, "$Resources//Sprites//Credit//Credit3.txt");
 
 	// CREDIT1 SPRITES UPDATE
 	Text_Move(&Role_GAMEPLAY, 50, 40);
@@ -228,10 +228,10 @@ void MainMenu_ProcessInput()
 		shakeDirection = DOWN;
 	}
 
-	if (GetAsyncKeyState(VK_RIGHT) || 
-		GetAsyncKeyState(VK_LEFT) || 
-		GetAsyncKeyState(VK_RETURN) || 
-		GetAsyncKeyState(VK_UP) || 
+	if (GetAsyncKeyState(VK_RIGHT) ||
+		GetAsyncKeyState(VK_LEFT) ||
+		GetAsyncKeyState(VK_RETURN) ||
+		GetAsyncKeyState(VK_UP) ||
 		GetAsyncKeyState(VK_DOWN))
 		keyDown = 1;
 	else
@@ -292,7 +292,7 @@ void MainMenu_Render()
 		_renderBeat();
 
 	_renderChoice(choice);
-	
+
 }
 
 //*********************************************************************************
@@ -485,7 +485,7 @@ void _renderArrow()
 		Text_RenderColor(&leftArrow, RED, 0, 0);
 		Text_RenderColor(&rightArrow, RED, 0, 0);
 	}
-	
+
 	if (arrowTimer < 0)
 		shakeDirection = 0;
 	else if (arrowTimer >= 0)

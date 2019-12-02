@@ -10,6 +10,7 @@
 #include <math.h>
 
 #define DEBUG_AABB 0
+#define SPRITE_OFFSET 7
 
 // ENEMY AI
 #define START_OF_GAME_DELAY 2000.0
@@ -64,7 +65,7 @@ void Enemy_Init(GAMETYPE type)
 	skullEnemy.startPosition.eulerY = 40.0;
 	skullEnemy.nextPosition = skullEnemy.startPosition;
 	skullEnemy.enemySprite = Text_CreateSprite();
-	Text_Init(&skullEnemy.enemySprite, "..//RhythmGame//$Resources//skull.txt");
+	Text_Init(&skullEnemy.enemySprite, "$Resources//Sprites//skull.txt");
 	Text_Move(&skullEnemy.enemySprite, skullEnemy.startPosition.x, skullEnemy.startPosition.y);
 	_MoveToPosition(0.0);
 
@@ -217,9 +218,9 @@ void _MoveToPosition(double velocity)
 		// Update position with euler
 		skullEnemy.startPosition.x = (int)skullEnemy.startPosition.eulerX;
 		skullEnemy.startPosition.y = (int)skullEnemy.startPosition.eulerY;
-		skullEnemy.endPosition.x = (int)(skullEnemy.startPosition.eulerX + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.x);
+		skullEnemy.endPosition.x = (int)(skullEnemy.startPosition.eulerX + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.x + SPRITE_OFFSET);
 		skullEnemy.endPosition.y = (int)(skullEnemy.startPosition.eulerY + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.y);
-		skullEnemy.endPosition.eulerX = skullEnemy.startPosition.eulerX + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.x;
+		skullEnemy.endPosition.eulerX = skullEnemy.startPosition.eulerX + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.x + SPRITE_OFFSET;
 		skullEnemy.endPosition.eulerY = skullEnemy.startPosition.eulerY + skullEnemy.enemySprite.spriteI[skullEnemy.enemySprite.charCount - 1].position.y;
 
 		Text_Move(&skullEnemy.enemySprite, skullEnemy.startPosition.x, skullEnemy.startPosition.y);
@@ -300,7 +301,6 @@ void _EnemyAttack()
 			Vector2d skullMouth = (Vector2d){
 				.x = (skullEnemy.startPosition.x + skullEnemy.endPosition.x) / 2,
 				.y = (skullEnemy.startPosition.y + skullEnemy.endPosition.y) / 2,
-
 				.eulerX = (skullEnemy.startPosition.eulerX + skullEnemy.endPosition.eulerX) / 2.0,
 				.eulerY = (skullEnemy.startPosition.eulerY + skullEnemy.endPosition.eulerY) / 2.0 };
 			projectileSpeed speed = { projSpeed,projSpeed * 3.0 };

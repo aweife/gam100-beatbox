@@ -1,9 +1,9 @@
-  rrr           rrr
- rr  wwwwwdddDDD  rr
-rrR wwwwwwdddDDDD Rrr
-RRwwwwwwwwwddddDDDDRR
-  wwwWWWwwdddWWWDDD
-  wwwwWWWdddWWWDDDD
-   wwwwwdddddDDDDD 
-     wwwwdWddDDDD  
-       wWwWdWD      W
+  rrr            rrr  
+ rr   wwwwddddDD   rr 
+rrR wwwwwwddddDDDD Rrr
+RRRwwwwwwwwdddddDDDRRR
+  wwwWWWwdddddWWWDDD  
+  wwwwWWWddddWWWDDDD  
+   wwwwwwdddddDDDDD   
+     wwwwwdWddDDDD    
+       wwWwWdWDD       

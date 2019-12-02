@@ -129,7 +129,7 @@ void _InitHealth()
 			{
 				health[i].hearts[j][k].visible = true;
 				health[i].hearts[j][k].heartSprite = Text_CreateSprite();
-				Text_InitArray(&health[i].hearts[j][k].heartSprite, "..//RhythmGame//$Resources//health2.txt", k);
+				Text_InitArray(&health[i].hearts[j][k].heartSprite, "$Resources//Sprites//UI//Heart.txt", k);
 				Text_Move(&health[i].hearts[j][k].heartSprite, health[i].origin.x +
 					(HEART_SPACING * j) +
 					(HEART_SPRITE_WIDTH * k), health[i].origin.y +
@@ -206,7 +206,7 @@ void _InitNumbers()
 	for (int i = 0; i < 10; i++)
 	{
 		numbers[i] = Text_CreateSprite();
-		Text_InitArray(&numbers[i], "..//RhythmGame//$Resources//numbers.txt", i);
+		Text_InitArray(&numbers[i], "$Resources//Sprites//UI//numbers.txt", i);
 	}
 }
 

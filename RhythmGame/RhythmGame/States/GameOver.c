@@ -11,6 +11,7 @@
 #include "../Text/Font.h"
 #include "../Clock/Clock.h"
 #include "../Audio/AudioEngine.h"
+#include "Highscore.h"
 
 //*********************************************************************************
 //								LOCAL VARIABLES
@@ -68,7 +69,6 @@ typedef struct Letter {
 Letter name[MAX_LETTERS];
 
 // For writing score to text file
-#define TEXT_PATHNAME "..//RhythmGame//$Resources//TestScore.txt"
 static char *path;
 static FILE *writeScoreFile;
 
@@ -205,42 +205,42 @@ void GameOver_Render()
 void GameOver_EnterState()
 {
 	CryingBeatmanState1 = Text_CreateSprite();
-	Text_Init(&CryingBeatmanState1, "..//RhythmGame//$Resources//CryingBeatman1.txt");
+	Text_Init(&CryingBeatmanState1, "$Resources//Sprites//GameOver//CryingBeatman1.txt");
 	Text_Move(&CryingBeatmanState1, (GAME_WIDTH / 4) + CENTER_OFFSETX - 5, (GAME_HEIGHT / 2) - CENTER_OFFSETY - 5);
 
 	CryingBeatmanState2 = Text_CreateSprite();
-	Text_Init(&CryingBeatmanState2, "..//RhythmGame//$Resources//CryingBeatman2.txt");
+	Text_Init(&CryingBeatmanState2, "$Resources//Sprites//GameOver//CryingBeatman2.txt");
 	Text_Move(&CryingBeatmanState2, (GAME_WIDTH / 4) + CENTER_OFFSETX - 5, (GAME_HEIGHT / 2) - CENTER_OFFSETY - 5);
 
 	ReaperState1 = Text_CreateSprite();
-	Text_Init(&ReaperState1, "..//RhythmGame//$Resources//Reaper1.txt");
+	Text_Init(&ReaperState1, "$Resources//Sprites//GameOver//Reaper1.txt");
 	Text_Move(&ReaperState1, (GAME_WIDTH / 2) - CENTER_OFFSETX - 2, (GAME_HEIGHT / 4) - CENTER_OFFSETY - 5);
 
 	ReaperState2 = Text_CreateSprite();
-	Text_Init(&ReaperState2, "..//RhythmGame//$Resources//Reaper2.txt");
+	Text_Init(&ReaperState2, "$Resources//Sprites//GameOver//Reaper2.txt");
 	Text_Move(&ReaperState2, (GAME_WIDTH / 2) - CENTER_OFFSETX - 27, (GAME_HEIGHT / 4) - CENTER_OFFSETY - 20);
 
 	GameOver = Text_CreateSprite();
-	Text_Init(&GameOver, "..//RhythmGame//$Resources//GameOver.txt");
+	Text_Init(&GameOver, "$Resources//Sprites//GameOver//GameOver.txt");
 	Text_Move(&GameOver, (GAME_WIDTH / 2) - CENTER_OFFSETX - 55, (GAME_HEIGHT / 4) + CENTER_OFFSETY - 5);
 
 	GetScore = Text_CreateSprite();
-	Text_Init(&GetScore, "..//RhythmGame//$Resources//GetScore.txt");
+	Text_Init(&GetScore, "$Resources//Sprites//GameOver//GetScore.txt");
 	Text_Move(&GetScore, (GAME_WIDTH / 2) - CENTER_OFFSETX - 75, (GAME_HEIGHT / 4) + CENTER_OFFSETY + 42);
 
 	GetName = Text_CreateSprite();
-	Text_Init(&GetName, "..//RhythmGame//$Resources//GetName.txt");
+	Text_Init(&GetName, "$Resources//Sprites//GameOver//GetName.txt");
 	Text_Move(&GetName, (GAME_WIDTH / 2) - CENTER_OFFSETX - 59, (GAME_HEIGHT / 4) + CENTER_OFFSETY + 62);
 
 	Enter = Text_CreateSprite();
-	Text_Init(&Enter, "..//RhythmGame//$Resources//GameOver_Enter.txt");
+	Text_Init(&Enter, "$Resources//Sprites//GameOver//GameOver_Enter.txt");
 	Text_Move(&Enter, (GAME_WIDTH / 2) - CENTER_OFFSETX - 35, (GAME_HEIGHT / 4) + CENTER_OFFSETY + 85);
 
 	// Init score and name
 	_PositionScore();
 	_PositionName();
 
-	path = TEXT_PATHNAME;
+	path = HIGHSCORE_PATH;
 }
 
 void GameOver_ExitState()

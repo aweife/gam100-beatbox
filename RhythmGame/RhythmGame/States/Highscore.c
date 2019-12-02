@@ -29,10 +29,11 @@ static int nameiterator = 0;
 static int scoreiterator = 0;
 static int HSstate = 0;
 static int digitCount = 0;
+
 void _Init_players()
 {
 
-	pcount = _Determineamountofplayers("..//RhythmGame//$Resources//scores.txt");
+	pcount = _Determineamountofplayers(HIGHSCORE_PATH);
 	PI = (Pinfo *)malloc(sizeof(Pinfo) * pcount);
 
 }
