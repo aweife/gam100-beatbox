@@ -45,13 +45,13 @@ void _Init_players()
 
 void _Init_positions()
 {
-	NameScorey = 75;
+	NameScorey = 85;
 	for (int i = 0; i < 5; i++)
 	{
 		infopositioning[i][0].x = 125;
 		infopositioning[i][0].y = NameScorey;
 
-		infopositioning[i][1].x = 83;
+		infopositioning[i][1].x = 81;
 		infopositioning[i][1].y = NameScorey;
 
 		NameScorey += 10;
@@ -254,7 +254,7 @@ void Highscore_EnterState()
 
 	HS = Text_CreateSprite();
 	Text_Init(&HS, "$Resources//Sprites//HighScore//Highscore2.txt");
-	Text_Move(&HS, 5, 55);
+	Text_Move(&HS, 51, 55);
 
 	trophymanstate1 = Text_CreateSprite();
 	Text_Init(&trophymanstate1, "$Resources//Sprites//HighScore//trophyman1.txt");
@@ -266,7 +266,7 @@ void Highscore_EnterState()
 
 	HSui = Text_CreateSprite();
 	Text_Init(&HSui, "$Resources//Sprites//HighScore//scoreinfo.txt");
-	Text_Move(&HSui, 40, 65);
+	Text_Move(&HSui, 35, 75);
 	_Init_positions();
 	_Init_players();
 	//_Init_Name();
