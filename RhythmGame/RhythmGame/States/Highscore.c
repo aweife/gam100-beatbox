@@ -254,7 +254,7 @@ void Highscore_EnterState()
 
 	HS = Text_CreateSprite();
 	Text_Init(&HS, "..//RhythmGame//$Resources//Highscore2.txt");
-	Text_Move(&HS, 5, 55);
+	Text_Move(&HS, 53, 55);
 
 	trophymanstate1 = Text_CreateSprite();
 	Text_Init(&trophymanstate1, "..//RhythmGame//$Resources//trophyman1.txt");
@@ -266,7 +266,7 @@ void Highscore_EnterState()
 
 	HSui = Text_CreateSprite();
 	Text_Init(&HSui, "..//RhythmGame//$Resources//scoreinfo.txt");
-	Text_Move(&HSui, 40, 65);
+	Text_Move(&HSui, 40, 75);
 	_Init_positions();
 	_Init_players();
 	//_Init_Name();

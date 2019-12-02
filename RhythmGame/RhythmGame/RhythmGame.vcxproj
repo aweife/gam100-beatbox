@@ -110,7 +110,6 @@
     <Text Include="$Resources\GetScore.txt" />
     <Text Include="$Resources\Health.txt" />
     <Text Include="$Resources\Health2.txt" />
-    <Text Include="$Resources\Highscore.txt" />
     <Text Include="$Resources\Highscore2.txt" />
     <Text Include="$Resources\Instruction_Enter1.txt" />
     <Text Include="$Resources\Instruction_Enter2.txt" />
