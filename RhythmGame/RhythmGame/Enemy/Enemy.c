@@ -65,7 +65,7 @@ void Enemy_Init(GAMETYPE type)
 	skullEnemy.startPosition.eulerY = 40.0;
 	skullEnemy.nextPosition = skullEnemy.startPosition;
 	skullEnemy.enemySprite = Text_CreateSprite();
-	Text_Init(&skullEnemy.enemySprite, "$Resources//Sprites//skull.txt");
+	Text_Init(&skullEnemy.enemySprite, "$Resources//Sprites//Game//skull.txt");
 	Text_Move(&skullEnemy.enemySprite, skullEnemy.startPosition.x, skullEnemy.startPosition.y);
 	_MoveToPosition(0.0);
 

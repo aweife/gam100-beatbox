@@ -6,8 +6,7 @@
 #include "StateMachine.h"
 #include "Highscore.h"
 #include "Game.h"
-#include "../UI/UI.h"
-#include "../Text/font.h"
+#include "../Text/Font.h"
 #include "../Audio/AudioEngine.h"
 #include <stdbool.h>
 
@@ -94,7 +93,7 @@ void _Init_Numbers()
 		for (int i = 0; i < 8; i++)
 		{
 			PI[j].playerscore[i].printsprite = Text_CreateSprite();
-			Text_InitArray(&PI[j].playerscore[i].printsprite, "..//RhythmGame//$Resources//numbers.txt", 0);
+			Text_InitArray(&PI[j].playerscore[i].printsprite, "$Resources//Sprites//UI//numbers.txt", 0);
 			PI[j].playerscore[i].visible = 0;
 			Text_Move(&PI[j].playerscore[i].printsprite, infopositioning[j][0].x + scoreiterator, infopositioning[j][0].y);
 			scoreiterator += 4;
@@ -108,7 +107,7 @@ void _Init_Numbers()
 		for (int i = 0; i < 8; i++)
 		{
 			Topplayers[j].playerscore[i].printsprite = Text_CreateSprite();
-			Text_InitArray(&Topplayers[j].playerscore[i].printsprite, "..//RhythmGame//$Resources//numbers.txt", 0);
+			Text_InitArray(&Topplayers[j].playerscore[i].printsprite, "$Resources//Sprites//UI//numbers.txt", 0);
 			Topplayers[j].playerscore[i].visible = 0;
 			Text_Move(&Topplayers[j].playerscore[i].printsprite, infopositioning[j][0].x + scoreiterator, infopositioning[j][0].y);
 			scoreiterator += 4;
@@ -152,7 +151,7 @@ void _Init_Name()
 		for (int i = 0; i < 3; i++)
 		{
 			PI[j].playername[i].printsprite = Text_CreateSprite();
-			Text_InitArray(&PI[j].playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 6);
+			Text_InitArray(&PI[j].playername[i].printsprite, "$Resources//Sprites//UI//Alphabets2.txt", 6);
 			PI[j].playername[i].visible = 0;
 
 		}
@@ -164,7 +163,7 @@ void _Init_Name()
 		for (int i = 0; i < 3; i++)
 		{
 			Topplayers[j].playername[i].printsprite = Text_CreateSprite();
-			Text_InitArray(&Topplayers[j].playername[i].printsprite, "..//RhythmGame//$resources//Alphabets2.txt", 6);
+			Text_InitArray(&Topplayers[j].playername[i].printsprite, "$Resources//Sprites//UI//Alphabets2.txt", 6);
 			Topplayers[j].playername[i].visible = 0;
 
 			Text_Move(&PI[j].playername[i].printsprite, infopositioning[j][1].x + nameiterator, infopositioning[j][1].y);
@@ -253,19 +252,19 @@ void Highscore_EnterState()
 {
 
 	HS = Text_CreateSprite();
-	Text_Init(&HS, "..//RhythmGame//$Resources//Highscore2.txt");
+	Text_Init(&HS, "$Resources//Sprites//HighScore//Highscore2.txt");
 	Text_Move(&HS, 5, 55);
 
 	trophymanstate1 = Text_CreateSprite();
-	Text_Init(&trophymanstate1, "..//RhythmGame//$Resources//trophyman1.txt");
+	Text_Init(&trophymanstate1, "$Resources//Sprites//HighScore//trophyman1.txt");
 	Text_Move(&trophymanstate1, 80, 10);
 
 	trophymanstate2 = Text_CreateSprite();
-	Text_Init(&trophymanstate2, "..//RhythmGame//$Resources//trophyman2.txt");
+	Text_Init(&trophymanstate2, "$Resources//Sprites//HighScore//trophyman2.txt");
 	Text_Move(&trophymanstate2, 79, 5);
 
 	HSui = Text_CreateSprite();
-	Text_Init(&HSui, "..//RhythmGame//$Resources//scoreinfo.txt");
+	Text_Init(&HSui, "$Resources//Sprites//HighScore//scoreinfo.txt");
 	Text_Move(&HSui, 40, 65);
 	_Init_positions();
 	_Init_players();
@@ -273,7 +272,7 @@ void Highscore_EnterState()
 	//_Init_Numbers();
 
 
-	_readandstoreinfo(&PI[0], "..//RhythmGame//$Resources//scores.txt");
+	_readandstoreinfo(&PI[0], HIGHSCORE_PATH);
 
 	_determinetopplayers();
 	_Move_placements();

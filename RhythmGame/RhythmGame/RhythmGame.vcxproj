@@ -38,7 +38,6 @@
     <ClCompile Include="Text\TextReader.c" />
     <ClCompile Include="Tutorial\Tutorial.c" />
     <ClCompile Include="UI\GameUI.c" />
-    <ClCompile Include="UI\UI.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Attack\Attack.h" />
@@ -60,7 +59,6 @@
     <ClInclude Include="Text\TextReader.h" />
     <ClInclude Include="Tutorial\Tutorial.h" />
     <ClInclude Include="UI\GameUI.h" />
-    <ClInclude Include="UI\UI.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="$Resources\Alphabets.txt" />

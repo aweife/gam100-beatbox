@@ -52,7 +52,7 @@ void Player_Init(GAMETYPE type)
 		player[i].direction = STAY;
 		player[i].state = Normal;
 		player[i].playerSprite = Text_CreateSprite();
-		Text_Init(&player[i].playerSprite, "$Resources//Sprites//player.txt");
+		Text_Init(&player[i].playerSprite, "$Resources//Sprites//Game//player.txt");
 
 		// Movement
 		player[i].factor = 0.0;

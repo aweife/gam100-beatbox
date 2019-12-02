@@ -47,6 +47,9 @@ void Audio_Create()
 		FMOD_DSP_SetParameterInt(tracks[i].dsp, FMOD_DSP_FFT_WINDOWTYPE, FMOD_DSP_FFT_WINDOW_TRIANGLE);
 		FMOD_DSP_SetParameterInt(tracks[i].dsp, FMOD_DSP_FFT_WINDOWSIZE, 1024);
 	}
+
+	// Load SFX
+	Audio_Load(SFX);
 }
 
 void Audio_Load(STAGE stage)
@@ -147,6 +150,10 @@ void Audio_Shutdown()
 {
 	// Unload all sounds
 	Audio_Unload();
+
+	// SFX
+	FMOD_Sound_Release(sfx[0]);
+	FMOD_Sound_Release(sfx[1]);
 
 	// All channels stop playing and released, main system too
 	result = FMOD_System_Release(_system);

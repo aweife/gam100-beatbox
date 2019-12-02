@@ -233,7 +233,13 @@ void MainMenu_ProcessInput()
 		GetAsyncKeyState(VK_RETURN) ||
 		GetAsyncKeyState(VK_UP) ||
 		GetAsyncKeyState(VK_DOWN))
+	{
 		keyDown = 1;
+		if(GetAsyncKeyState(VK_RETURN))
+			Audio_PlayOneShot(1, 1.0f);
+		else
+			Audio_PlayOneShot(0, 1.0f);
+	}
 	else
 		keyDown = 0;
 

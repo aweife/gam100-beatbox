@@ -66,7 +66,7 @@ void Game_EnterState(GAMETYPE type)
 
 	// Set game unpaused
 	pauseButton = Text_CreateSprite();
-	Text_Init(&pauseButton, "$Resources//Sprites//pause.txt");
+	Text_Init(&pauseButton, "$Resources//Sprites//Game//pause.txt");
 	Text_Move(&pauseButton, GAME_WIDTH / 2 - GAMEUI_OFFSET, MAP_OFFSET);
 	_PauseGame(false);
 }

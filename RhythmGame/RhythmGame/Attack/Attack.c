@@ -56,7 +56,7 @@ void Attack_Init()
 		pArray[i].position.x = -1;
 		pArray[i].position.y = -1;
 		pArray[i].projectileSprite = Text_CreateSprite();
-		Text_Init(&pArray[i].projectileSprite, "$Resources//Sprites//projectile.txt");
+		Text_Init(&pArray[i].projectileSprite, "$Resources//Sprites//Game//projectile.txt");
 	}
 
 	// Init player projectiles sprites
@@ -66,7 +66,7 @@ void Attack_Init()
 		plArray[i].position.x = -1;
 		plArray[i].position.y = -1;
 		plArray[i].projectileSprite = Text_CreateSprite();
-		Text_Init(&plArray[i].projectileSprite, "$Resources//Sprites//projectile2.txt");
+		Text_Init(&plArray[i].projectileSprite, "$Resources//Sprites//Game//projectile2.txt");
 	}
 
 	// Init laser sprites
@@ -74,14 +74,14 @@ void Attack_Init()
 	{
 		_ClearLaser(i);
 		lArray[i].spawnSprite = Text_CreateSprite();
-		Text_Init(&lArray[i].spawnSprite, "$Resources//Sprites//laserspawn.txt");
+		Text_Init(&lArray[i].spawnSprite, "$Resources//Sprites//Game//laserspawn.txt");
 
 		// 2 laser sprite
 		for (int k = 0; k < 2; k++)
 			for (int j = 0; j < LENGTH_OF_LASER; j++)
 			{
 				lArray[i].laserSprite[j][k] = Text_CreateSprite();
-				Text_InitArray(&lArray[i].laserSprite[j][k], "$Resources//Sprites//laser.txt", k);
+				Text_InitArray(&lArray[i].laserSprite[j][k], "$Resources//Sprites//Game//laser.txt", k);
 			}
 	}
 
@@ -89,7 +89,7 @@ void Attack_Init()
 	for (int i = 0; i < TYPES_OF_NOTES; i++)
 	{
 		notes[i] = Text_CreateSprite();
-		Text_InitArray(&notes[i], "$Resources//Sprites//notes.txt", i);
+		Text_InitArray(&notes[i], "$Resources//Sprites//Game//notes.txt", i);
 	}
 
 	// Init notes array
