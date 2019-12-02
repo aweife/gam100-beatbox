@@ -20,6 +20,7 @@ typedef struct Pinfo
 
 }Pinfo;
 
+#define HIGHSCORE_PATH "$HighScores//highscores.txt"
 
 extern void Highscore_EnterState();
 extern void Highscore_ExitState();

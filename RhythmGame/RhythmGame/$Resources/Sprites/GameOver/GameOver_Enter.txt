@@ -1,0 +1,8 @@
+   BBBBB     BBBBB     BBBBB     BBBBB     BBBBB           BBBBB   B    BB     BBBBB     BBBBB     BBBBB
+       B         B         B         B         B               B    B    B         B         B         B
+ YYYYY B   YYYYY B   YYYYY     YYYYY     YYYYY           YYYYY     Y  YY B   YYYYY     YYYYY     YYYYY B
+yyyyyY    yyyyyY    yyyyyY B  yyyyyY B  yyyyyY B        yyyyyY B  yyY yY B  yyyyyY    yyyyyY    yyyyyY  
+y   yY    y   yY    y         y      B  y      B        y         y y yY B    y       y         y   yY  
+yyyyy     yyyyy     yyyy      yyyyyY    yyyyyY          yyy       y  yyY      y       yyy       yyyyy   
+y         y  y      y             yY        yY          y         y   yY      y       y         y  y    
+y         y   y     yyyyy     yyyyy     yyyyy           yyyyy     y   y       y       yyyyy     y   y   

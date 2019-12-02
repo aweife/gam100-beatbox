@@ -5,6 +5,7 @@
 
 #define NUMBER_OF_CHANNELS 20
 #define MAX_NUMBER_OF_TRACKS 5
+#define MAX_NUMBER_OF_SFX 2
 
 #define BEAT_THRESHOLD 0.0000000017
 
@@ -46,6 +47,9 @@ void Audio_Create()
 		FMOD_DSP_SetParameterInt(tracks[i].dsp, FMOD_DSP_FFT_WINDOWTYPE, FMOD_DSP_FFT_WINDOW_TRIANGLE);
 		FMOD_DSP_SetParameterInt(tracks[i].dsp, FMOD_DSP_FFT_WINDOWSIZE, 1024);
 	}
+
+	// Load SFX
+	Audio_Load(SFX);
 }
 
 void Audio_Load(STAGE stage)
@@ -53,21 +57,20 @@ void Audio_Load(STAGE stage)
 	switch (stage)
 	{
 	case MAINMENU:
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//KickMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[0].sound);
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//SnareMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[1].sound);
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//MelodyMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[2].sound);
-		break;
-	case TUTORIAL:
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//KickMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[0].sound);
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//SnareMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[1].sound);
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//MelodyMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[2].sound);
+		FMOD_System_CreateSound(_system, "$Resources//Music//KickMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[0].sound);
+		FMOD_System_CreateSound(_system, "$Resources//Music//SnareMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[1].sound);
+		FMOD_System_CreateSound(_system, "$Resources//Music//MelodyMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[2].sound);
 		break;
 	case STAGEONE:
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//Snare1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[0].sound);
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//Normal1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[1].sound);
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//Laser1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[2].sound);
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//Warning1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[3].sound);
-		FMOD_System_CreateSound(_system, "..//RhythmGame//$Resources//Melody1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[4].sound);
+		FMOD_System_CreateSound(_system, "$Resources//Music//Snare1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[0].sound);
+		FMOD_System_CreateSound(_system, "$Resources//Music//Normal1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[1].sound);
+		FMOD_System_CreateSound(_system, "$Resources//Music//Laser1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[2].sound);
+		FMOD_System_CreateSound(_system, "$Resources//Music//Warning1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[3].sound);
+		FMOD_System_CreateSound(_system, "$Resources//Music//Melody1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[4].sound);
+		break;
+	case SFX:
+		FMOD_System_CreateSound(_system, "$Resources//Music//Select.wav", FMOD_LOOP_OFF, 0, &sfx[0]);
+		FMOD_System_CreateSound(_system, "$Resources//Music//Confirm.wav", FMOD_LOOP_OFF, 0, &sfx[1]);
 		break;
 	}
 }
@@ -115,15 +118,6 @@ void Audio_PlayBGM(STAGE stage)
 			FMOD_DSP_GetParameterData(tracks[i].dsp, FMOD_DSP_FFT_SPECTRUMDATA, (void **)&tracks[i].dspFFT, 0, 0, 0);
 		}
 		break;
-	case TUTORIAL:
-		for (int i = 0; i < 3; i++)
-		{
-			FMOD_System_PlaySound(_system, tracks[i].sound, 0, false, &tracks[i].channel);
-			FMOD_Channel_AddDSP(tracks[i].channel, 0, tracks[i].dsp);
-			FMOD_DSP_SetActive(tracks[i].dsp, true);
-			FMOD_DSP_GetParameterData(tracks[i].dsp, FMOD_DSP_FFT_SPECTRUMDATA, (void **)&tracks[i].dspFFT, 0, 0, 0);
-		}
-		break;
 	case STAGEONE:
 		for (int i = 0; i < 5; i++)
 		{
@@ -156,6 +150,10 @@ void Audio_Shutdown()
 {
 	// Unload all sounds
 	Audio_Unload();
+
+	// SFX
+	FMOD_Sound_Release(sfx[0]);
+	FMOD_Sound_Release(sfx[1]);
 
 	// All channels stop playing and released, main system too
 	result = FMOD_System_Release(_system);

@@ -12,8 +12,8 @@ LogoStruct Logo;
 extern void Logo_EnterState()
 {
 	Logo = (LogoStruct){ .position.x = 3, .position.y = 100, .position.eulerY = 100.0, .LogoSprite1 = Text_CreateSprite(), .LogoSprite2 = Text_CreateSprite()};
-	Text_Init(&Logo.LogoSprite1, "..//RhythmGame//$Resources//Logo.txt");
-	Text_Init(&Logo.LogoSprite2, "..//RhythmGame//$Resources//Credit//Credit2_COPYRIGHT.txt");
+	Text_Init(&Logo.LogoSprite1, "$Resources//Sprites//Credit//Logo.txt");
+	Text_Init(&Logo.LogoSprite2, "$Resources//Sprites//Credit//Credit2_COPYRIGHT.txt");
 }
 
 extern void Logo_ExitState()
@@ -34,8 +34,8 @@ extern void Logo_ProcessInput()
 extern void Logo_Update()
 {
 	dTimer = Clock_GetDeltaTime();
-	if (Logo.position.eulerY < 30)
-		Logo.position.eulerY = 29.0;
+	if (Logo.position.eulerY < 51)
+		Logo.position.eulerY = 50.0;
 	else
 		Logo.position.eulerY -= velocity * dTimer;
 

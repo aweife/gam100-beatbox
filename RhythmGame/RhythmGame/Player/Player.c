@@ -10,6 +10,7 @@
 #include "../States/Game.h"
 
 #define DEBUG_AABB 0
+#define SPRITE_OFFSET 1
 
 #define PLAYER_BASE_MOVESPEED 0.06
 #define PLAYER_FAST_MOVESPEED 0.3
@@ -51,7 +52,7 @@ void Player_Init(GAMETYPE type)
 		player[i].direction = STAY;
 		player[i].state = Normal;
 		player[i].playerSprite = Text_CreateSprite();
-		Text_Init(&player[i].playerSprite, "..//RhythmGame//$Resources//player.txt");
+		Text_Init(&player[i].playerSprite, "$Resources//Sprites//Game//player.txt");
 
 		// Movement
 		player[i].factor = 0.0;
@@ -80,7 +81,7 @@ void Player_Init(GAMETYPE type)
 	else
 		player[0].startPosition.eulerX = player[0].startPosition.x = 95;
 
-	if(type == TUT)
+	if (type == TUT)
 		player[0].startPosition.eulerY = player[0].startPosition.y = 100;
 }
 
@@ -264,8 +265,10 @@ void _MovePlayer(int which)
 
 	player[which].startPosition.x = (int)player[which].startPosition.eulerX;
 	player[which].startPosition.y = (int)player[which].startPosition.eulerY;
-	player[which].endPosition.x = (int)(player[which].startPosition.eulerX + player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.x);
+	player[which].endPosition.x = (int)(player[which].startPosition.eulerX + player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.x + SPRITE_OFFSET);
 	player[which].endPosition.y = (int)(player[which].startPosition.eulerY + player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.y);
+	player[which].endPosition.eulerX = player[which].startPosition.eulerX + player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.x + SPRITE_OFFSET;
+	player[which].endPosition.eulerY = player[which].startPosition.eulerY + player[which].playerSprite.spriteI[player[which].playerSprite.charCount - 1].position.y;
 
 	Text_Move(&player[which].playerSprite, player[which].startPosition.x, player[which].startPosition.y);
 }
@@ -278,8 +281,22 @@ void _AutoAttack()
 	{
 		attackTimer = PLAYER_ATTACKSPEED;
 		projectileSpeed speed = { PROJECTILE_SPEED,PROJECTILE_SPEED };
-		Attack_Spawn(PLAYER, player[0].startPosition, UP, speed, 0);
+		Vector2d middle = (Vector2d){
+			.x = (player[0].startPosition.x + player[0].endPosition.x) / 2,
+			.y = player[0].startPosition.y,
+			.eulerX = (player[0].startPosition.eulerX + player[0].endPosition.eulerX) / 2.0,
+			.eulerY = player[0].startPosition.eulerY,
+		};
+		Attack_Spawn(PLAYER, middle, UP, speed, 0);
 		if (Game_GetGameType() == TWOPLAYER)
-			Attack_Spawn(PLAYER, player[1].startPosition, UP, speed, 1);
+		{
+			Vector2d middle2 = (Vector2d){
+			.x = (player[1].startPosition.x + player[1].endPosition.x) / 2,
+			.y = player[1].startPosition.y,
+			.eulerX = (player[1].startPosition.eulerX + player[1].endPosition.eulerX) / 2.0,
+			.eulerY = player[1].startPosition.eulerY,
+			};
+			Attack_Spawn(PLAYER, middle2, UP, speed, 1);
+		}
 	}
 }

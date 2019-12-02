@@ -125,8 +125,8 @@ void Tutorial_ProcessInput()
 		Map_Init(0);
 		Attack_Init();
 		Audio_Unload();
-		Audio_Load(TUTORIAL);
-		Audio_PlayBGM(TUTORIAL);
+		Audio_Load(MAINMENU);
+		Audio_PlayBGM(MAINMENU);
 	}
 	else if (GetAsyncKeyState(VK_RETURN) && !RETURN_DOWN && startGame == true) {
 		// Changes to Main Game
@@ -308,86 +308,86 @@ void Tutorial_ExitState()
 void InstructionSprite_Init()
 {
 	leftBeatmanState1 = Text_CreateSprite();
-	Text_Init(&leftBeatmanState1, "..//RhythmGame//$Resources//beatman1.txt");
+	Text_Init(&leftBeatmanState1, "$Resources//Sprites//Tutorial//beatman1.txt");
 	Text_Move(&leftBeatmanState1, (GAME_WIDTH / 4) - TUTORIAL_BEATMAN_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2) + 20);
 
 	rightBeatmanState1 = Text_CreateSprite();
-	Text_Init(&rightBeatmanState1, "..//RhythmGame//$Resources//beatman2.txt");
+	Text_Init(&rightBeatmanState1, "$Resources//Sprites//Tutorial//beatman2.txt");
 	Text_Move(&rightBeatmanState1, (GAME_WIDTH / 4) - (TUTORIAL_BEATMAN_OFFSET - 2) + TUTORIAL_MIRROR_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2) + 15);
 
 	leftBeatmanState2 = Text_CreateSprite();
-	Text_Init(&leftBeatmanState2, "..//RhythmGame//$Resources//beatman1.txt");
+	Text_Init(&leftBeatmanState2, "$Resources//Sprites//Tutorial//beatman1.txt");
 	Text_Move(&leftBeatmanState2, (GAME_WIDTH / 4) - (TUTORIAL_BEATMAN_OFFSET - 2) + TUTORIAL_MIRROR_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2) + 20);
 
 	rightBeatmanState2 = Text_CreateSprite();
-	Text_Init(&rightBeatmanState2, "..//RhythmGame//$Resources//beatman2.txt");
+	Text_Init(&rightBeatmanState2, "$Resources//Sprites//Tutorial//beatman2.txt");
 	Text_Move(&rightBeatmanState2, (GAME_WIDTH / 4) - TUTORIAL_BEATMAN_OFFSET, (GAME_HEIGHT / 4) - (TUTORIAL_BEATMAN_OFFSET / 2) + 15);
 
 	Instruction = Text_CreateSprite();
-	Text_Init(&Instruction, "..//RhythmGame//$Resources//Instruction_Header.txt");
+	Text_Init(&Instruction, "$Resources//Sprites//Tutorial//Instruction_Header.txt");
 	Text_Move(&Instruction, (GAME_WIDTH / 2) - TUTORIAL_INSTRUCTION_OFFSET, (GAME_HEIGHT / 2) - (TUTORIAL_BEATMAN_OFFSET / 2) + 15);
 
 	EnterState1 = Text_CreateSprite();
-	Text_Init(&EnterState1, "..//RhythmGame//$Resources//Instruction_Enter1.txt");
+	Text_Init(&EnterState1, "$Resources//Sprites//Tutorial//Instruction_Enter1.txt");
 	Text_Move(&EnterState1, (GAME_WIDTH / 4), (GAME_HEIGHT / 2) + TUTORIAL_ENTER_OFFSET);
 
 	EnterState2 = Text_CreateSprite();
-	Text_Init(&EnterState2, "..//RhythmGame//$Resources//Instruction_Enter2.txt");
+	Text_Init(&EnterState2, "$Resources//Sprites//Tutorial//Instruction_Enter2.txt");
 	Text_Move(&EnterState2, (GAME_WIDTH / 4), (GAME_HEIGHT / 2) + TUTORIAL_ENTER_OFFSET);
 }
 
 void GameplaySprite_Init()
 {
 	BeatheadState1 = Text_CreateSprite();
-	Text_Init(&BeatheadState1, "..//RhythmGame//$Resources//beathead1.txt");
+	Text_Init(&BeatheadState1, "$Resources//Sprites//Tutorial//beathead1.txt");
 	Text_Move(&BeatheadState1, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX - 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
 
 	BeatheadState2 = Text_CreateSprite();
-	Text_Init(&BeatheadState2, "..//RhythmGame//$Resources//beathead2.txt");
+	Text_Init(&BeatheadState2, "$Resources//Sprites//Tutorial//beathead2.txt");
 	Text_Move(&BeatheadState2, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX - 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
 
 	MoveDialogue = Text_CreateSprite();
-	Text_Init(&MoveDialogue, "..//RhythmGame//$Resources//MoveDialogue.txt");
+	Text_Init(&MoveDialogue, "$Resources//Sprites//Tutorial//MoveDialogue.txt");
 	Text_Move(&MoveDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 25, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 5);
 
 	ArrowKeysState1 = Text_CreateSprite();
-	Text_Init(&ArrowKeysState1, "..//RhythmGame//$Resources//ArrowKeys1.txt");
+	Text_Init(&ArrowKeysState1, "$Resources//Sprites//Tutorial//ArrowKeys1.txt");
 	Text_Move(&ArrowKeysState1, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2), (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY - 5);
 
 	ArrowKeysState2 = Text_CreateSprite();
-	Text_Init(&ArrowKeysState2, "..//RhythmGame//$Resources//ArrowKeys2.txt");
+	Text_Init(&ArrowKeysState2, "$Resources//Sprites//Tutorial//ArrowKeys2.txt");
 	Text_Move(&ArrowKeysState2, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2) + 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY - 4);
 
 	DashDialogue = Text_CreateSprite();
-	Text_Init(&DashDialogue, "..//RhythmGame//$Resources//DashDialogue.txt");
+	Text_Init(&DashDialogue, "$Resources//Sprites//Tutorial//DashDialogue.txt");
 	Text_Move(&DashDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 25, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 5);
 
 	SpaceKeyState1 = Text_CreateSprite();
-	Text_Init(&SpaceKeyState1, "..//RhythmGame//$Resources//SpaceKey1.txt");
+	Text_Init(&SpaceKeyState1, "$Resources//Sprites//Tutorial//SpaceKey1.txt");
 	Text_Move(&SpaceKeyState1, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2), (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
 
 	SpaceKeyState2 = Text_CreateSprite();
-	Text_Init(&SpaceKeyState2, "..//RhythmGame//$Resources//SpaceKey2.txt");
+	Text_Init(&SpaceKeyState2, "$Resources//Sprites//Tutorial//SpaceKey2.txt");
 	Text_Move(&SpaceKeyState2, (GAME_WIDTH / 2) + (TUTORIAL_DIALOGUE_OFFSETX / 2) + 1, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 3);
 
 	EnemyDialogue = Text_CreateSprite();
-	Text_Init(&EnemyDialogue, "..//RhythmGame//$Resources//EnemyDialogue.txt");
+	Text_Init(&EnemyDialogue, "$Resources//Sprites//Tutorial//EnemyDialogue.txt");
 	Text_Move(&EnemyDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 35, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 5);
 
 	EnemyWarningState1 = Text_CreateSprite();
-	Text_Init(&EnemyWarningState1, "..//RhythmGame//$Resources//EnemySpotted1.txt");
+	Text_Init(&EnemyWarningState1, "$Resources//Sprites//Tutorial//EnemySpotted1.txt");
 	Text_Move(&EnemyWarningState1, (GAME_WIDTH / 2) - TUTORIAL_ENEMY_POSITIONX, (GAME_HEIGHT / 2) - TUTORIAL_ENEMY_POSITIONY);
 
 	EnemyWarningState2 = Text_CreateSprite();
-	Text_Init(&EnemyWarningState2, "..//RhythmGame//$Resources//EnemySpotted2.txt");
+	Text_Init(&EnemyWarningState2, "$Resources//Sprites//Tutorial//EnemySpotted2.txt");
 	Text_Move(&EnemyWarningState2, (GAME_WIDTH / 2) - TUTORIAL_ENEMY_POSITIONX, (GAME_HEIGHT / 2) - TUTORIAL_ENEMY_POSITIONY);
 
 	NotesDialogue = Text_CreateSprite();
-	Text_Init(&NotesDialogue, "..//RhythmGame//$Resources//NotesDialogue.txt");
+	Text_Init(&NotesDialogue, "$Resources//Sprites//Tutorial//NotesDialogue.txt");
 	Text_Move(&NotesDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 25, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
 
 	EndTutorialDialogue = Text_CreateSprite();
-	Text_Init(&EndTutorialDialogue, "..//RhythmGame//$Resources//EndTutorialDialogue.txt");
+	Text_Init(&EndTutorialDialogue, "$Resources//Sprites//Tutorial//EndTutorialDialogue.txt");
 	Text_Move(&EndTutorialDialogue, (GAME_WIDTH / 2) - TUTORIAL_DIALOGUE_OFFSETX + 30, (GAME_HEIGHT / 2) + TUTORIAL_DIALOGUE_OFFSETY + 2);
 }
 

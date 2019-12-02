@@ -1,0 +1,43 @@
+0
+     w    
+     bw   
+     bbw  
+     bBbb 
+     b BbB
+     b  BB
+     b   B
+     b    
+ bbbbb    
+bwbbbB    
+bbbbbB    
+ BBBB    W
+1
+    dddddmm
+    mmmmmmm
+    m     m
+    mmmMMMm
+    m     m
+    m     m
+ mmmm     m
+mwmmM  mmmm
+mmmMM mwmmM
+ MMM  mmmMM
+       MMMW
+2
+     wwy   
+     wYy   
+    yY yy  
+   yy  yy  
+   yy  yy  
+    yyyy   
+   yYY     
+ wY  y     
+wy  Yyy    
+wy Yyyyyyw 
+wy y y   yw
+ Yy  y  yYY
+  YYyyyYY  
+     y     
+  ww y     
+  Yyyy     
+   YY     W

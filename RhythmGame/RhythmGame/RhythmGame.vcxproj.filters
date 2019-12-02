@@ -17,7 +17,6 @@
     <ClCompile Include="States\StateMachine.c" />
     <ClCompile Include="Text\TextReader.c" />
     <ClCompile Include="UI\GameUI.c" />
-    <ClCompile Include="UI\UI.c" />
     <ClCompile Include="States\Logo.c" />
     <ClCompile Include="Tutorial\Tutorial.c" />
     <ClCompile Include="Text\Font.c" />
@@ -40,7 +39,6 @@
     <ClInclude Include="States\StateMachine.h" />
     <ClInclude Include="Text\TextReader.h" />
     <ClInclude Include="UI\GameUI.h" />
-    <ClInclude Include="UI\UI.h" />
     <ClInclude Include="States\Logo.h" />
     <ClInclude Include="Tutorial\Tutorial.h" />
     <ClInclude Include="Text\Font.h" />

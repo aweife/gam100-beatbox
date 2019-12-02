@@ -42,25 +42,25 @@ void _InitLettersAndNumbers()
 	for (int i = 0; i < 10; i++)
 	{
 		words.atoj[i] = Text_CreateSprite();
-		Text_InitArray(&words.atoj[i], "..//RhythmGame//$Resources//Alphabets.txt", i);
+		Text_InitArray(&words.atoj[i], "$Resources//Sprites/UI//Alphabets.txt", i);
 	}
 	// Create k to t
 	for (int i = 0; i < 10; i++)
 	{
 		words.ktot[i] = Text_CreateSprite();
-		Text_InitArray(&words.ktot[i], "..//RhythmGame//$Resources//Alphabets2.txt", i);
+		Text_InitArray(&words.ktot[i], "$Resources//Sprites/UI//Alphabets2.txt", i);
 	}
 	// Create u to z
 	for (int i = 0; i < 6; i++)
 	{
 		words.utoz[i] = Text_CreateSprite();
-		Text_InitArray(&words.utoz[i], "..//RhythmGame//$Resources//Alphabets3.txt", i);
+		Text_InitArray(&words.utoz[i], "$Resources//Sprites/UI//Alphabets3.txt", i);
 	}
 	// Create numbers
 	for (int i = 0; i < 10; i++)
 	{
 		words.numbers[i] = Text_CreateSprite();
-		Text_InitArray(&words.numbers[i], "..//RhythmGame//$Resources//numbers.txt", i);
+		Text_InitArray(&words.numbers[i], "$Resources//Sprites/UI//numbers.txt", i);
 	}
 }
 

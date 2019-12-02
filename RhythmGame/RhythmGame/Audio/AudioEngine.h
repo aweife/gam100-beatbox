@@ -4,8 +4,8 @@
 
 typedef enum STAGE {
 	MAINMENU,
-	TUTORIAL,
 	STAGEONE,
+	SFX,
 } STAGE;
 
 /* Call these functions only *************************************************/
