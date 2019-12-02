@@ -5,7 +5,7 @@
 
 void Random_Init()
 {
-	srand(time(NULL));
+	srand((unsigned)time(NULL));
 }
 
 int Random_Range(int min_n, int max_n)

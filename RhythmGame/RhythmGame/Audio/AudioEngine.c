@@ -2,10 +2,11 @@
 #include "fmod.h"
 #include "fmod_errors.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 #define NUMBER_OF_CHANNELS 20
 #define MAX_NUMBER_OF_TRACKS 5
-#define MAX_NUMBER_OF_SFX 2
+#define MAX_NUMBER_OF_SFX 1
 
 #define BEAT_THRESHOLD 0.0000000017
 
@@ -19,7 +20,7 @@ typedef struct track
 } track;
 
 track tracks[MAX_NUMBER_OF_TRACKS] = { 0 };
-FMOD_SOUND *sfx[1] = { 0 };
+FMOD_SOUND *sfx[MAX_NUMBER_OF_SFX] = { 0 };
 
 // FMOD-specific stuff
 static FMOD_SYSTEM *_system;
@@ -57,9 +58,12 @@ void Audio_Load(STAGE stage)
 	switch (stage)
 	{
 	case MAINMENU:
-		FMOD_System_CreateSound(_system, "$Resources//Music//KickMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[0].sound);
-		FMOD_System_CreateSound(_system, "$Resources//Music//SnareMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[1].sound);
-		FMOD_System_CreateSound(_system, "$Resources//Music//MelodyMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[2].sound);
+		result = FMOD_System_CreateSound(_system, "$Resources//Music//KickMenu.wav", FMOD_LOOP_NORMAL, 0, &tracks[0].sound);
+		_CheckResult("kick");
+		result = FMOD_System_CreateSound(_system, "$Resources//Music//SnareMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[1].sound);
+		_CheckResult("snare");
+		result = FMOD_System_CreateSound(_system, "$Resources//Music//MelodyMenu.wav", FMOD_LOOP_NORMAL | FMOD_CREATESAMPLE, 0, &tracks[2].sound);
+		_CheckResult("melody");
 		break;
 	case STAGEONE:
 		FMOD_System_CreateSound(_system, "$Resources//Music//Snare1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[0].sound);
@@ -69,8 +73,7 @@ void Audio_Load(STAGE stage)
 		FMOD_System_CreateSound(_system, "$Resources//Music//Melody1.wav", FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tracks[4].sound);
 		break;
 	case SFX:
-		FMOD_System_CreateSound(_system, "$Resources//Music//Select.wav", FMOD_LOOP_OFF, 0, &sfx[0]);
-		FMOD_System_CreateSound(_system, "$Resources//Music//Confirm.wav", FMOD_LOOP_OFF, 0, &sfx[1]);
+		FMOD_System_CreateSound(_system, "$Resources//Music//Confirm.wav", FMOD_LOOP_OFF, 0, &sfx[0]);
 		break;
 	}
 }
@@ -112,10 +115,10 @@ void Audio_PlayBGM(STAGE stage)
 	case MAINMENU:
 		for (int i = 0; i < 3; i++)
 		{
-			FMOD_System_PlaySound(_system, tracks[i].sound, 0, false, &tracks[i].channel);
-			FMOD_Channel_AddDSP(tracks[i].channel, 0, tracks[i].dsp);
-			FMOD_DSP_SetActive(tracks[i].dsp, true);
-			FMOD_DSP_GetParameterData(tracks[i].dsp, FMOD_DSP_FFT_SPECTRUMDATA, (void **)&tracks[i].dspFFT, 0, 0, 0);
+			result = FMOD_System_PlaySound(_system, tracks[i].sound, 0, false, &tracks[i].channel);
+			result = FMOD_Channel_AddDSP(tracks[i].channel, 0, tracks[i].dsp);
+			result = FMOD_DSP_SetActive(tracks[i].dsp, true);
+			result = FMOD_DSP_GetParameterData(tracks[i].dsp, FMOD_DSP_FFT_SPECTRUMDATA, (void **)&tracks[i].dspFFT, 0, 0, 0);
 		}
 		break;
 	case STAGEONE:
@@ -128,17 +131,16 @@ void Audio_PlayBGM(STAGE stage)
 		}
 		break;
 	}
+	_CheckResult("playing");
 }
 
 bool Audio_GetSpectrum(int id)
 {
-	// Im not sure if I will stil get access violation
+	// The value we get back
 	if (tracks[id].dspFFT->spectrum[0])
-	{
-		// The value we get back
 		return (tracks[id].dspFFT->spectrum[0][1] > BEAT_THRESHOLD) ? true : false;
-		//return tracks[id].dspFFT->spectrum[0][1];
-	}
+	else
+		return false;
 }
 
 void Audio_Update()
@@ -152,8 +154,8 @@ void Audio_Shutdown()
 	Audio_Unload();
 
 	// SFX
-	FMOD_Sound_Release(sfx[0]);
-	FMOD_Sound_Release(sfx[1]);
+	for (int i = 0; i < MAX_NUMBER_OF_SFX; i++)
+		FMOD_Sound_Release(sfx[i]);
 
 	// All channels stop playing and released, main system too
 	result = FMOD_System_Release(_system);

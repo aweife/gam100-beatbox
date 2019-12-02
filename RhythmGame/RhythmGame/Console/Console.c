@@ -116,7 +116,7 @@ void Console_SetRenderBuffer_String(int x, int y, const char* s)
 #ifdef _DEBUG
 	Console_HandleValidity_Assert();
 #endif
-	const int size = strlen(s);
+	const int size = (const int)strlen(s);
 	int index = x + y * sConsoleSize.X;
 	for (int i = 0; i < size; ++i)
 	{

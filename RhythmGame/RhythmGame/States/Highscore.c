@@ -33,6 +33,8 @@ static int scoreiterator = 0;
 static int HSstate = 0;
 static int digitCount = 0;
 
+int _Determineamountofplayers(char *path);
+
 void _Init_players()
 {
 
@@ -65,6 +67,7 @@ int _Determineamountofplayers(char *path)
 	if (readScoreFile == NULL)
 	{
 		perror("Error opening file");
+		return 0;
 	}
 	else {
 
@@ -78,8 +81,6 @@ int _Determineamountofplayers(char *path)
 		fclose(readScoreFile);
 		return players;
 	}
-
-
 }
 
 void _Init_Numbers()

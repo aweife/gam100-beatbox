@@ -5,7 +5,6 @@
 #include "../Audio/AudioEngine.h"
 #include "../Enemy/Enemy.h"
 #include "../Clock/Clock.h"
-#include "../UI/UI.h"
 #include "../Attack/Attack.h"
 #include "../Random/Random.h"
 #include "../UI/GameUI.h"
@@ -75,6 +74,10 @@ void Game_ExitState()
 {
 	_PauseGame(false);
 	Attack_Cleanup();
+	Text_Cleanup(&Enemy_GetEnemy()->enemySprite);
+	Text_Cleanup(&Player_GetPlayer(0)->playerSprite);
+	if(gameType==TWOPLAYER)
+		Text_Cleanup(&Player_GetPlayer(1)->playerSprite);
 	Audio_Unload();
 	Audio_Load(MAINMENU);
 	Audio_PlayBGM(MAINMENU);
@@ -163,7 +166,7 @@ void Game_Render()
 	if (stageOneEnded) return;
 
 	if (gamePaused)
-		Text_RenderRainbow(&pauseButton, 0, 0);
+		Text_RenderRainbow(&pauseButton);
 	else
 		GameUI_Render();
 

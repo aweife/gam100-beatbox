@@ -4,11 +4,12 @@
 #include "../Text/TextReader.h"
 #include "StateMachine.h"
 #include "Game.h"
-#include"../UI/UI.h"
 #include "../Audio/AudioEngine.h"
 #include "../Map/Map.h"
 #include "../Global.h"
 #include "../Console/Console.h"
+
+#define SFX_VOLUME .5f
 
 // MAIN MENU SPRITES
 sprite diamond1, diamond2, diamond3;
@@ -194,12 +195,19 @@ void MainMenu_ExitState()
 void MainMenu_ProcessInput()
 {
 	if (GetAsyncKeyState(VK_RETURN) && keyDown == 0)
+	{
 		_confirmChoice(choice);
+		Audio_PlayOneShot(0, SFX_VOLUME);
+	}
 
 	if (GetAsyncKeyState(VK_LEFT) && keyDown == 0)
 	{
 		if (choice < LEVEL_TUTORIAL)
+		{
 			choice--;
+			if(choice != PRESSENTER)
+			Audio_PlayOneShot(0, SFX_VOLUME);
+		}
 		arrowTimer = 100.0;
 		shakeDirection = LEFT;
 	}
@@ -207,7 +215,11 @@ void MainMenu_ProcessInput()
 	if (GetAsyncKeyState(VK_RIGHT) && keyDown == 0)
 	{
 		if (choice < LEVEL_TUTORIAL)
+		{
 			choice++;
+			if (choice != PRESSENTER)
+			Audio_PlayOneShot(0, SFX_VOLUME);
+		}
 		arrowTimer = 100.0;
 		shakeDirection = RIGHT;
 	}
@@ -215,7 +227,11 @@ void MainMenu_ProcessInput()
 	if (GetAsyncKeyState(VK_UP) && keyDown == 0)
 	{
 		if (choice >= LEVEL_TUTORIAL)
+		{
 			choice--;
+			if (choice != PRESSENTER)
+			Audio_PlayOneShot(0, SFX_VOLUME);
+		}
 		arrowTimer = 100.0;
 		shakeDirection = UP;
 	}
@@ -223,7 +239,11 @@ void MainMenu_ProcessInput()
 	if (GetAsyncKeyState(VK_DOWN) && keyDown == 0)
 	{
 		if (choice >= LEVEL_TUTORIAL)
+		{
 			choice++;
+			if (choice != PRESSENTER)
+			Audio_PlayOneShot(0, SFX_VOLUME);
+		}
 		arrowTimer = 100.0;
 		shakeDirection = DOWN;
 	}
@@ -234,11 +254,8 @@ void MainMenu_ProcessInput()
 		GetAsyncKeyState(VK_UP) ||
 		GetAsyncKeyState(VK_DOWN))
 	{
-		keyDown = 1;
-		if(GetAsyncKeyState(VK_RETURN))
-			Audio_PlayOneShot(1, 1.0f);
-		else
-			Audio_PlayOneShot(0, 1.0f);
+		if (!keyDown)
+			keyDown = 1;
 	}
 	else
 		keyDown = 0;
