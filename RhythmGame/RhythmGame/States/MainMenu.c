@@ -204,9 +204,12 @@ void MainMenu_ProcessInput()
 	{
 		if (choice < LEVEL_TUTORIAL)
 		{
-			choice--;
+			
 			if (choice != PRESSENTER)
+			{
+				choice--;
 				Audio_PlayOneShot(0, SFX_VOLUME);
+			}
 		}
 		arrowTimer = 100.0;
 		shakeDirection = LEFT;
@@ -216,9 +219,12 @@ void MainMenu_ProcessInput()
 	{
 		if (choice < LEVEL_TUTORIAL)
 		{
-			choice++;
+			
 			if (choice != PRESSENTER)
+			{
+				choice++;
 				Audio_PlayOneShot(0, SFX_VOLUME);
+			}
 		}
 		arrowTimer = 100.0;
 		shakeDirection = RIGHT;
@@ -228,7 +234,7 @@ void MainMenu_ProcessInput()
 	{
 		if (choice >= LEVEL_TUTORIAL)
 		{
-			choice--;
+			
 			if (choice != PRESSENTER)
 				Audio_PlayOneShot(0, SFX_VOLUME);
 		}
