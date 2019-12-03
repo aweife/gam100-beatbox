@@ -20,7 +20,6 @@ typedef struct Pinfo
 	Phighscore playerscore[8];
 	Pname playername[3];
 	int score;
-
 }Pinfo;
 
 #define HIGHSCORE_PATH "$HighScores//highscores.txt"

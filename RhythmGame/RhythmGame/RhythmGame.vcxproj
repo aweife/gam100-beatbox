@@ -289,7 +289,9 @@
       <StackReserveSize>4194304 </StackReserveSize>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(SolutionDir)RhythmGame\Audio\Fmod\core\lib\x64\fmodL.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d "$(SolutionDir)RhythmGame\Audio\Fmod\core\lib\x64\fmodL.dll" "$(OutDir)" /q
+xcopy /y /d "$(SolutionDir)RhythmGame\$Resources" "$(OutDir)$Resources" /e /i /q
+xcopy /y /d "$(SolutionDir)RhythmGame\$HighScores" "$(OutDir)$HighScores" /i /q</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -339,7 +341,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)RhythmGame\Audio\Fmod\core\lib\x64</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(SolutionDir)RhythmGame\Audio\Fmod\core\lib\x64\fmod.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d "$(SolutionDir)RhythmGame\Audio\Fmod\core\lib\x64\fmod.dll" "$(OutDir)" /q
+xcopy /y /d "$(SolutionDir)RhythmGame\$Resources" "$(OutDir)$Resources" /e /i /q
+xcopy /y /d "$(SolutionDir)RhythmGame\$HighScores" "$(OutDir)$HighScores" /i /q</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

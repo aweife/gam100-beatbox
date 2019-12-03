@@ -56,10 +56,8 @@ void _RenderTrophymanAnimation();
 
 void _Init_players()
 {
-
 	pcount = _Determineamountofplayers(HIGHSCORE_PATH);
-	PI = (Pinfo *)malloc(sizeof(Pinfo) * pcount);
-
+	PI = (Pinfo *)calloc(pcount + 1,sizeof(Pinfo));
 }
 
 void _Init_positions()
