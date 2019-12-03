@@ -4,6 +4,7 @@
 * @DP emails f.abdullah@digipen.edu
 * Brief Description:
 * This file contains the code to run the game over screen of the game.
+* COPYRIGHT © 2019 BY DIGIPEN CORP, USA. ALL RIGHTS RESERVED.
 *******************************************************************************/
 #include "GameOver.h"
 #include <Windows.h>

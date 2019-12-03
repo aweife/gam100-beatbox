@@ -3,7 +3,8 @@
 * @author(s) Ang Wei Feng (Ted)
 * @DP emails weifeng.ang@digipen.edu
 * Brief Description:
-* This file displays the UI for the game (depending on number of players)
+* This file displays the UI for the game (depending on number of players).
+* COPYRIGHT © 2019 BY DIGIPEN CORP, USA. ALL RIGHTS RESERVED.
 *******************************************************************************/
 
 #include "GameUI.h"

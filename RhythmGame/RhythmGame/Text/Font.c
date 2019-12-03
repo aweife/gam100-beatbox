@@ -3,6 +3,7 @@
 * @author(s) Ong Guan Hin
 * @DP emails guanhin.ong@digipen.edu
 * Brief Description: Converts a number input to the respective sprite
+* COPYRIGHT © 2019 BY DIGIPEN CORP, USA. ALL RIGHTS RESERVED.
 *******************************************************************************/
 #include "Font.h"
 

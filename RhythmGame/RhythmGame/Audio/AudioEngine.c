@@ -7,6 +7,7 @@
 * We are able to manage the memory of the audio files well by only loading 
 * what we current need into memory. We are also able to read the frequencies
 * of the current track playing.
+* COPYRIGHT © 2019 BY DIGIPEN CORP, USA. ALL RIGHTS RESERVED.
 *******************************************************************************/
 
 #include "AudioEngine.h"

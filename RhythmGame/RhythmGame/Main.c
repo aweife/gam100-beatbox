@@ -1,3 +1,12 @@
+/*******************************************************************************
+* @filename Main.c
+* @author(s) Ong Guan Hin
+* @DP emails guanhin.ong@digipen.edu
+* Brief Description:
+* This file consist of the main code with statemachines to run the game properly.
+* COPYRIGHT © 2019 BY DIGIPEN CORP, USA. ALL RIGHTS RESERVED.
+*******************************************************************************/
+
 #include "Global.h"
 #include "Console/Console.h"
 #include "States/StateMachine.h"

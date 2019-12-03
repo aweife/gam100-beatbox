@@ -5,6 +5,7 @@
 * Brief Description:
 * This file manages the projectiles, powerups and collision of both enemy and 
 * player
+* COPYRIGHT © 2019 BY DIGIPEN CORP, USA. ALL RIGHTS RESERVED.
 *******************************************************************************/
 
 #include "Attack.h"
