@@ -3,7 +3,8 @@
 * @author(s) Ang Wei Feng (Ted)
 * @DP emails weifeng.ang@digipen.edu
 * Brief Description:
-* This file creates the border and update according to audio
+* This file creates the border and update according to audio.
+* COPYRIGHT © 2019 BY DIGIPEN CORP, USA. ALL RIGHTS RESERVED.
 *******************************************************************************/
 
 #include "Map.h"

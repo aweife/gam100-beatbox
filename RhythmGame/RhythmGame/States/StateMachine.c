@@ -4,6 +4,7 @@
 * @DP emails s.wong@digipen.edu
 * Brief Description:
 * This file contains the StateMachine functions.
+* COPYRIGHT © 2019 BY DIGIPEN CORP, USA. ALL RIGHTS RESERVED.
 *******************************************************************************/
 
 #include "StateMachine.h"

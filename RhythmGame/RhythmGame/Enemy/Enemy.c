@@ -4,6 +4,7 @@
 * @DP emails f.abdullah@digipen.edu
 * Brief Description:
 * This file contains the code to control the enemy of the game.
+* COPYRIGHT © 2019 BY DIGIPEN CORP, USA. ALL RIGHTS RESERVED.
 *******************************************************************************/
 
 #include "Enemy.h"

@@ -4,6 +4,7 @@
 * @DP emails guanhin.ong@digipen.edu
 * Brief Description: This file reads highscores from a text file and sorts
 them accordingly to rank.Only the top 5 players will be shown. 
+* COPYRIGHT © 2019 BY DIGIPEN CORP, USA. ALL RIGHTS RESERVED.
 *******************************************************************************/
 #include "MainMenu.h"
 #include <Windows.h>

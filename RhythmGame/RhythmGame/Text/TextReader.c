@@ -4,7 +4,8 @@
 * @DP emails guanhin.ong@digipen.edu
 * Brief Description:
 * This file contains the code required to read from a text file and render them 
-as sprites
+* as sprites
+* COPYRIGHT © 2019 BY DIGIPEN CORP, USA. ALL RIGHTS RESERVED.
 *******************************************************************************/
 #include <stdio.h>
 #include<stdlib.h>
