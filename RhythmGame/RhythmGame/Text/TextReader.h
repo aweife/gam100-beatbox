@@ -1,6 +1,7 @@
 #pragma once
 #include "../Global.h"
 
+//struct to keep track of the positioning,char and colour of the text.
 typedef struct spriteInfo
 {
 	Vector2d position;
@@ -8,6 +9,7 @@ typedef struct spriteInfo
 	CONSOLECOLOR printColor;
 }spriteInfo;
 
+//struct with all the information of a sprite to do collisions check and more
 typedef struct sprite
 {
 	Vector2d origin;
@@ -15,27 +17,28 @@ typedef struct sprite
 	int charCount;
 }sprite;
 
-//initialise sprite
+//initialise sprite with the specified text file
 void Text_Init(sprite* s, char* path);
-//Initialise sprite with array
+
+//Initialise sprite with a specified state
 void Text_InitArray(sprite* s, char* path,int state);
 
-//creates a skullenemy
+//creates a sprite
 sprite Text_CreateSprite();
 
-//Renders enemy
+//Renders sprite
 void Text_Render(sprite *s, int offsetX, int offsetY);
 
-// Set enemy position
+// Set the sprite's position
 void Text_Move(sprite *s, int x, int y);
 
 //Render each line according to rainbow colour
 void Text_RenderRainbow(sprite* s);
 
-//Render words
+//Render white words only with foreground colors
 void Text_RenderWords(sprite* s);
 
-//free memory allocated to spriteInfo
+//free the memory allocated to spriteI of sprites
 void Text_Cleanup(sprite* s);
 
 //renders everything with 1 colour specified

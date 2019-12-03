@@ -1,4 +1,11 @@
-
+/*******************************************************************************
+* @filename TextReader.c
+* @author(s) Ong Guan Hin
+* @DP emails guanhin.ong@digipen.edu
+* Brief Description:
+* This file contains the code required to read from a text file and render them 
+as sprites
+*******************************************************************************/
 #include <stdio.h>
 #include<stdlib.h>
 #include <ctype.h>
@@ -273,8 +280,6 @@ void _Readandstoretext(sprite *s, const char *path)
 			fgets(Charline, 200, pFile);
 
 
-
-
 			for (int i = 0; i < 200; i++)
 			{
 				if (Charline[i] != '0' && Charline[i] != '\n' && Charline[i] != '\0' && Charline[i] != 'n')
@@ -400,7 +405,6 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 				continue;
 			}
 
-
 			if (rendertrue == 1)
 			{
 				for (int i = 0; i < 200; i++)
@@ -417,7 +421,6 @@ void _ReadandstoretextArray(spriteInfo *spriteI, const char *path,int state)
 
 
 				}
-
 
 			for (int i = 0; i < charcount; i++)
 			{

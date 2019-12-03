@@ -1,3 +1,10 @@
+/*******************************************************************************
+* @filename Highscore.c
+* @author(s) Ong Guan Hin
+* @DP emails guanhin.ong@digipen.edu
+* Brief Description: This file reads highscores from a text file and sorts
+them accordingly to rank.Only the top 5 players will be shown. 
+*******************************************************************************/
 #include "MainMenu.h"
 #include <Windows.h>
 #include <stdlib.h>
@@ -10,6 +17,7 @@
 #include "../Audio/AudioEngine.h"
 #include <stdbool.h>
 
+//initialize sprites and variables
 sprite HS;
 sprite trophymanstate1;
 sprite trophymanstate2;
@@ -19,12 +27,13 @@ Pinfo Topplayers[5];
 Pinfo Highestscorers;
 FILE *readScoreFile;
 
+//preset printing positions
 Vector2d infopositioning[5][2];
+
+//variables for functions to work
 int NameScorey;
 static char buffer[200];
-
 static bool animateTrophyman = false;
-
 static int charcount;
 static int scorecount;
 static int pcount;
@@ -33,7 +42,16 @@ static int scoreiterator = 0;
 static int HSstate = 0;
 static int digitCount = 0;
 
+//Internal function
 int _Determineamountofplayers(char *path);
+void _Init_players();
+void _Init_positions();
+void _Init_Numbers();
+void _Move_placements();
+void _Init_Name();
+void _readandstoreinfo(Pinfo* p, char* path);
+void _determinetopplayers();
+void _RenderTrophymanAnimation();
 
 void _Init_players()
 {
@@ -128,7 +146,6 @@ void _Move_placements()
 		nameiterator = 0;
 		for (int i = 0; i < 3; i++)
 		{
-
 			Text_Move(&Topplayers[j].playername[i].printsprite, infopositioning[j][1].x + nameiterator, infopositioning[j][1].y);
 			nameiterator += 6;
 		}
@@ -147,7 +164,6 @@ void _Move_placements()
 
 void _Init_Name()
 {
-
 
 	for (int j = 0; j < pcount; j++)
 	{
@@ -194,7 +210,6 @@ void _readandstoreinfo(Pinfo *p, char *path)
 		perror("Error opening file");
 	}
 	else {
-
 
 		while (!feof(readScoreFile))
 		{
@@ -249,7 +264,6 @@ void _determinetopplayers()
 		Pfound++;
 	}
 
-
 }
 
 void Highscore_EnterState()
@@ -275,9 +289,7 @@ void Highscore_EnterState()
 	//_Init_Name();
 	//_Init_Numbers();
 
-
 	_readandstoreinfo(&PI[0], HIGHSCORE_PATH);
-
 	_determinetopplayers();
 	_Move_placements();
 }

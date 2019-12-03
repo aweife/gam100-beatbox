@@ -1,3 +1,9 @@
+/*******************************************************************************
+* @filename Font.c
+* @author(s) Ong Guan Hin
+* @DP emails guanhin.ong@digipen.edu
+* Brief Description: Converts a number input to the respective sprite
+*******************************************************************************/
 #include "Font.h"
 
 // Word sprites

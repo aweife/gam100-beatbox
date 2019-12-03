@@ -1,3 +1,10 @@
+/*******************************************************************************
+* @filename Enemy.c
+* @author(s) Fikrul Islami Bin Abdullah
+* @DP emails f.abdullah@digipen.edu
+* Brief Description:
+* This file contains the code to control the enemy of the game.
+*******************************************************************************/
 #include "Enemy.h"
 #include "../Attack/Attack.h"
 #include "../Clock/Clock.h"
@@ -50,10 +57,18 @@ static double projSpawnSpeed;
 static int progress = 0;
 static double damagedTimer = 0;
 
-/* Internal functions */
+/******* Internal functions ********/
+
+//Sets position of enemy
 void _MoveToPosition(double velocity);
+
+//Sets subsequent position of enemy
 void _DecideNextPosition(int position);
+
+//Controls enemy attack pattern
 void _EnemyAttack();
+
+//Renders enemy health bar
 void _RenderHealthBar();
 
 void Enemy_Init(GAMETYPE type)
