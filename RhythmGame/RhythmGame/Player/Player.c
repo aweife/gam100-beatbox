@@ -1,3 +1,11 @@
+/*******************************************************************************
+* @filename Player.c
+* @author(s) Wong Swee Jong Nico
+* @DP emails s.wong@digipen.edu
+* Brief Description:
+* This file contains the Player functions.
+*******************************************************************************/
+
 #include "Player.h"
 #include "../Console/Console.h"
 #include "../Map/Map.h"
@@ -28,9 +36,16 @@ static double attackTimer;
 
 /* Internal functions */
 
+// Logic for player movement depending on user input
 void _MovePlayer(int which);
-void _CheckBorder(int which); // Checks if player collision with border
-void _UpdateState(int which);// Updates timers
+
+// Checks if player collision with border
+void _CheckBorder(int which); 
+
+// Updates timers
+void _UpdateState(int which);
+
+// Allows player to shoot automatically 
 void _AutoAttack();
 
 
