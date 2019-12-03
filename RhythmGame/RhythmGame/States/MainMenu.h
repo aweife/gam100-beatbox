@@ -19,11 +19,20 @@ typedef enum MenuState
 	CREDITSCREEN3 = 22,
 } MenuState;
 
+// Main Menu Enter State
 extern void MainMenu_EnterState();
+
+// Main Menu Exit State
 extern void MainMenu_ExitState();
+
+// Main Menu User Input
 extern void MainMenu_ProcessInput();
+
+// Main Menu Update
 extern void MainMenu_Update();
+
+// Main Menu Rendering
 extern void MainMenu_Render();
 
-extern void _creditExitState();
+// Free the sprites from malloc
 extern void Sprite_Unload();

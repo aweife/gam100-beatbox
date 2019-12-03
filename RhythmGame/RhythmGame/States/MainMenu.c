@@ -1,3 +1,11 @@
+/*******************************************************************************
+* @filename MainMenu.c
+* @author(s) Wong Swee Jong Nico
+* @DP emails s.wong@digipen.edu
+* Brief Description:
+* This file contains the MainMenu functions.
+*******************************************************************************/
+
 #include <Windows.h>
 #include "MainMenu.h"
 #include "../Clock/Clock.h"
@@ -44,17 +52,42 @@ sprite credit2_COPYRIGHT;
 // CREDIT3 SPRITES
 sprite credit3;
 
-extern void _renderBackground(int offset, CONSOLECOLOR color);
-extern void _renderChoice();
-extern void _confirmChoice();
-extern void _moveToBeat();
-extern void _updateTimer();
-extern void _colorSwitch();
-extern void _renderBeat();
-extern void _renderArrow();
-extern void _renderTitle();
+// Renders the background of Main Menu
+void _renderBackground(int offset, CONSOLECOLOR color);
 
-extern void _renderCredit();
+// Renders depending on choice
+void _renderChoice();
+
+// Confirms user input to changeState or perform other functions
+void _confirmChoice();
+
+// Logic for animation of the diamond in the middle of MainMenu
+void _moveToBeat();
+
+// Function to update all the required timers
+void _updateTimer();
+
+// Switches the color for the diamond depending on choice
+void _colorSwitch();
+
+// Renders the diamond with color
+void _renderBeat();
+
+// Renders the MainMenu arrows (Both UP DOWN and LEFT RIGHT arrows)
+void _renderArrow();
+
+// Renders the Title of game with offset
+void _renderTitle();
+
+// Resets the position when exiting credit
+void _creditExitState();
+
+// Renders the different pages of credit screen
+void _renderCredit();
+
+//*********************************************************************************
+//								LOCAL VARIABLES
+//*********************************************************************************
 
 static int i = 0;
 
@@ -77,11 +110,6 @@ static int spriteAni = 0;
 static int spriteColorCount = 1;
 static char spriteChar = 0;
 static int spriteColor = 0;
-
-//*********************************************************************************
-//								LOCAL VARIABLES
-//*********************************************************************************
-
 
 //*********************************************************************************
 //								STATE MANAGEMENT

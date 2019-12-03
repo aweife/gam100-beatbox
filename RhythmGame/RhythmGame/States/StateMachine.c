@@ -1,3 +1,11 @@
+/*******************************************************************************
+* @filename StateMachine.c
+* @author(s) Wong Swee Jong Nico
+* @DP emails s.wong@digipen.edu
+* Brief Description:
+* This file contains the StateMachine functions.
+*******************************************************************************/
+
 #include "StateMachine.h"
 #include "Game.h"
 #include "MainMenu.h"

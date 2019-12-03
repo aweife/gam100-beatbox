@@ -1,3 +1,11 @@
+/*******************************************************************************
+* @filename Logo.c
+* @author(s) Wong Swee Jong Nico
+* @DP emails s.wong@digipen.edu
+* Brief Description:
+* This file contains the Logo functions.
+*******************************************************************************/
+
 #include <Windows.h>
 #include "Logo.h"
 #include "StateMachine.h"
