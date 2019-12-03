@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 
+// For selecting which stage to load
 typedef enum STAGE {
 	MAINMENU,
 	STAGEONE,

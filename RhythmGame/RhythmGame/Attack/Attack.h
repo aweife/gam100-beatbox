@@ -12,18 +12,20 @@
 #define NUMBER_OF_NOTES 6
 #define TYPES_OF_NOTES 3
 
+// To decide which attack to spawn
 typedef enum ATTACKTYPE {
 	PROJECTILE,
 	LASER,
 	PLAYER,
 }ATTACKTYPE;
 
+// Different speed for player and enemy
 typedef struct projectileSpeed {
 	double normal;
 	double fast;
 }projectileSpeed;
 
-//Projectile Structure
+// Projectile Struct
 typedef struct Projectile {
 	Vector2d position;
 	bool active;
@@ -33,6 +35,7 @@ typedef struct Projectile {
 	int which;
 } Projectile;
 
+// Laser Struct
 typedef struct Laser {
 	Vector2d startPosition;
 	Vector2d startPositionCheck;
@@ -46,6 +49,7 @@ typedef struct Laser {
 	int laserIndex;
 } Laser;
 
+// Powerup struct
 typedef struct Note {
 	Vector2d startPosition;
 	Vector2d endPosition;
@@ -54,9 +58,20 @@ typedef struct Note {
 	SCORESTATE noteType;
 } Note;
 
+// Call this to initialise attacking
 extern void Attack_Init();
+
+// Update movement and collision
 extern void Attack_Update();
+
+// Render all attacks if they are active
 extern void Attack_Render();
+
+// Call this to spawn an attack (provide type and details)
 extern void Attack_Spawn(ATTACKTYPE type, Vector2d spawnPosition, DIRECTION direction, projectileSpeed speed, int which);
+
+// Call this to spawn an powerup
 extern void Attack_SpawnNote(Vector2d spawnPosition, SCORESTATE type);
+
+// Call this to free sprites used
 extern void Attack_Cleanup();

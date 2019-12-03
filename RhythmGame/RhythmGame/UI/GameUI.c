@@ -1,3 +1,10 @@
+/*******************************************************************************
+* @filename Game UI
+* @author(s) Ang Wei Feng (Ted)
+* @DP emails weifeng.ang@digipen.edu
+* Brief Description:
+* This file displays the UI for the game (depending on number of players)
+*******************************************************************************/
 #include "GameUI.h"
 #include "../Map/Map.h"
 #include "../States/StateMachine.h"
@@ -20,42 +27,64 @@
 #define SCORE_ROWS 2 
 #define SCORE_HEIGHT 10
 
+// Heart sprite
 typedef struct Hearts {
 	bool visible;
 	sprite heartSprite;
 } Hearts;
 
+// The health UI container
 typedef struct HealthUI {
 	int count;
 	Vector2d origin;
 	Hearts hearts[5][2];
 } HealthUI;
 
+// Digit sprite
 typedef struct Digits {
 	bool visible;
 	sprite numberSprite;
 	CONSOLECOLOR color;
 } Digits;
 
+// The score container
 typedef struct ScoreUI {
 	Vector2d origin;
 	int count;
 	Digits digits[MAX_SCORE_DIGITS];
 } ScoreUI;
 
+// For display the numbers logic
 static sprite numbers[10] = { 0 };
+
+// UI
 static HealthUI health[2] = { 0 };
 static ScoreUI score[2] = { 0 };
 
-// Ui mode
+// UI mode
 GAMETYPE uiMode;
 
+/* Private functions **********************************************************/
+
+// Create the numbers sprites to use in the score
 void _InitNumbers();
+
+// Create and position the health ui
 void _InitHealth();
+
+// Create and position the score ui
 void _InitScore();
+
+// To reset the score ui into position everytime it updates
 void _AlignScore(ScoreUI *score);
+
+// Render health UI
 void _RenderHealth();
+
+// Render score UI
 void _RenderScore();
+
+/* Definitions ****************************************************************/
 
 void GameUI_Init(GAMETYPE type)
 {

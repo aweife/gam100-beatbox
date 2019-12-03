@@ -1,3 +1,12 @@
+/*******************************************************************************
+* @filename Attack
+* @author(s) Ang Wei Feng (Ted)
+* @DP emails weifeng.ang@digipen.edu
+* Brief Description:
+* This file manages the projectiles, powerups and collision of both enemy and
+* player
+*******************************************************************************/
+
 #include "Game.h"
 #include <stdbool.h>
 #include "../Player/Player.h"
@@ -31,10 +40,18 @@ static bool gamePaused = 0;
 int escDown, pKeyDown, enterDown;
 sprite pauseButton;
 
-/* Internal */
+/* Private functions **********************************************************/
+
+// To exit the game after 5 seconds delay after song ends
 void _CheckGameEnd();
+
+// Pause the game and audio
 void _PauseGame(bool pause);
+
+// Process input depending on number of players
 void _ProcessPlayerControls();
+
+/* Definitions ****************************************************************/
 
 void Game_EnterState(GAMETYPE type)
 {

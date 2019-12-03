@@ -1,3 +1,12 @@
+/*******************************************************************************
+* @filename Attack 
+* @author(s) Ang Wei Feng (Ted)
+* @DP emails weifeng.ang@digipen.edu
+* Brief Description:
+* This file manages the projectiles, powerups and collision of both enemy and 
+* player
+*******************************************************************************/
+
 #include "Attack.h"
 #include "../Clock/Clock.h"
 #include "../Global.h"
@@ -20,8 +29,7 @@
 #define NOTE_SLOW_3 0.06
 #define NOTE_SLOW_TIME 2000.0
 
-// Keep tracks of how many projectiles are currently in use
-// then we update all in-use projectiles
+// Using malloc
 Projectile *pArray = 0;
 Projectile *plArray = 0;
 Laser *lArray = 0;
@@ -32,15 +40,33 @@ Note nArray[NUMBER_OF_NOTES] = { 0 };
 static double noteTimer = 0;
 static double slowFactor = 0;
 
-/* Internal functions */
+/* Private functions **********************************************************/
+
+// Move projectile
 void _MoveProjectile();
+
+// Check projectile collisiont (border, player and enemy)
 void _CheckProjectileCollision();
+
+// Move laser
 void _MoveLaser();
+
+// Check laser collision (border and player)
 void _CheckLaserCollision();
+
+// Clear laser when hit border
 void _ClearLaser(int i);
+
+// Move notes
 void _MoveNote();
+
+// Check notes collision
 void _CheckNoteCollision();
+
+// Slow down projectiles and lasers
 void _SlowTime(double factor);
+
+/* Definitions ****************************************************************/
 
 void Attack_Init()
 {
@@ -127,7 +153,7 @@ void Attack_Render() // put in game.c
 {
 	//Print out projectile
 	for (int i = 0; i < NUMBER_OF_PROJECTILE; i++)
-	if (pArray[i].active)
+		if (pArray[i].active)
 		{
 			CONSOLECOLOR c, d;
 			if (noteTimer > 0.0)

@@ -1,3 +1,11 @@
+/*******************************************************************************
+* @filename Map
+* @author(s) Ang Wei Feng (Ted)
+* @DP emails weifeng.ang@digipen.edu
+* Brief Description:
+* This file creates the border and update according to audio
+*******************************************************************************/
+
 #include "Map.h"
 #include "../Audio/AudioEngine.h"
 #include "../Console/Console.h"
@@ -17,12 +25,24 @@ static int shakeCount = 0;
 static int shakeFactorX = 0;
 static int shakeFactorY = 0;
 
-// Private functions
+/* Private functions **********************************************************/
+
+// Create a stationary border
 void _CreateStatic();
+
+// Create an outer border with size offset
 void _CreateVisualiser(int offset, CONSOLECOLOR color);
+
+// Create an faint background of '.'
 void _CreateBackground(int offset, CONSOLECOLOR color);
+
+// Offset the borders by an small amount
 void _ShakeMap();
+
+// Resets the borders to their original positions
 void _ResetMap();
+
+/* Definitions ****************************************************************/
 
 void Map_Init(int offset)
 {

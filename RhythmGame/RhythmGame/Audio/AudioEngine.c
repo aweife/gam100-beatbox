@@ -1,3 +1,13 @@
+/*******************************************************************************
+* @filename Audio Engine
+* @author(s) Ang Wei Feng (Ted)
+* @DP emails weifeng.ang@digipen.edu
+* Brief Description:
+* This file manages the audio of the game. It uses an external library FMOD.
+* We are able to manage the memory of the audio files well by only loading 
+* what we current need into memory. We are also able to read the frequencies
+* of the current track playing.
+*******************************************************************************/
 #include "AudioEngine.h"
 #include "fmod.h"
 #include "fmod_errors.h"
@@ -10,7 +20,7 @@
 
 #define BEAT_THRESHOLD 0.0000000017
 
-
+// Audio tracks structure
 typedef struct track
 {
 	FMOD_DSP *dsp;
@@ -18,7 +28,6 @@ typedef struct track
 	FMOD_SOUND *sound;
 	FMOD_CHANNEL *channel;
 } track;
-
 track tracks[MAX_NUMBER_OF_TRACKS] = { 0 };
 FMOD_SOUND *sfx[MAX_NUMBER_OF_SFX] = { 0 };
 
@@ -27,9 +36,12 @@ static FMOD_SYSTEM *_system;
 static FMOD_RESULT result;
 
 
-// For internal use
+/* Private functions **********************************************************/
+
+// Error checking for fmod
 void _CheckResult(const char *debug);
 
+/* Definitions ****************************************************************/
 
 void Audio_Create()
 {
