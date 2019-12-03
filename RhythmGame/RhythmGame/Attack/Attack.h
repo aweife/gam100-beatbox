@@ -5,7 +5,7 @@
 #include "../Enemy/Enemy.h"
 #include <stdbool.h>
 
-#define NUMBER_OF_PROJECTILE 100
+#define NUMBER_OF_PROJECTILE 200
 #define NUMBER_OF_PLAYER_PROJECTILE 30
 #define LENGTH_OF_LASER 200
 #define NUMBER_OF_LASER 4
