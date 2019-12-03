@@ -1,3 +1,10 @@
+/*******************************************************************************
+* @filename GameOver.c
+* @author(s) Fikrul Islami Bin Abdullah
+* @DP emails f.abdullah@digipen.edu
+* Brief Description:
+* This file contains the code to run the game over screen of the game.
+*******************************************************************************/
 #include "GameOver.h"
 #include <Windows.h>
 #include "StateMachine.h"
@@ -72,15 +79,27 @@ Letter name[MAX_LETTERS];
 static char *path;
 static FILE *writeScoreFile;
 
-// Functions
-// Animate Crying Beatman
+/*********Internal Functions***********/
+
+//Enables animation of Crying Beatman between states
 void _RenderCryingBeatmanAnimation();
-// Animate Reaper
+
+//Enables animation of Reaper between states
 void _RenderReaperAnimation();
+
+//Set score position
 void _PositionScore();
+
+//Set position of name
 void _PositionName();
+
+//Enables input of letters in name
 void _ChooseLetter(Letter *selection, int dir);
+
+//Inputs the score from the game
 void _InputScore(int first, int second, int third, int score);
+
+//Enables animation of cursor
 void _BlinkingCursor();
 
 //*********************************************************************************

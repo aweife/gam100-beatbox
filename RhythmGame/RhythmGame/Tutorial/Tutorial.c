@@ -1,3 +1,10 @@
+/*******************************************************************************
+* @filename tutorial.c
+* @author(s) Fikrul Islami Bin Abdullah
+* @DP emails f.abdullah@digipen.edu
+* Brief Description:
+* This file contains the code to run the tutorial of the game.
+*******************************************************************************/
 #include "Tutorial.h"
 #include "../Global.h"
 #include "../Map/Map.h"
@@ -99,15 +106,33 @@ static bool animateWarning = false;
 static double tutorialDuration = 0.0;
 static double animateDuration = 0.0;
 
-// Internal functions
+/********Internal functions********/
+
+//Initialise the sprites for the tutorial gameplay
 void GameplaySprite_Init();
+
+//Initialise the sprites for the instructions
 void InstructionSprite_Init();
+
+//Enables movement of player
 void _MovePlayer();
+
+//Enables animation of arrow keys between states
 void _RenderArrowKeysAnimation();
+
+//Enables animation of BeatHead between states
 void _RenderBeatHeadAnimation();
+
+//Enables animation of Beatman between states
 void _RenderBeatmanAnimation();
+
+//Enables animation of Beatman between states
 void _RenderEnterAnimation();
+
+//Enables animation of Space Key between states
 void _RenderSpaceKeyAnimation();
+
+//Enables animation of Warning Sign betweens states
 void _RenderWarningAnimation();
 
 //*********************************************************************************

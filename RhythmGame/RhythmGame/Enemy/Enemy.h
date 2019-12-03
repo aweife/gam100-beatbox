@@ -26,9 +26,17 @@ typedef struct Enemy {
 	SCORESTATE scoreState;
 } Enemy;
 
+//Initialise Enemy values
+extern void Enemy_Init(GAMETYPE type);\
 
-extern void Enemy_Init(GAMETYPE type);
+//Updates Enemy AI
 extern void Enemy_Update();
+
+//Renders Enemy Art
 extern void Enemy_Render();
+
+//Flexibility to include enemy in other states
 extern Enemy *Enemy_GetEnemy();
+
+//Controls output when enemy is damaged
 extern void Enemy_Damage(int which);
