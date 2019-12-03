@@ -8,6 +8,7 @@
 * what we current need into memory. We are also able to read the frequencies
 * of the current track playing.
 *******************************************************************************/
+
 #include "AudioEngine.h"
 #include "fmod.h"
 #include "fmod_errors.h"

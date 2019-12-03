@@ -5,6 +5,7 @@
 * Brief Description:
 * This file contains the code to control the enemy of the game.
 *******************************************************************************/
+
 #include "Enemy.h"
 #include "../Attack/Attack.h"
 #include "../Clock/Clock.h"
